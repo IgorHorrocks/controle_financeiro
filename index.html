@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>Controle Financeiro • Produção v2</title>
+<title>Controle Financeiro • Produção v3</title>
 
 <style>
 :root{
@@ -88,6 +88,17 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
  .card{padding:12px;border-radius:12px}.kpi .value{font-size:18px}.formgrid{grid-template-columns:1fr}.assumptions{grid-template-columns:repeat(2,1fr)}
  canvas{height:255px}.toolbar select{flex:1;min-width:105px}.workspace-head{align-items:flex-start;flex-direction:column}.headtitle{font-size:14px}
 }
+
+.projection-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.projection-form .field input{font-variant-numeric:tabular-nums}
+.projection-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.mini-kpi{padding:11px;border:1px solid var(--line);border-radius:11px;background:#fafcfe}
+.mini-kpi .mk-label{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:800;letter-spacing:.035em}
+.mini-kpi .mk-value{font-size:15px;font-weight:850;margin-top:4px;letter-spacing:-.025em}
+.chart-note{font-size:9px;color:#94a3b8;margin-top:7px;line-height:1.4}
+@media(max-width:1050px){.projection-form{grid-template-columns:repeat(2,1fr)}.projection-summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.projection-form{grid-template-columns:1fr}.projection-summary{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -187,14 +198,53 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 <div class="card kpi"><div class="label">Meta sem FGTS</div><div class="value" id="patMeta">—</div><div class="progress"><span id="metaProgress"></span></div></div>
 <div class="card kpi"><div class="label">Diferença para meta</div><div class="value" id="patGap">—</div></div>
 </div>
+
 <div class="grid2 section">
-<div class="card"><div class="title">Composição do patrimônio</div><canvas id="chartPatDonut"></canvas><div id="patLegend" class="legend"></div></div>
-<div class="card"><div class="title">Igor x Vitória</div><canvas id="chartOwners"></canvas></div>
+<div class="card">
+  <div class="title">Composição atual por classe</div>
+  <div class="subtitle">Conta corrente, previdência, FGTS, aplicações e dinheiro.</div>
+  <canvas id="chartPatDonut"></canvas><div id="patLegend" class="legend"></div>
 </div>
-<div class="card section"><div class="title">Evolução do patrimônio</div><canvas id="chartPatHistory"></canvas></div>
+<div class="card">
+  <div class="title">Projeção patrimonial</div>
+  <div class="subtitle">Total projetado e total sem FGTS com as premissas configuradas abaixo.</div>
+  <canvas id="chartPatProjection"></canvas>
+  <div class="legend"><span><i class="dot" style="background:#2563eb"></i>Total</span><span><i class="dot" style="background:#08a36d"></i>Sem FGTS</span></div>
+</div>
+</div>
+
 <div class="card section">
-<div class="title">Premissas patrimoniais salvas no JSON</div>
-<div class="assumptions" id="assumptions"></div>
+  <div class="title">Evolução patrimonial por componente</div>
+  <div class="subtitle">Mostra a evolução das classes patrimoniais disponíveis nos fechamentos mensais.</div>
+  <canvas id="chartPatComponents"></canvas>
+  <div id="patEvolutionLegend" class="legend"></div>
+  <div class="chart-note">A série por componentes começa no primeiro mês em que o arquivo possui detalhamento por conta. O total histórico anterior continua preservado no JSON.</div>
+</div>
+
+<div class="card section">
+  <div class="title">Premissas da projeção</div>
+  <div class="subtitle">Personalize as hipóteses. Ao salvar, as premissas são gravadas no mesmo <code>dados.json</code> do OneDrive e passam a valer em todos os aparelhos.</div>
+  <div class="projection-form">
+    <div class="field"><label>Rentabilidade das aplicações (% a.m.)</label><input id="projRentAplic" inputmode="decimal" placeholder="1,00"><div class="hint">No Excel: 1,00% ao mês.</div></div>
+    <div class="field"><label>Rentabilidade Previdência/FGTS (% a.m.)</label><input id="projRentPrevFgts" inputmode="decimal" placeholder="0,50"><div class="hint">No Excel: 0,50% ao mês.</div></div>
+    <div class="field"><label>Aporte mensal • Previdência Igor</label><input id="projAportePrev" inputmode="decimal" placeholder="1.100,00"></div>
+    <div class="field"><label>Aporte mensal • FGTS Igor</label><input id="projFgtsIgor" inputmode="decimal" placeholder="1.100,00"></div>
+    <div class="field"><label>Aporte mensal • FGTS Vitória</label><input id="projFgtsVitoria" inputmode="decimal" placeholder="590,00"></div>
+    <div class="field"><label>Aporte mensal • Aplicações Igor</label><input id="projApliIgor" inputmode="decimal" placeholder="5.000,00"></div>
+    <div class="field"><label>Aporte mensal • Aplicações Vitória</label><input id="projApliVitoria" inputmode="decimal" placeholder="3.000,00"></div>
+    <div class="field"><label>Horizonte da projeção (meses)</label><input id="projHorizonte" type="number" min="1" max="120" step="1" placeholder="18"></div>
+    <div class="field"><label>Meta patrimonial sem FGTS</label><input id="projMeta" inputmode="decimal" placeholder="0,00"></div>
+  </div>
+  <div class="form-actions">
+    <button class="btn green" id="btnSaveProjection">Salvar premissas no OneDrive</button>
+    <button class="btn secondary" id="btnResetProjection">Usar premissas originais do Excel</button>
+  </div>
+  <div class="projection-summary">
+    <div class="mini-kpi"><div class="mk-label">Total no fim da projeção</div><div class="mk-value" id="projEndTotal">—</div></div>
+    <div class="mini-kpi"><div class="mk-label">Sem FGTS no fim</div><div class="mk-value" id="projEndSemFgts">—</div></div>
+    <div class="mini-kpi"><div class="mk-label">Crescimento projetado</div><div class="mk-value" id="projGrowth">—</div></div>
+    <div class="mini-kpi"><div class="mk-label">Diferença p/ meta no fim</div><div class="mk-value" id="projEndGap">—</div></div>
+  </div>
 </div>
 </section>
 
@@ -321,22 +371,137 @@ function refreshCategories(){
 function currentPat(y,m){let c=data.investimentos.filter(x=>x.natureza==="Componente"&&keyYM(x.ano,x.mes)<=keyYM(y,m));if(!c.length)return{total:0,sem:0,igor:0,vitoria:0,rows:[],y:null,m:null};let k=Math.max(...c.map(x=>keyYM(x.ano,x.mes))),yy=Math.floor(k/100),mm=k%100,r=c.filter(x=>x.ano===yy&&x.mes===mm),total=sum(r),fgts=sum(r.filter(x=>/FGTS/i.test(x.descricao)));return{total,sem:total-fgts,igor:sum(r.filter(x=>x.descricao.startsWith("Igor:"))),vitoria:sum(r.filter(x=>x.descricao.startsWith("Vitória:"))),rows:r,y:yy,m:mm}}
 function history(){let h=data.investimentos.filter(x=>x.natureza==="Total histórico").sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes));let keys=new Set(h.map(x=>keyYM(x.ano,x.mes)));let comp=[...new Set(data.investimentos.filter(x=>x.natureza==="Componente").map(x=>keyYM(x.ano,x.mes)))];comp.filter(k=>!keys.has(k)).forEach(k=>{let y=Math.floor(k/100),m=k%100,r=data.investimentos.filter(x=>x.natureza==="Componente"&&x.ano===y&&x.mes===m);h.push({ano:y,mes:m,valor:sum(r)})});return h.sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes))}
 
+const PAT_COLORS={"Conta Corrente":"#0891b2","Previdência":"#8b5cf6","FGTS":"#f59e0b","Aplicações":"#08a36d","Dinheiro":"#64748b","Outros":"#db2777","Total":"#2563eb"};
+
+function patrimonyClass(desc){
+ let s=String(desc||"");
+ if(/Conta Corrente/i.test(s))return"Conta Corrente";
+ if(/Previdência/i.test(s))return"Previdência";
+ if(/FGTS/i.test(s))return"FGTS";
+ if(/Aplicações/i.test(s))return"Aplicações";
+ if(/^Dinheiro$/i.test(s))return"Dinheiro";
+ return"Outros";
+}
+function classTotals(rows){
+ let o={"Conta Corrente":0,"Previdência":0,"FGTS":0,"Aplicações":0,"Dinheiro":0,"Outros":0};
+ rows.forEach(x=>{let c=patrimonyClass(x.descricao);o[c]=(o[c]||0)+Number(x.valor||0)});
+ Object.keys(o).forEach(k=>{if(Math.abs(o[k])<.0001)delete o[k]});
+ return o;
+}
+function latestPatSnapshot(){
+ let c=data.investimentos.filter(x=>x.natureza==="Componente");
+ if(!c.length)return{rows:[],y:null,m:null,total:0,sem:0};
+ let k=Math.max(...c.map(x=>keyYM(x.ano,x.mes))),y=Math.floor(k/100),m=k%100,rows=c.filter(x=>x.ano===y&&x.mes===m),total=sum(rows),fgts=sum(rows.filter(x=>/FGTS/i.test(x.descricao)));
+ return{rows,y,m,total,sem:total-fgts};
+}
+function componentHistory(){
+ let rows=data.investimentos.filter(x=>x.natureza==="Componente");
+ let keys=[...new Set(rows.map(x=>keyYM(x.ano,x.mes)))].sort((a,b)=>a-b);
+ return keys.map(k=>{
+   let y=Math.floor(k/100),m=k%100,r=rows.filter(x=>x.ano===y&&x.mes===m),classes=classTotals(r);
+   return{y,m,label:`${String(m).padStart(2,"0")}/${String(y).slice(2)}`,classes,total:sum(r)};
+ });
+}
+function projectionDefaults(){
+ let pr=data.settings?.projecao||{};
+ return{
+   rentAplic:Number.isFinite(Number(pr.rentabilidadeMensal))?Number(pr.rentabilidadeMensal):0.01,
+   rentPrevFgts:Number.isFinite(Number(pr.rentabilidadePrevFGTS))?Number(pr.rentabilidadePrevFGTS):0.005,
+   aportePrev:Number.isFinite(Number(pr.aportePrevidenciaIgor))?Number(pr.aportePrevidenciaIgor):1100,
+   fgtsIgor:Number.isFinite(Number(pr.aporteFGTSIgor))?Number(pr.aporteFGTSIgor):1100,
+   fgtsVitoria:Number.isFinite(Number(pr.aporteFGTSVitoria))?Number(pr.aporteFGTSVitoria):590,
+   apliIgor:Number.isFinite(Number(pr.aporteAplicacoesIgor))?Number(pr.aporteAplicacoesIgor):5000,
+   apliVitoria:Number.isFinite(Number(pr.aporteAplicacoesVitoria))?Number(pr.aporteAplicacoesVitoria):3000,
+   horizonte:Math.max(1,Math.min(120,Number(pr.horizonteMeses)||18)),
+   meta:Number(data.settings?.metaPatrimonioSemFGTS)||0
+ };
+}
+function projectionFromSettings(){
+ let start=latestPatSnapshot(),pr=projectionDefaults();
+ if(!start.rows.length)return{start,months:[],pr};
+ let state={};
+ start.rows.forEach(x=>state[x.descricao]=Number(x.valor||0));
+ let months=[];
+ for(let i=1;i<=pr.horizonte;i++){
+   let t=shift(start.y,start.m,i);
+   let next={...state};
+   // Contas correntes e dinheiro permanecem constantes, como no Excel.
+   if("Igor: Previdência" in next)next["Igor: Previdência"]=next["Igor: Previdência"]*(1+pr.rentPrevFgts)+pr.aportePrev;
+   if("Igor: FGTS" in next)next["Igor: FGTS"]=next["Igor: FGTS"]*(1+pr.rentPrevFgts)+pr.fgtsIgor;
+   if("Vitória: FGTS" in next)next["Vitória: FGTS"]=next["Vitória: FGTS"]*(1+pr.rentPrevFgts)+pr.fgtsVitoria;
+   if("Igor: Aplicações" in next)next["Igor: Aplicações"]=(next["Igor: Aplicações"]+pr.apliIgor)*(1+pr.rentAplic);
+   if("Vitória: Aplicações" in next)next["Vitória: Aplicações"]=(next["Vitória: Aplicações"]+pr.apliVitoria)*(1+pr.rentAplic);
+   state=next;
+   let entries=Object.entries(state).map(([descricao,valor])=>({descricao,valor}));
+   let total=entries.reduce((s,x)=>s+x.valor,0),fgts=entries.filter(x=>/FGTS/i.test(x.descricao)).reduce((s,x)=>s+x.valor,0);
+   months.push({y:t.y,m:t.m,label:`${String(t.m).padStart(2,"0")}/${String(t.y).slice(2)}`,state:{...state},classes:classTotals(entries),total,sem:total-fgts});
+ }
+ return{start,months,pr};
+}
+function setProjectionInputs(pr=projectionDefaults()){
+ const set=(id,val)=>{let el=$(id);if(document.activeElement!==el)el.value=val};
+ set("projRentAplic",(pr.rentAplic*100).toFixed(2).replace(".",","));
+ set("projRentPrevFgts",(pr.rentPrevFgts*100).toFixed(2).replace(".",","));
+ set("projAportePrev",pr.aportePrev.toFixed(2).replace(".",","));
+ set("projFgtsIgor",pr.fgtsIgor.toFixed(2).replace(".",","));
+ set("projFgtsVitoria",pr.fgtsVitoria.toFixed(2).replace(".",","));
+ set("projApliIgor",pr.apliIgor.toFixed(2).replace(".",","));
+ set("projApliVitoria",pr.apliVitoria.toFixed(2).replace(".",","));
+ set("projHorizonte",pr.horizonte);
+ set("projMeta",pr.meta.toFixed(2).replace(".",","));
+}
+function projectionInputs(){
+ return{
+   rentAplic:parseMoney($("projRentAplic").value)/100,
+   rentPrevFgts:parseMoney($("projRentPrevFgts").value)/100,
+   aportePrev:parseMoney($("projAportePrev").value),
+   fgtsIgor:parseMoney($("projFgtsIgor").value),
+   fgtsVitoria:parseMoney($("projFgtsVitoria").value),
+   apliIgor:parseMoney($("projApliIgor").value),
+   apliVitoria:parseMoney($("projApliVitoria").value),
+   horizonte:Math.max(1,Math.min(120,parseInt($("projHorizonte").value)||18)),
+   meta:parseMoney($("projMeta").value)
+ };
+}
+
 function setupCanvas(id,h=285){let c=$(id),r=c.getBoundingClientRect();if(r.width<20)return null;let d=window.devicePixelRatio||1;c.width=r.width*d;c.height=h*d;c.style.height=h+"px";let ctx=c.getContext("2d");ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,r.width,h);return[ctx,r.width,h]}
 function noData(ctx,w,h){ctx.fillStyle="#94a3b8";ctx.font="12px system-ui";ctx.textAlign="center";ctx.fillText("Sem dados",w/2,h/2)}
 function drawBar(id,labels,vals,colors=COLORS){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z;if(!vals.length||Math.max(...vals.map(Math.abs),0)===0){noData(ctx,w,h);return}let max=Math.max(...vals,1),L=44,R=12,T=24,B=58,pw=w-L-R,ph=h-T-B,gap=pw/vals.length,bw=Math.min(54,gap*.62);ctx.font="10px system-ui";ctx.textAlign="center";vals.forEach((v,i)=>{let bh=ph*v/max,x=L+i*gap+gap/2-bw/2,y=T+ph-bh;ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x,y,bw,bh);ctx.fillStyle="#475569";ctx.fillText(brl(v).replace(",00",""),x+bw/2,Math.max(11,y-6));ctx.save();ctx.translate(x+bw/2,h-9);ctx.rotate(-.42);ctx.fillStyle="#64748b";ctx.fillText(labels[i],0,0);ctx.restore()})}
 function drawHBar(id,obj){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);if(!es.length){noData(ctx,w,h);return}let max=Math.max(...es.map(x=>x[1])),L=Math.min(145,w*.43),R=56,T=10,B=10,ph=(h-T-B)/es.length,bh=Math.min(20,ph*.58);ctx.font="10px system-ui";es.forEach(([k,v],i)=>{let y=T+i*ph+(ph-bh)/2;ctx.textAlign="right";ctx.fillStyle="#475569";ctx.fillText(k.length>23?k.slice(0,21)+"…":k,L-7,y+bh*.75);ctx.fillStyle=COLORS[i%COLORS.length];ctx.fillRect(L,y,(w-L-R)*v/max,bh);ctx.textAlign="left";ctx.fillStyle="#64748b";ctx.fillText(brl(v).replace(",00",""),L+(w-L-R)*v/max+4,y+bh*.75)})}
 function drawDonut(id,obj,legendId){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),total=es.reduce((s,x)=>s+x[1],0);if(!total){noData(ctx,w,h);if(legendId)$(legendId).innerHTML="";return}let cx=w/2,cy=h/2,r=Math.min(w,h)*.32,a=-Math.PI/2;es.forEach(([k,v],i)=>{let b=a+Math.PI*2*v/total;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,b);ctx.closePath();ctx.fillStyle=COLORS[i%COLORS.length];ctx.fill();a=b});ctx.globalCompositeOperation="destination-out";ctx.beginPath();ctx.arc(cx,cy,r*.56,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation="source-over";ctx.fillStyle="#111827";ctx.font="800 14px system-ui";ctx.textAlign="center";ctx.fillText(brl(total),cx,cy+5);if(legendId)$(legendId).innerHTML=es.map(([k,v],i)=>`<span><i class="dot" style="background:${COLORS[i%COLORS.length]}"></i>${esc(k)} (${(v/total*100).toFixed(0)}%)</span>`).join("")}
 function drawLines(id,labels,series){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,all=series.flatMap(s=>s.vals).filter(Number.isFinite);if(!all.length){noData(ctx,w,h);return}let min=Math.min(0,...all),max=Math.max(1,...all);if(max===min)max=min+1;let L=52,R=12,T=17,B=35,pw=w-L-R,ph=h-T-B;ctx.font="9px system-ui";ctx.strokeStyle="#e5e7eb";ctx.fillStyle="#64748b";ctx.textAlign="right";for(let i=0;i<=4;i++){let val=max-(max-min)*i/4,y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(Math.round(val).toLocaleString("pt-BR"),L-5,y+3)}let X=i=>labels.length===1?L+pw/2:L+pw*i/(labels.length-1),Y=v=>T+(max-v)/(max-min)*ph;series.forEach((s,si)=>{ctx.strokeStyle=s.color||COLORS[si];ctx.lineWidth=2.2;ctx.beginPath();s.vals.forEach((v,i)=>{let x=X(i),y=Y(v);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()});ctx.fillStyle="#64748b";ctx.textAlign="center";labels.forEach((l,i)=>{if(labels.length<=12||i%Math.ceil(labels.length/10)===0)ctx.fillText(l,X(i),h-10)})}
-function drawHistory(){let h=history(),z=setupCanvas("chartPatHistory",300);if(!z)return;let[ctx,w,hh]=z;if(!h.length){noData(ctx,w,hh);return}let labels=h.map(x=>`${String(x.mes).padStart(2,"0")}/${String(x.ano).slice(2)}`),vals=h.map(x=>x.valor);drawLines("chartPatHistory",labels,[{vals,color:"#2563eb"}])}
+function drawPatComponents(){
+ let h=componentHistory();
+ if(!h.length){let z=setupCanvas("chartPatComponents",300);if(z)noData(z[0],z[1],z[2]);$("patEvolutionLegend").innerHTML="";return}
+ let labels=h.map(x=>x.label),classes=["Conta Corrente","Previdência","FGTS","Aplicações","Dinheiro"],series=[];
+ classes.forEach(c=>{if(h.some(x=>(x.classes[c]||0)>0))series.push({label:c,vals:h.map(x=>x.classes[c]||0),color:PAT_COLORS[c]})});
+ series.push({label:"Total",vals:h.map(x=>x.total),color:PAT_COLORS.Total});
+ drawLines("chartPatComponents",labels,series);
+ $("patEvolutionLegend").innerHTML=series.map(s=>`<span><i class="dot" style="background:${s.color}"></i>${s.label}</span>`).join("");
+}
+function drawPatProjection(){
+ let p=projectionFromSettings();
+ if(!p.months.length){let z=setupCanvas("chartPatProjection",285);if(z)noData(z[0],z[1],z[2]);return}
+ let labels=[`${String(p.start.m).padStart(2,"0")}/${String(p.start.y).slice(2)}`,...p.months.map(x=>x.label)];
+ let total=[p.start.total,...p.months.map(x=>x.total)],sem=[p.start.sem,...p.months.map(x=>x.sem)];
+ drawLines("chartPatProjection",labels,[{vals:total,color:"#2563eb"},{vals:sem,color:"#08a36d"}]);
+ let end=p.months.at(-1),growth=end.total-p.start.total,gap=end.sem-p.pr.meta;
+ $("projEndTotal").textContent=brl(end.total);$("projEndSemFgts").textContent=brl(end.sem);$("projGrowth").textContent=brl(growth);$("projGrowth").className="mk-value "+(growth>=0?"good":"bad");$("projEndGap").textContent=brl(gap);$("projEndGap").className="mk-value "+(gap>=0?"good":"bad");
+}
 
 function renderGeneral(){let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória"),rec=ig+vi,fix=sumMonth(data.fixos,y,m),vr=sumMonth(data.variaveis,y,m),par=sumMonth(data.parcelas,y,m),desp=fix+vr+par,sobra=rec-desp,p=currentPat(y,m),af=avg3Total(data.fixos,y,m),av=avg3Total(data.variaveis,y,m),ap=avg3Total(data.parcelas,y,m),ai=avg3Income(y,m,"Igor"),avt=avg3Income(y,m,"Vitória"),as=ai+avt-af-av-ap;$("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSobra").textContent=brl(sobra);$("gSobra").className="value "+(sobra>=0?"good":"bad");$("gPat").textContent=brl(p.total);$("gPatSub").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";$("avgFix").textContent=brl(af);$("avgVar").textContent=brl(av);$("avgPar").textContent=brl(ap);$("avgSob").textContent=brl(as);$("avgSob").className="value "+(as>=0?"good":"bad");drawBar("chartConsolidado",["Variáveis","Fixos","Parcelas","Igor","Vitória"],[av,af,ap,ai,avt],["#f59e0b","#2563eb","#8b5cf6","#059669","#0891b2"]);let rr=[],dd=[],ss=[];for(let mm=1;mm<=12;mm++){let r=income(y,mm,"Igor")+income(y,mm,"Vitória"),d=sumMonth(data.fixos,y,mm)+sumMonth(data.variaveis,y,mm)+sumMonth(data.parcelas,y,mm);rr.push(r);dd.push(d);ss.push(r-d)}drawLines("chartFluxo",MESES.map(x=>x.slice(0,3)),[{vals:rr,color:"#059669"},{vals:dd,color:"#dc2626"},{vals:ss,color:"#2563eb"}])}
 function renderGastos(){let{y,m}=selected(),f=avg3Cats(data.fixos,y,m),v=avg3Cats(data.variaveis,y,m),p=avg3Cats(data.parcelas,y,m);drawHBar("chartFixos",f);drawHBar("chartVariaveis",v);drawHBar("chartParcelasCat",p);let ks=[...new Set([...Object.keys(f),...Object.keys(v),...Object.keys(p)])].sort((a,b)=>((f[b]||0)+(v[b]||0)+(p[b]||0))-((f[a]||0)+(v[a]||0)+(p[a]||0)));$("gastosBody").innerHTML=ks.map(k=>`<tr><td>${esc(k)}</td><td class="num">${brl(f[k]||0)}</td><td class="num">${brl(v[k]||0)}</td><td class="num">${brl(p[k]||0)}</td><td class="num"><b>${brl((f[k]||0)+(v[k]||0)+(p[k]||0))}</b></td></tr>`).join("")}
 function renderReceitas(){let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória");$("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rIgor3").textContent=brl(avg3Income(y,m,"Igor"));$("rVitoria3").textContent=brl(avg3Income(y,m,"Vitória"));let a=[],b=[];for(let mm=1;mm<=12;mm++){a.push(income(y,mm,"Igor"));b.push(income(y,mm,"Vitória"))}drawLines("chartReceitas",MESES.map(x=>x.slice(0,3)),[{vals:a,color:"#2563eb"},{vals:b,color:"#db2777"}]);drawDonut("chartReceitaDonut",{Igor:ig,Vitória:vi},"receitaLegend")}
 function renderParcelas(){let{y,m}=selected(),vals=[],labs=[];for(let k=0;k<12;k++){let t=shift(y,m,k);labs.push(`${MESES[t.m-1].slice(0,3)}/${String(t.y).slice(2)}`);vals.push(sumMonth(data.parcelas,t.y,t.m))}$("pMes").textContent=brl(vals[0]);$("pMedia").textContent=brl(avg3Total(data.parcelas,y,m));$("p6").textContent=brl(vals.slice(0,6).reduce((a,b)=>a+b,0));$("pFutureCount").textContent=data.parcelas.filter(x=>keyYM(x.ano,x.mes)>keyYM(y,m)&&Number(x.valor)>0).length.toLocaleString("pt-BR");drawBar("chartParcelasFut",labs,vals,Array(12).fill("#8b5cf6"))}
-function renderPat(){let{y,m}=selected(),p=currentPat(y,m),meta=data.settings?.metaPatrimonioSemFGTS||0,gap=p.sem-meta;$("patTotal").textContent=brl(p.total);$("patSemFgts").textContent=brl(p.sem);$("patMeta").textContent=brl(meta);$("patGap").textContent=brl(gap);$("patGap").className="value "+(gap>=0?"good":"bad");$("metaProgress").style.width=(meta?Math.min(100,p.sem/meta*100):0)+"%";$("patData").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";let by={};p.rows.forEach(x=>by[x.descricao]=(by[x.descricao]||0)+Number(x.valor||0));drawDonut("chartPatDonut",by,"patLegend");drawBar("chartOwners",["Igor","Vitória"],[p.igor,p.vitoria],["#2563eb","#db2777"]);drawHistory();let pr=data.settings?.projecao||{};$("assumptions").innerHTML=[["Rent. mensal",((pr.rentabilidadeMensal||0)*100).toFixed(2).replace(".",",")+"%"],["Previdência Igor",brl(pr.aportePrevidenciaIgor)],["FGTS Igor",brl(pr.aporteFGTSIgor)],["FGTS Vitória",brl(pr.aporteFGTSVitoria)],["Aplicações Igor",brl(pr.aporteAplicacoesIgor)],["Aplicações Vitória",brl(pr.aporteAplicacoesVitoria)]].map(x=>`<div class="assump"><div class="a">${x[0]}</div><div class="v">${x[1]}</div></div>`).join("")}
+function renderPat(){
+ let{y,m}=selected(),p=currentPat(y,m),meta=Number(data.settings?.metaPatrimonioSemFGTS)||0,gap=p.sem-meta;
+ $("patTotal").textContent=brl(p.total);$("patSemFgts").textContent=brl(p.sem);$("patMeta").textContent=brl(meta);$("patGap").textContent=brl(gap);$("patGap").className="value "+(gap>=0?"good":"bad");$("metaProgress").style.width=(meta?Math.min(100,p.sem/meta*100):0)+"%";$("patData").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";
+ let by=classTotals(p.rows);drawDonut("chartPatDonut",by,"patLegend");
+ setProjectionInputs();drawPatComponents();drawPatProjection();
+}
 function renderData(){let{y,m}=selected(),rows=[];[["Fixo","fixos"],["Variável","variaveis"],["Parcela","parcelas"],["Entrada","entradas"],["Patrimônio","investimentos"]].forEach(([tipo,k])=>rowsMonth(data[k],y,m).filter(x=>k!=="investimentos"||x.natureza==="Componente").forEach(x=>rows.push({...x,tipo})));$("dFix").textContent=data.fixos.length.toLocaleString("pt-BR");$("dVar").textContent=data.variaveis.length.toLocaleString("pt-BR");$("dPar").textContent=data.parcelas.length.toLocaleString("pt-BR");$("dOther").textContent=(data.entradas.length+data.investimentos.length).toLocaleString("pt-BR");$("dadosBody").innerHTML=rows.map(x=>`<tr><td><span class="chip">${x.tipo}</span></td><td>${x.data}</td><td>${esc(x.descricao)}</td><td>${esc(x.pessoa||x.natureza||"")}</td><td class="num">${brl(x.valor)}</td></tr>`).join("")}
 function render(){renderGeneral();renderGastos();renderReceitas();renderParcelas();renderPat();renderData();updateCloudUi()}
-function showTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["geral","gastos","receitas","parcelas","patrimonio","novo","dados","config"].forEach(x=>$(x).classList.toggle("hidden",x!==id));let titles={geral:["Visão geral","Controle integrado de receitas, despesas, parcelas e patrimônio."],gastos:["Despesas","Análise dos gastos por categoria e comportamento recente."],receitas:["Receitas","Acompanhe entradas de Igor e Vitória ao longo do tempo."],parcelas:["Parcelas","Veja compromissos atuais e projeções dos próximos meses."],patrimonio:["Patrimônio","Saldos, composição e evolução patrimonial."],novo:["Novo lançamento","Cadastre uma movimentação financeira com poucos campos."],dados:["Base de dados","Backup, importação e conferência do arquivo financeiro."],config:["Configuração","Conexão segura do dashboard com o OneDrive."]};let t=titles[id]||titles.geral;document.querySelector(".workspace-head h2").textContent=t[0];document.querySelector(".workspace-head p").textContent=t[1];if(id==="novo")updateForm();setTimeout(render,35)}
+function showTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["geral","gastos","receitas","parcelas","patrimonio","novo","dados","config"].forEach(x=>$(x).classList.toggle("hidden",x!==id));let titles={geral:["Visão geral","Controle integrado de receitas, despesas, parcelas e patrimônio."],gastos:["Despesas","Análise dos gastos por categoria e comportamento recente."],receitas:["Receitas","Acompanhe entradas de Igor e Vitória ao longo do tempo."],parcelas:["Parcelas","Veja compromissos atuais e projeções dos próximos meses."],patrimonio:["Patrimônio","Acompanhe os componentes do patrimônio e simule cenários com premissas personalizadas."],novo:["Novo lançamento","Cadastre uma movimentação financeira com poucos campos."],dados:["Base de dados","Backup, importação e conferência do arquivo financeiro."],config:["Configuração","Conexão segura do dashboard com o OneDrive."]};let t=titles[id]||titles.geral;document.querySelector(".workspace-head h2").textContent=t[0];document.querySelector(".workspace-head p").textContent=t[1];if(id==="novo")updateForm();setTimeout(render,35)}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));$("fab").onclick=()=>showTab("novo");
 function openQuick(type){$("nTipo").value=type;updateForm();showTab("novo");setTimeout(()=>{if(type!=="investimentos")$("nDescricao").focus()},80)}
 $("quickExpense").onclick=()=>openQuick("variaveis");
@@ -376,9 +541,37 @@ async function saveNew(){
 }
 $("btnSalvar").onclick=saveNew;
 
+
+async function saveProjectionSettings(){
+ if(!account||!remoteMeta){toast("Conecte e sincronize o OneDrive primeiro.");showTab("config");return}
+ let pr=projectionInputs(),before=structuredClone(data);
+ try{
+   data.settings=data.settings||{};
+   data.settings.metaPatrimonioSemFGTS=pr.meta;
+   data.settings.projecao=data.settings.projecao||{};
+   Object.assign(data.settings.projecao,{
+     rentabilidadeMensal:pr.rentAplic,
+     rentabilidadePrevFGTS:pr.rentPrevFgts,
+     aportePrevidenciaIgor:pr.aportePrev,
+     aporteFGTSIgor:pr.fgtsIgor,
+     aporteFGTSVitoria:pr.fgtsVitoria,
+     aporteAplicacoesIgor:pr.apliIgor,
+     aporteAplicacoesVitoria:pr.apliVitoria,
+     horizonteMeses:pr.horizonte
+   });
+   await saveRemoteWithConflictCheck();toast("Premissas salvas no OneDrive.");render();
+ }catch(e){data=before;handleError(e)}
+}
+function resetProjectionInputs(){
+ setProjectionInputs({rentAplic:.01,rentPrevFgts:.005,aportePrev:1100,fgtsIgor:1100,fgtsVitoria:590,apliIgor:5000,apliVitoria:3000,horizonte:18,meta:Number(data.settings?.metaPatrimonioSemFGTS)||489830.22});
+ toast("Premissas originais carregadas. Clique em Salvar para gravar.");
+}
+$("btnSaveProjection").onclick=saveProjectionSettings;
+$("btnResetProjection").onclick=resetProjectionInputs;
+
 function toast(msg){let e=$("toast");e.textContent=msg;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)}
 function setSyncStatus(text,cls=""){let e=$("syncPill");e.textContent=text;e.className="syncpill "+cls}
-function updateCloudUi(){$("loginToSave").classList.toggle("hidden",!!account&&!!remoteMeta);$("btnSalvar").disabled=!(account&&remoteMeta);$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?`Arquivo: dados.json\nID: ${remoteMeta.id||"—"}\neTag: ${remoteMeta.eTag||"—"}\nÚltima modificação: ${remoteMeta.lastModifiedDateTime||"—"}\nPasta: ${appRoot?.webUrl||"Apps / aplicativo"}`:"Ainda não conectado.";if(account&&remoteMeta)setSyncStatus("OneDrive conectado","online");else if(account)setSyncStatus("Conectado • sem arquivo","warn");else setSyncStatus("Modo demonstração")}
+function updateCloudUi(){$("loginToSave").classList.toggle("hidden",!!account&&!!remoteMeta);$("btnSalvar").disabled=!(account&&remoteMeta);if($("btnSaveProjection"))$("btnSaveProjection").disabled=!(account&&remoteMeta);$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?`Arquivo: dados.json\nID: ${remoteMeta.id||"—"}\neTag: ${remoteMeta.eTag||"—"}\nÚltima modificação: ${remoteMeta.lastModifiedDateTime||"—"}\nPasta: ${appRoot?.webUrl||"Apps / aplicativo"}`:"Ainda não conectado.";if(account&&remoteMeta)setSyncStatus("OneDrive conectado","online");else if(account)setSyncStatus("Conectado • sem arquivo","warn");else setSyncStatus("Modo demonstração")}
 function handleError(e){console.error(e);let msg=e?.message||String(e);if(msg.includes("CONFLICT_REMOTE")){toast("O arquivo mudou em outro aparelho. Sincronize e tente novamente.");setSyncStatus("Conflito detectado","warn")}else toast("Erro: "+msg.slice(0,130))}
 
 async function initMsal(){const cid=localStorage.getItem(CLIENT_KEY);$("clientIdInput").value=cid||"";$("redirectUriBox").textContent=REDIRECT_URI;if(location.protocol==="file:"){$("fileWarning").classList.remove("hidden");return}if(!cid)return;try{pca=new PublicClientApplication({auth:{clientId:cid,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI,postLogoutRedirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let result=await pca.handleRedirectPromise();account=result?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);if(account)await syncFromOneDrive()}catch(e){handleError(e)}}
