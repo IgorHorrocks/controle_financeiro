@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Controle Financeiro • Produção</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--text:#17202a;--muted:#64748b;--line:#e5e7eb;--blue:#2563eb;--orange:#f59e0b;--purple:#8b5cf6;--green:#059669;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--dark:#111827}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}button,input,select{font:inherit}
+header{position:sticky;top:0;z-index:30;background:#111827;color:#fff;padding:13px 14px;box-shadow:0 3px 12px #0002}
+.head{max-width:1250px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}.head h1{font-size:18px;margin:0}.syncpill{font-size:11px;padding:6px 9px;border-radius:999px;background:#374151;color:#e5e7eb}.syncpill.online{background:#064e3b;color:#d1fae5}.syncpill.warn{background:#78350f;color:#fef3c7}
+main{max-width:1250px;margin:auto;padding:13px 13px 94px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 2px 8px #0f172a0a}.section{margin-top:10px}
+.notice{padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.45;margin-bottom:10px}.notice.info{background:#eff6ff;border:1px solid #bfdbfe;color:#334155}.notice.warn{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12}.notice.ok{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:11px}.toolbar select,.toolbar input{border:1px solid #d8dee8;background:#fff;color:#17202a;border-radius:10px;padding:9px 11px;min-height:42px}
+.btn{border:0;border-radius:10px;padding:10px 13px;min-height:42px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer}.btn.secondary{background:#fff;color:#17202a;border:1px solid var(--line)}.btn.green{background:var(--green)}.btn.danger{background:#fff;color:var(--red);border:1px solid #fecaca}.btn:disabled{opacity:.5;cursor:not-allowed}
+.tabs{display:flex;gap:7px;overflow-x:auto;margin-bottom:11px;padding-bottom:2px;scrollbar-width:none}.tab{border:1px solid var(--line);background:#fff;color:#334155;border-radius:999px;padding:9px 12px;white-space:nowrap;font-weight:650;cursor:pointer}.tab.active{background:#111827;color:#fff;border-color:#111827}.hidden{display:none!important}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.kpi .label{font-size:12px;color:var(--muted)}.kpi .value{font-size:22px;font-weight:850;margin-top:5px;letter-spacing:-.03em}.kpi .sub{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35}.good{color:var(--green)!important}.bad{color:var(--red)!important}
+.title{font-size:14px;font-weight:850;margin-bottom:9px}.subtitle{font-size:11px;color:var(--muted);margin-top:-4px;margin-bottom:10px}.small{font-size:11px;color:var(--muted);line-height:1.45}
+canvas{display:block;width:100%;height:285px}.legend{display:flex;gap:9px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:690px}th,td{padding:9px;border-bottom:1px solid var(--line);font-size:12px;text-align:left}th{background:#fafafa;color:var(--muted);font-weight:750}.num{text-align:right;font-variant-numeric:tabular-nums}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}.field input,.field select{width:100%;border:1px solid #d8dee8;background:#fff;color:#17202a;border-radius:10px;padding:9px 11px;min-height:42px}.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.setupgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.step{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fafafa;font-size:12px;line-height:1.45}.step b{display:block;margin-bottom:4px}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px;word-break:break-all;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px}
+.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}.progress span{height:100%;display:block;background:var(--blue)}
+.assumptions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.assump{padding:10px;border:1px solid var(--line);border-radius:12px;background:#fafafa;text-align:center}.assump .a{font-size:10px;color:var(--muted)}.assump .v{font-size:12px;font-weight:800;margin-top:4px}
+.chip{display:inline-flex;border-radius:999px;padding:4px 8px;background:#eef2ff;color:#3730a3;font-size:10px;font-weight:750}
+.bottom-add{position:fixed;right:18px;bottom:18px;z-index:40;border:0;border-radius:999px;padding:13px 17px;background:#2563eb;color:#fff;font-weight:800;box-shadow:0 8px 25px #2563eb55;cursor:pointer}.toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:60}.toast.show{opacity:1}
+footer{text-align:center;color:var(--muted);font-size:10px;padding:22px}
+@media(max-width:920px){.grid4{grid-template-columns:repeat(2,1fr)}.grid3,.grid2,.setupgrid{grid-template-columns:1fr}.assumptions{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){main{padding:10px 10px 92px}.card{padding:12px;border-radius:14px}.grid4{gap:7px}.kpi .value{font-size:18px}.formgrid{grid-template-columns:1fr}.assumptions{grid-template-columns:repeat(2,1fr)}canvas{height:255px}.toolbar select{flex:1;min-width:110px}.bottom-add{right:12px;bottom:12px}}
+</style>
+</head>
+<body>
+<header><div class="head"><h1>Controle Financeiro</h1><div id="syncPill" class="syncpill">Modo demonstração</div></div></header>
+<main>
+<div class="notice ok"><b>Versão de produção:</b> este HTML não contém seus dados financeiros. Os valores só são carregados depois da autenticação no OneDrive.</div>
+<div id="fileWarning" class="notice warn hidden"><b>Para sincronizar com o OneDrive, este HTML precisa estar publicado em HTTPS.</b> Abrir por <code>file://</code> serve apenas para visualizar. Depois de publicar, cadastre a URL exibida na aba “Configuração” como Redirect URI do aplicativo Microsoft.</div>
+
+<div class="toolbar">
+<select id="mesSel"></select><select id="anoSel"></select>
+<button class="btn secondary" id="btnLatest">Período mais recente</button>
+<button class="btn green" id="btnSync">Sincronizar OneDrive</button>
+</div>
+
+<div class="tabs">
+<button class="tab active" data-tab="geral">Visão geral</button>
+<button class="tab" data-tab="gastos">Gastos</button>
+<button class="tab" data-tab="receitas">Receitas</button>
+<button class="tab" data-tab="parcelas">Parcelas</button>
+<button class="tab" data-tab="patrimonio">Patrimônio</button>
+<button class="tab" data-tab="novo">Novo lançamento</button>
+<button class="tab" data-tab="dados">Dados</button>
+<button class="tab" data-tab="config">Configuração</button>
+</div>
+
+<section id="geral">
+<div class="grid4">
+<div class="card kpi"><div class="label">Receitas do mês</div><div class="value" id="gReceita">—</div><div class="sub" id="gReceitaSub">—</div></div>
+<div class="card kpi"><div class="label">Despesas do mês</div><div class="value" id="gDespesa">—</div><div class="sub">Fixos + variáveis + parcelas</div></div>
+<div class="card kpi"><div class="label">Sobra do mês</div><div class="value" id="gSobra">—</div><div class="sub">Receitas − despesas</div></div>
+<div class="card kpi"><div class="label">Patrimônio</div><div class="value" id="gPat">—</div><div class="sub" id="gPatSub">Último fechamento</div></div>
+</div>
+<div class="grid4 section">
+<div class="card kpi"><div class="label">Média 3 meses • Fixos</div><div class="value" id="avgFix">—</div></div>
+<div class="card kpi"><div class="label">Média 3 meses • Variáveis</div><div class="value" id="avgVar">—</div></div>
+<div class="card kpi"><div class="label">Média 3 meses • Parcelas</div><div class="value" id="avgPar">—</div></div>
+<div class="card kpi"><div class="label">Média 3 meses • Sobra</div><div class="value" id="avgSob">—</div></div>
+</div>
+<div class="grid2 section">
+<div class="card"><div class="title">Consolidado — média dos últimos 3 meses</div><canvas id="chartConsolidado"></canvas></div>
+<div class="card"><div class="title">Receitas x despesas x sobra</div><canvas id="chartFluxo"></canvas></div>
+</div>
+</section>
+
+<section id="gastos" class="hidden">
+<div class="grid3">
+<div class="card"><div class="title">Fixos — média 3 meses</div><canvas id="chartFixos"></canvas></div>
+<div class="card"><div class="title">Variáveis — média 3 meses</div><canvas id="chartVariaveis"></canvas></div>
+<div class="card"><div class="title">Parcelas — média 3 meses</div><canvas id="chartParcelasCat"></canvas></div>
+</div>
+<div class="card section"><div class="title">Categorias consolidadas</div><div class="wrap"><table><thead><tr><th>Categoria</th><th class="num">Fixos</th><th class="num">Variáveis</th><th class="num">Parcelas</th><th class="num">Total médio</th></tr></thead><tbody id="gastosBody"></tbody></table></div></div>
+</section>
+
+<section id="receitas" class="hidden">
+<div class="grid4">
+<div class="card kpi"><div class="label">Igor • mês</div><div class="value" id="rIgor">—</div></div>
+<div class="card kpi"><div class="label">Vitória • mês</div><div class="value" id="rVitoria">—</div></div>
+<div class="card kpi"><div class="label">Igor • média 3 meses</div><div class="value" id="rIgor3">—</div></div>
+<div class="card kpi"><div class="label">Vitória • média 3 meses</div><div class="value" id="rVitoria3">—</div></div>
+</div>
+<div class="grid2 section">
+<div class="card"><div class="title">Receitas mensais</div><canvas id="chartReceitas"></canvas></div>
+<div class="card"><div class="title">Composição do mês</div><canvas id="chartReceitaDonut"></canvas><div id="receitaLegend" class="legend"></div></div>
+</div>
+</section>
+
+<section id="parcelas" class="hidden">
+<div class="grid4">
+<div class="card kpi"><div class="label">Parcelas do mês</div><div class="value" id="pMes">—</div></div>
+<div class="card kpi"><div class="label">Média 3 meses</div><div class="value" id="pMedia">—</div></div>
+<div class="card kpi"><div class="label">Próximos 6 meses</div><div class="value" id="p6">—</div></div>
+<div class="card kpi"><div class="label">Registros futuros</div><div class="value" id="pFutureCount">—</div></div>
+</div>
+<div class="card section"><div class="title">Projeção das parcelas</div><canvas id="chartParcelasFut"></canvas></div>
+</section>
+
+<section id="patrimonio" class="hidden">
+<div class="grid4">
+<div class="card kpi"><div class="label">Patrimônio total</div><div class="value" id="patTotal">—</div><div class="sub" id="patData">—</div></div>
+<div class="card kpi"><div class="label">Total sem FGTS</div><div class="value" id="patSemFgts">—</div></div>
+<div class="card kpi"><div class="label">Meta sem FGTS</div><div class="value" id="patMeta">—</div><div class="progress"><span id="metaProgress"></span></div></div>
+<div class="card kpi"><div class="label">Diferença para meta</div><div class="value" id="patGap">—</div></div>
+</div>
+<div class="grid2 section">
+<div class="card"><div class="title">Composição do patrimônio</div><canvas id="chartPatDonut"></canvas><div id="patLegend" class="legend"></div></div>
+<div class="card"><div class="title">Igor x Vitória</div><canvas id="chartOwners"></canvas></div>
+</div>
+<div class="card section"><div class="title">Evolução do patrimônio</div><canvas id="chartPatHistory"></canvas></div>
+<div class="card section">
+<div class="title">Premissas patrimoniais salvas no JSON</div>
+<div class="assumptions" id="assumptions"></div>
+</div>
+</section>
+
+<section id="novo" class="hidden">
+<div id="loginToSave" class="notice warn"><b>Conecte o OneDrive antes de lançar.</b> Nesta versão, novos lançamentos só são considerados salvos quando a nova versão do <code>dados.json</code> é confirmada no OneDrive.</div>
+<div class="card">
+<div class="title">Novo lançamento</div>
+<div class="subtitle">Ao tocar em Salvar, o dashboard verifica se o arquivo mudou em outro aparelho antes de gravar.</div>
+<div class="formgrid">
+<div class="field"><label>Tipo</label><select id="nTipo"><option value="variaveis">Gasto variável</option><option value="fixos">Gasto fixo</option><option value="parcelas">Compra parcelada</option><option value="entradas">Entrada / receita</option><option value="investimentos">Saldo patrimonial</option></select></div>
+<div class="field"><label>Data / primeiro mês</label><input id="nData" type="date"></div>
+<div class="field" id="fCategoria"><label>Categoria</label><select id="nCategoria"></select></div>
+<div class="field" id="fDescricao"><label>Descrição</label><input id="nDescricao" placeholder="Ex.: salário, reembolso"></div>
+<div class="field" id="fNome"><label>Pessoa</label><select id="nNome"><option>Igor</option><option>Vitória</option></select></div>
+<div class="field" id="fOwner"><label>Titular</label><select id="nOwner"><option>Igor</option><option>Vitória</option><option>Dinheiro</option></select></div>
+<div class="field" id="fConta"><label>Tipo de saldo</label><select id="nConta"><option>Conta Corrente</option><option>Previdência</option><option>FGTS</option><option>Aplicações</option></select></div>
+<div class="field"><label id="valorLabel">Valor (R$)</label><input id="nValor" inputmode="decimal" placeholder="0,00"></div>
+<div class="field" id="fNumParc"><label>Número de parcelas</label><input id="nNumParc" type="number" min="1" max="120" value="2"></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSalvar">Salvar no OneDrive</button></div>
+</div>
+</section>
+
+<section id="dados" class="hidden">
+<div class="grid4">
+<div class="card kpi"><div class="label">Fixos</div><div class="value" id="dFix">—</div><div class="sub">registros no JSON</div></div>
+<div class="card kpi"><div class="label">Variáveis</div><div class="value" id="dVar">—</div><div class="sub">registros no JSON</div></div>
+<div class="card kpi"><div class="label">Parcelas</div><div class="value" id="dPar">—</div><div class="sub">registros no JSON</div></div>
+<div class="card kpi"><div class="label">Entradas + patrimônio</div><div class="value" id="dOther">—</div><div class="sub">registros no JSON</div></div>
+</div>
+<div class="card section">
+<div class="title">Backup / migração</div>
+<div class="form-actions">
+<button class="btn secondary" id="btnDownloadJson">Baixar dados.json atual</button>
+<label class="btn secondary" style="display:inline-flex;align-items:center">Importar dados.json<input id="jsonImport" type="file" accept=".json,application/json" style="display:none"></label>
+<button class="btn green" id="btnUploadCurrent">Enviar versão atual ao OneDrive</button>
+</div>
+<div class="small" style="margin-top:9px">Na primeira configuração, importe o arquivo privado <b>dados_inicial_privado.json</b>. Ele permanece fora do site e só é enviado ao seu OneDrive quando você confirmar.</div>
+</div>
+<div class="card section"><div class="title">Registros do período</div><div class="wrap"><table><thead><tr><th>Tipo</th><th>Data</th><th>Descrição</th><th>Detalhe</th><th class="num">Valor</th></tr></thead><tbody id="dadosBody"></tbody></table></div></div>
+</section>
+
+<section id="config" class="hidden">
+<div class="notice info"><b>Esta configuração não usa Client Secret.</b> O navegador usa autenticação de SPA com PKCE. O único identificador colocado aqui é o <b>Application (client) ID</b>, que não é uma senha.</div>
+<div class="setupgrid">
+<div class="card">
+<div class="title">1. Publicar o HTML</div>
+<div class="small">Hospede este arquivo em um endereço HTTPS estável (por exemplo, GitHub Pages, Netlify ou Cloudflare Pages). O endereço final precisa ser cadastrado exatamente no Microsoft Entra.</div>
+<div style="margin-top:9px" class="field"><label>Redirect URI desta página</label><div class="mono" id="redirectUriBox"></div></div>
+</div>
+<div class="card">
+<div class="title">2. Registrar o aplicativo Microsoft</div>
+<div class="small">No Microsoft Entra, crie um registro de aplicativo que aceite contas Microsoft pessoais. Em <b>Authentication</b>, adicione a URL acima como plataforma <b>Single-page application (SPA)</b>. Em <b>API permissions</b>, adicione a permissão delegada <b>Files.ReadWrite.AppFolder</b>.</div>
+</div>
+<div class="card">
+<div class="title">3. Informar o Client ID</div>
+<div class="field"><label>Application (client) ID</label><input id="clientIdInput" placeholder="00000000-0000-0000-0000-000000000000"></div>
+<div class="form-actions"><button class="btn" id="btnSaveClient">Salvar Client ID</button></div>
+</div>
+<div class="card">
+<div class="title">4. Conectar o OneDrive</div>
+<div id="accountInfo" class="small">Nenhuma conta conectada.</div>
+<div class="form-actions"><button class="btn green" id="btnLogin">Entrar com Microsoft</button><button class="btn secondary" id="btnLogout">Sair</button></div>
+</div>
+</div>
+<div class="card section">
+<div class="title">Onde o arquivo fica</div>
+<div class="small">O dashboard usa a pasta especial do aplicativo no OneDrive. O caminho aparece como <b>Apps / nome-do-aplicativo / dados.json</b>. O aplicativo recebe permissão apenas para essa pasta.</div>
+<div id="remoteInfo" class="mono" style="margin-top:9px">Ainda não conectado.</div>
+</div>
+<div class="card section">
+<div class="title">Uso em outro celular</div>
+<div class="small">Abra o mesmo endereço HTTPS, entre com a <b>mesma conta Microsoft</b> e toque em <b>Sincronizar OneDrive</b>. O dashboard baixa o mesmo <code>dados.json</code>. Esta primeira versão não compartilha automaticamente a base entre duas contas Microsoft diferentes.</div>
+</div>
+</section>
+</main>
+<button class="bottom-add" id="fab">+ Lançar</button>
+<div class="toast" id="toast"></div>
+<footer>HTML público sem dados • Fonte privada: OneDrive / App Folder / dados.json</footer>
+
+<script type="module">
+import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
+
+const INITIAL_DATA={"schemaVersion":1,"revision":0,"updatedAt":null,"settings":{"moeda":"BRL"},"fixos":[],"variaveis":[],"parcelas":[],"entradas":[],"investimentos":[]};
+const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const COLORS=["#2563eb","#f59e0b","#8b5cf6","#059669","#dc2626","#0891b2","#64748b","#db2777","#84cc16","#0f766e","#9333ea"];
+const SCOPES=["Files.ReadWrite.AppFolder"];
+const CLIENT_KEY="financeOneDriveClientIdV1";
+const $=id=>document.getElementById(id);
+let data=structuredClone(INITIAL_DATA);
+let pca=null, account=null, appRoot=null, remoteMeta=null, syncTimer=null;
+const REDIRECT_URI=location.origin+location.pathname;
+
+const brl=v=>(Number(v)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const sum=a=>a.reduce((s,x)=>s+(Number(x.valor)||0),0);
+const keyYM=(y,m)=>y*100+m;
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function objSum(o){return Object.values(o).reduce((a,b)=>a+Number(b||0),0)}
+function parseMoney(s){s=String(s||"").trim().replace(/\s/g,"").replace(/R\$/g,"");if(s.includes(","))s=s.replace(/\./g,"").replace(",",".");return parseFloat(s)||0}
+function shift(y,m,k){let d=new Date(y,m-1+k,1);return{y:d.getFullYear(),m:d.getMonth()+1}}
+function rowsMonth(arr,y,m){return arr.filter(x=>x.ano===y&&x.mes===m)}
+function sumMonth(arr,y,m){return sum(rowsMonth(arr,y,m))}
+function avg3Total(arr,y,m){let s=0;for(let k=-2;k<=0;k++){let t=shift(y,m,k);s+=sumMonth(arr,t.y,t.m)}return s/3}
+function avg3Cats(arr,y,m){let o={};for(let k=-2;k<=0;k++){let t=shift(y,m,k);rowsMonth(arr,t.y,t.m).forEach(x=>{let c=x.categoria||x.descricao||"Outros";o[c]=(o[c]||0)+(Number(x.valor)||0)/3})}return o}
+function income(y,m,nome){return sum(rowsMonth(data.entradas,y,m).filter(x=>x.pessoa===nome))}
+function avg3Income(y,m,nome){let s=0;for(let k=-2;k<=0;k++){let t=shift(y,m,k);s+=income(t.y,t.m,nome)}return s/3}
+function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
+
+function periods(){let a=[...data.fixos,...data.variaveis,...data.entradas];let map=new Map();a.forEach(x=>map.set(keyYM(x.ano,x.mes),{ano:x.ano,mes:x.mes}));return [...map.values()].sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes))}
+function fillFilters(keep=true){let oy=+$("anoSel").value,om=+$("mesSel").value,ps=periods(),ys=[...new Set(ps.map(x=>x.ano))];$("anoSel").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("mesSel").innerHTML=MESES.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");if(keep&&ys.includes(oy)){$("anoSel").value=oy;$("mesSel").value=om}else{let p=ps.at(-1)||{ano:2026,mes:8};$("anoSel").value=p.ano;$("mesSel").value=p.mes}}
+function selected(){return{y:+$("anoSel").value,m:+$("mesSel").value}}
+function latest(){let p=periods().at(-1);if(p){$("anoSel").value=p.ano;$("mesSel").value=p.mes;render()}}
+function refreshCategories(){
+ const defaults=["Alimentação","Casa / Bens Pessoais","Saúde","Aplicação","Assinatura","Transporte","Educação","Lazer","Viagem","Vestuário / Maquiagem","Trabalho"];
+ const found=[...data.fixos,...data.variaveis,...data.parcelas].map(x=>x.categoria||x.descricao).filter(Boolean);
+ const cats=[...new Set([...defaults,...found])].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+ const current=$("nCategoria").value;
+ $("nCategoria").innerHTML=cats.map(x=>`<option>${esc(x)}</option>`).join("");
+ if(cats.includes(current))$("nCategoria").value=current;
+}
+
+function currentPat(y,m){let c=data.investimentos.filter(x=>x.natureza==="Componente"&&keyYM(x.ano,x.mes)<=keyYM(y,m));if(!c.length)return{total:0,sem:0,igor:0,vitoria:0,rows:[],y:null,m:null};let k=Math.max(...c.map(x=>keyYM(x.ano,x.mes))),yy=Math.floor(k/100),mm=k%100,r=c.filter(x=>x.ano===yy&&x.mes===mm),total=sum(r),fgts=sum(r.filter(x=>/FGTS/i.test(x.descricao)));return{total,sem:total-fgts,igor:sum(r.filter(x=>x.descricao.startsWith("Igor:"))),vitoria:sum(r.filter(x=>x.descricao.startsWith("Vitória:"))),rows:r,y:yy,m:mm}}
+function history(){let h=data.investimentos.filter(x=>x.natureza==="Total histórico").sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes));let keys=new Set(h.map(x=>keyYM(x.ano,x.mes)));let comp=[...new Set(data.investimentos.filter(x=>x.natureza==="Componente").map(x=>keyYM(x.ano,x.mes)))];comp.filter(k=>!keys.has(k)).forEach(k=>{let y=Math.floor(k/100),m=k%100,r=data.investimentos.filter(x=>x.natureza==="Componente"&&x.ano===y&&x.mes===m);h.push({ano:y,mes:m,valor:sum(r)})});return h.sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes))}
+
+function setupCanvas(id,h=285){let c=$(id),r=c.getBoundingClientRect();if(r.width<20)return null;let d=window.devicePixelRatio||1;c.width=r.width*d;c.height=h*d;c.style.height=h+"px";let ctx=c.getContext("2d");ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,r.width,h);return[ctx,r.width,h]}
+function noData(ctx,w,h){ctx.fillStyle="#94a3b8";ctx.font="12px system-ui";ctx.textAlign="center";ctx.fillText("Sem dados",w/2,h/2)}
+function drawBar(id,labels,vals,colors=COLORS){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z;if(!vals.length||Math.max(...vals.map(Math.abs),0)===0){noData(ctx,w,h);return}let max=Math.max(...vals,1),L=44,R=12,T=24,B=58,pw=w-L-R,ph=h-T-B,gap=pw/vals.length,bw=Math.min(54,gap*.62);ctx.font="10px system-ui";ctx.textAlign="center";vals.forEach((v,i)=>{let bh=ph*v/max,x=L+i*gap+gap/2-bw/2,y=T+ph-bh;ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x,y,bw,bh);ctx.fillStyle="#475569";ctx.fillText(brl(v).replace(",00",""),x+bw/2,Math.max(11,y-6));ctx.save();ctx.translate(x+bw/2,h-9);ctx.rotate(-.42);ctx.fillStyle="#64748b";ctx.fillText(labels[i],0,0);ctx.restore()})}
+function drawHBar(id,obj){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);if(!es.length){noData(ctx,w,h);return}let max=Math.max(...es.map(x=>x[1])),L=Math.min(145,w*.43),R=56,T=10,B=10,ph=(h-T-B)/es.length,bh=Math.min(20,ph*.58);ctx.font="10px system-ui";es.forEach(([k,v],i)=>{let y=T+i*ph+(ph-bh)/2;ctx.textAlign="right";ctx.fillStyle="#475569";ctx.fillText(k.length>23?k.slice(0,21)+"…":k,L-7,y+bh*.75);ctx.fillStyle=COLORS[i%COLORS.length];ctx.fillRect(L,y,(w-L-R)*v/max,bh);ctx.textAlign="left";ctx.fillStyle="#64748b";ctx.fillText(brl(v).replace(",00",""),L+(w-L-R)*v/max+4,y+bh*.75)})}
+function drawDonut(id,obj,legendId){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),total=es.reduce((s,x)=>s+x[1],0);if(!total){noData(ctx,w,h);if(legendId)$(legendId).innerHTML="";return}let cx=w/2,cy=h/2,r=Math.min(w,h)*.32,a=-Math.PI/2;es.forEach(([k,v],i)=>{let b=a+Math.PI*2*v/total;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,b);ctx.closePath();ctx.fillStyle=COLORS[i%COLORS.length];ctx.fill();a=b});ctx.globalCompositeOperation="destination-out";ctx.beginPath();ctx.arc(cx,cy,r*.56,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation="source-over";ctx.fillStyle="#111827";ctx.font="800 14px system-ui";ctx.textAlign="center";ctx.fillText(brl(total),cx,cy+5);if(legendId)$(legendId).innerHTML=es.map(([k,v],i)=>`<span><i class="dot" style="background:${COLORS[i%COLORS.length]}"></i>${esc(k)} (${(v/total*100).toFixed(0)}%)</span>`).join("")}
+function drawLines(id,labels,series){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,all=series.flatMap(s=>s.vals).filter(Number.isFinite);if(!all.length){noData(ctx,w,h);return}let min=Math.min(0,...all),max=Math.max(1,...all);if(max===min)max=min+1;let L=52,R=12,T=17,B=35,pw=w-L-R,ph=h-T-B;ctx.font="9px system-ui";ctx.strokeStyle="#e5e7eb";ctx.fillStyle="#64748b";ctx.textAlign="right";for(let i=0;i<=4;i++){let val=max-(max-min)*i/4,y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(Math.round(val).toLocaleString("pt-BR"),L-5,y+3)}let X=i=>labels.length===1?L+pw/2:L+pw*i/(labels.length-1),Y=v=>T+(max-v)/(max-min)*ph;series.forEach((s,si)=>{ctx.strokeStyle=s.color||COLORS[si];ctx.lineWidth=2.2;ctx.beginPath();s.vals.forEach((v,i)=>{let x=X(i),y=Y(v);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()});ctx.fillStyle="#64748b";ctx.textAlign="center";labels.forEach((l,i)=>{if(labels.length<=12||i%Math.ceil(labels.length/10)===0)ctx.fillText(l,X(i),h-10)})}
+function drawHistory(){let h=history(),z=setupCanvas("chartPatHistory",300);if(!z)return;let[ctx,w,hh]=z;if(!h.length){noData(ctx,w,hh);return}let labels=h.map(x=>`${String(x.mes).padStart(2,"0")}/${String(x.ano).slice(2)}`),vals=h.map(x=>x.valor);drawLines("chartPatHistory",labels,[{vals,color:"#2563eb"}])}
+
+function renderGeneral(){let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória"),rec=ig+vi,fix=sumMonth(data.fixos,y,m),vr=sumMonth(data.variaveis,y,m),par=sumMonth(data.parcelas,y,m),desp=fix+vr+par,sobra=rec-desp,p=currentPat(y,m),af=avg3Total(data.fixos,y,m),av=avg3Total(data.variaveis,y,m),ap=avg3Total(data.parcelas,y,m),ai=avg3Income(y,m,"Igor"),avt=avg3Income(y,m,"Vitória"),as=ai+avt-af-av-ap;$("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSobra").textContent=brl(sobra);$("gSobra").className="value "+(sobra>=0?"good":"bad");$("gPat").textContent=brl(p.total);$("gPatSub").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";$("avgFix").textContent=brl(af);$("avgVar").textContent=brl(av);$("avgPar").textContent=brl(ap);$("avgSob").textContent=brl(as);$("avgSob").className="value "+(as>=0?"good":"bad");drawBar("chartConsolidado",["Variáveis","Fixos","Parcelas","Igor","Vitória"],[av,af,ap,ai,avt],["#f59e0b","#2563eb","#8b5cf6","#059669","#0891b2"]);let rr=[],dd=[],ss=[];for(let mm=1;mm<=12;mm++){let r=income(y,mm,"Igor")+income(y,mm,"Vitória"),d=sumMonth(data.fixos,y,mm)+sumMonth(data.variaveis,y,mm)+sumMonth(data.parcelas,y,mm);rr.push(r);dd.push(d);ss.push(r-d)}drawLines("chartFluxo",MESES.map(x=>x.slice(0,3)),[{vals:rr,color:"#059669"},{vals:dd,color:"#dc2626"},{vals:ss,color:"#2563eb"}])}
+function renderGastos(){let{y,m}=selected(),f=avg3Cats(data.fixos,y,m),v=avg3Cats(data.variaveis,y,m),p=avg3Cats(data.parcelas,y,m);drawHBar("chartFixos",f);drawHBar("chartVariaveis",v);drawHBar("chartParcelasCat",p);let ks=[...new Set([...Object.keys(f),...Object.keys(v),...Object.keys(p)])].sort((a,b)=>((f[b]||0)+(v[b]||0)+(p[b]||0))-((f[a]||0)+(v[a]||0)+(p[a]||0)));$("gastosBody").innerHTML=ks.map(k=>`<tr><td>${esc(k)}</td><td class="num">${brl(f[k]||0)}</td><td class="num">${brl(v[k]||0)}</td><td class="num">${brl(p[k]||0)}</td><td class="num"><b>${brl((f[k]||0)+(v[k]||0)+(p[k]||0))}</b></td></tr>`).join("")}
+function renderReceitas(){let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória");$("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rIgor3").textContent=brl(avg3Income(y,m,"Igor"));$("rVitoria3").textContent=brl(avg3Income(y,m,"Vitória"));let a=[],b=[];for(let mm=1;mm<=12;mm++){a.push(income(y,mm,"Igor"));b.push(income(y,mm,"Vitória"))}drawLines("chartReceitas",MESES.map(x=>x.slice(0,3)),[{vals:a,color:"#2563eb"},{vals:b,color:"#db2777"}]);drawDonut("chartReceitaDonut",{Igor:ig,Vitória:vi},"receitaLegend")}
+function renderParcelas(){let{y,m}=selected(),vals=[],labs=[];for(let k=0;k<12;k++){let t=shift(y,m,k);labs.push(`${MESES[t.m-1].slice(0,3)}/${String(t.y).slice(2)}`);vals.push(sumMonth(data.parcelas,t.y,t.m))}$("pMes").textContent=brl(vals[0]);$("pMedia").textContent=brl(avg3Total(data.parcelas,y,m));$("p6").textContent=brl(vals.slice(0,6).reduce((a,b)=>a+b,0));$("pFutureCount").textContent=data.parcelas.filter(x=>keyYM(x.ano,x.mes)>keyYM(y,m)&&Number(x.valor)>0).length.toLocaleString("pt-BR");drawBar("chartParcelasFut",labs,vals,Array(12).fill("#8b5cf6"))}
+function renderPat(){let{y,m}=selected(),p=currentPat(y,m),meta=data.settings?.metaPatrimonioSemFGTS||0,gap=p.sem-meta;$("patTotal").textContent=brl(p.total);$("patSemFgts").textContent=brl(p.sem);$("patMeta").textContent=brl(meta);$("patGap").textContent=brl(gap);$("patGap").className="value "+(gap>=0?"good":"bad");$("metaProgress").style.width=(meta?Math.min(100,p.sem/meta*100):0)+"%";$("patData").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";let by={};p.rows.forEach(x=>by[x.descricao]=(by[x.descricao]||0)+Number(x.valor||0));drawDonut("chartPatDonut",by,"patLegend");drawBar("chartOwners",["Igor","Vitória"],[p.igor,p.vitoria],["#2563eb","#db2777"]);drawHistory();let pr=data.settings?.projecao||{};$("assumptions").innerHTML=[["Rent. mensal",((pr.rentabilidadeMensal||0)*100).toFixed(2).replace(".",",")+"%"],["Previdência Igor",brl(pr.aportePrevidenciaIgor)],["FGTS Igor",brl(pr.aporteFGTSIgor)],["FGTS Vitória",brl(pr.aporteFGTSVitoria)],["Aplicações Igor",brl(pr.aporteAplicacoesIgor)],["Aplicações Vitória",brl(pr.aporteAplicacoesVitoria)]].map(x=>`<div class="assump"><div class="a">${x[0]}</div><div class="v">${x[1]}</div></div>`).join("")}
+function renderData(){let{y,m}=selected(),rows=[];[["Fixo","fixos"],["Variável","variaveis"],["Parcela","parcelas"],["Entrada","entradas"],["Patrimônio","investimentos"]].forEach(([tipo,k])=>rowsMonth(data[k],y,m).filter(x=>k!=="investimentos"||x.natureza==="Componente").forEach(x=>rows.push({...x,tipo})));$("dFix").textContent=data.fixos.length.toLocaleString("pt-BR");$("dVar").textContent=data.variaveis.length.toLocaleString("pt-BR");$("dPar").textContent=data.parcelas.length.toLocaleString("pt-BR");$("dOther").textContent=(data.entradas.length+data.investimentos.length).toLocaleString("pt-BR");$("dadosBody").innerHTML=rows.map(x=>`<tr><td><span class="chip">${x.tipo}</span></td><td>${x.data}</td><td>${esc(x.descricao)}</td><td>${esc(x.pessoa||x.natureza||"")}</td><td class="num">${brl(x.valor)}</td></tr>`).join("")}
+function render(){renderGeneral();renderGastos();renderReceitas();renderParcelas();renderPat();renderData();updateCloudUi()}
+function showTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["geral","gastos","receitas","parcelas","patrimonio","novo","dados","config"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id==="novo")updateForm();setTimeout(render,35)}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));$("fab").onclick=()=>showTab("novo");
+
+function updateForm(){let t=$("nTipo").value;$("fCategoria").classList.toggle("hidden",!["fixos","variaveis","parcelas"].includes(t));$("fDescricao").classList.toggle("hidden",t!=="entradas");$("fNome").classList.toggle("hidden",t!=="entradas");$("fOwner").classList.toggle("hidden",t!=="investimentos");$("fConta").classList.toggle("hidden",t!=="investimentos");$("fNumParc").classList.toggle("hidden",t!=="parcelas");$("valorLabel").textContent=t==="parcelas"?"Valor total da compra (R$)":t==="investimentos"?"Saldo no mês (R$)":"Valor (R$)"}
+$("nTipo").onchange=updateForm;
+function futureMonth(iso,k){let[y,m]=iso.split("-").map(Number),x=new Date(y,m-1+k,1);return{y:x.getFullYear(),m:x.getMonth()+1,br:`01/${String(x.getMonth()+1).padStart(2,"0")}/${x.getFullYear()}`}}
+function clonePreviousSnapshot(y,m){if(data.investimentos.some(x=>x.natureza==="Componente"&&x.ano===y&&x.mes===m))return;let prior=data.investimentos.filter(x=>x.natureza==="Componente"&&keyYM(x.ano,x.mes)<keyYM(y,m));if(!prior.length)return;let max=Math.max(...prior.map(x=>keyYM(x.ano,x.mes))),py=Math.floor(max/100),pm=max%100;prior.filter(x=>x.ano===py&&x.mes===pm).forEach(x=>data.investimentos.push({...x,id:uid(),data:`01/${String(m).padStart(2,"0")}/${y}`,ano:y,mes:m,origem:"copia-mes-anterior"}))}
+
+async function saveNew(){if(!account||!remoteMeta){toast("Conecte e sincronize o OneDrive primeiro.");showTab("config");return}let t=$("nTipo").value,iso=$("nData").value,v=parseMoney($("nValor").value);if(!iso||!$("nValor").value.trim()){toast("Preencha data e valor.");return}let before=structuredClone(data),[y,m,d]=iso.split("-").map(Number),br=`${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}/${y}`;try{if(["fixos","variaveis"].includes(t)){data[t].push({id:uid(),data:br,ano:y,mes:m,descricao:$("nCategoria").value,categoria:$("nCategoria").value,valor:v,tipo:t==="fixos"?"fixo":"variavel",origem:"app"})}else if(t==="entradas"){data.entradas.push({id:uid(),data:br,ano:y,mes:m,descricao:$("nDescricao").value.trim()||"Entrada",pessoa:$("nNome").value,valor:v,tipo:"entrada",origem:"app"})}else if(t==="parcelas"){let n=Math.max(1,+$("nNumParc").value||1),c=Math.round(v*100),b=Math.floor(c/n),rest=c-b*n;for(let k=0;k<n;k++){let z=futureMonth(iso,k);data.parcelas.push({id:uid(),data:z.br,ano:z.y,mes:z.m,descricao:$("nCategoria").value,categoria:$("nCategoria").value,valor:(b+(k===n-1?rest:0))/100,tipo:"parcela",origem:"app",grupoParcelas:br+"-"+Date.now(),parcela:k+1,totalParcelas:n})}}else{clonePreviousSnapshot(y,m);let owner=$("nOwner").value,conta=$("nConta").value,desc=owner==="Dinheiro"?"Dinheiro":`${owner}: ${conta}`;data.investimentos=data.investimentos.filter(x=>!(x.natureza==="Componente"&&x.ano===y&&x.mes===m&&x.descricao===desc));data.investimentos.push({id:uid(),data:`01/${String(m).padStart(2,"0")}/${y}`,ano:y,mes:m,descricao:desc,valor:v,natureza:"Componente",tipo:"investimento",origem:"app"})}await saveRemoteWithConflictCheck();fillFilters(true);$("anoSel").value=y;$("mesSel").value=m;$("nValor").value="";toast("Salvo no OneDrive.");render()}catch(e){data=before;handleError(e)}}
+$("btnSalvar").onclick=saveNew;
+
+function toast(msg){let e=$("toast");e.textContent=msg;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)}
+function setSyncStatus(text,cls=""){let e=$("syncPill");e.textContent=text;e.className="syncpill "+cls}
+function updateCloudUi(){$("loginToSave").classList.toggle("hidden",!!account&&!!remoteMeta);$("btnSalvar").disabled=!(account&&remoteMeta);$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?`Arquivo: dados.json\nID: ${remoteMeta.id||"—"}\neTag: ${remoteMeta.eTag||"—"}\nÚltima modificação: ${remoteMeta.lastModifiedDateTime||"—"}\nPasta: ${appRoot?.webUrl||"Apps / aplicativo"}`:"Ainda não conectado.";if(account&&remoteMeta)setSyncStatus("OneDrive conectado","online");else if(account)setSyncStatus("Conectado • sem arquivo","warn");else setSyncStatus("Modo demonstração")}
+function handleError(e){console.error(e);let msg=e?.message||String(e);if(msg.includes("CONFLICT_REMOTE")){toast("O arquivo mudou em outro aparelho. Sincronize e tente novamente.");setSyncStatus("Conflito detectado","warn")}else toast("Erro: "+msg.slice(0,130))}
+
+async function initMsal(){const cid=localStorage.getItem(CLIENT_KEY);$("clientIdInput").value=cid||"";$("redirectUriBox").textContent=REDIRECT_URI;if(location.protocol==="file:"){$("fileWarning").classList.remove("hidden");return}if(!cid)return;try{pca=new PublicClientApplication({auth:{clientId:cid,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI,postLogoutRedirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let result=await pca.handleRedirectPromise();account=result?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);if(account)await syncFromOneDrive()}catch(e){handleError(e)}}
+async function token(){if(!pca||!account)throw new Error("Faça login primeiro.");try{return(await pca.acquireTokenSilent({scopes:SCOPES,account})).accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});throw new Error("Redirecionando para autenticação.")}throw e}}
+async function graph(path,opt={}){let t=await token(),headers={Authorization:`Bearer ${t}`,...(opt.headers||{})},r=await fetch("https://graph.microsoft.com/v1.0"+path,{...opt,headers});return r}
+async function ensureAppRoot(){let r=await graph("/me/drive/special/approot");if(!r.ok)throw new Error("Não foi possível acessar a pasta do aplicativo ("+r.status+").");appRoot=await r.json();return appRoot}
+async function getMeta(){await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/dados.json`);if(r.status===404)return null;if(!r.ok)throw new Error("Erro ao ler metadados do dados.json ("+r.status+").");return await r.json()}
+async function uploadJson(obj){await ensureAppRoot();obj.updatedAt=new Date().toISOString();obj.revision=(Number(obj.revision)||0)+1;let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/dados.json:/content`,{method:"PUT",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify(obj,null,2)});if(!r.ok)throw new Error("Falha ao gravar dados.json no OneDrive ("+r.status+").");remoteMeta=await r.json();return remoteMeta}
+async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus("dados.json ainda não existe","warn");$("remoteInfo").textContent="A pasta do aplicativo está conectada, mas ainda não existe dados.json.\nVá à aba Dados, importe o arquivo privado dados_inicial_privado.json e clique em “Enviar versão atual ao OneDrive”.";updateCloudUi();toast("Primeira configuração: importe o JSON privado na aba Dados.");return}appRoot=appRoot||await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error("Falha ao baixar dados.json ("+r.status+").");let txt=await r.text(),obj=JSON.parse(txt);if(!obj.schemaVersion||!Array.isArray(obj.fixos)||!Array.isArray(obj.entradas))throw new Error("dados.json não tem o formato esperado.");data=obj;remoteMeta=meta;fillFilters(true);refreshCategories();render();setSyncStatus("Sincronizado","online");toast("Dados atualizados do OneDrive.")}
+async function saveRemoteWithConflictCheck(){let current=await getMeta();if(current&&remoteMeta?.eTag&&current.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson(data);setSyncStatus("Salvo agora","online")}
+async function checkRemoteChange(){if(!account||document.hidden)return;try{let m=await getMeta();if(m&&remoteMeta?.eTag&&m.eTag!==remoteMeta.eTag){setSyncStatus("Há atualização online","warn");toast("Há uma versão mais nova no OneDrive. Toque em Sincronizar.")}}catch(e){console.warn(e)}}
+
+$("btnSaveClient").onclick=()=>{let v=$("clientIdInput").value.trim();if(!/^[0-9a-fA-F-]{36}$/.test(v)){toast("Client ID inválido.");return}localStorage.setItem(CLIENT_KEY,v);toast("Client ID salvo. Recarregando…");setTimeout(()=>location.reload(),600)}
+$("btnLogin").onclick=async()=>{try{if(location.protocol==="file:")throw new Error("Publique o HTML em HTTPS antes do login.");if(!pca)throw new Error("Salve o Client ID primeiro.");await pca.loginRedirect({scopes:SCOPES,redirectUri:REDIRECT_URI})}catch(e){handleError(e)}}
+$("btnLogout").onclick=async()=>{try{if(pca&&account)await pca.logoutRedirect({account,postLogoutRedirectUri:REDIRECT_URI})}catch(e){handleError(e)}}
+$("btnSync").onclick=()=>syncFromOneDrive().catch(handleError);
+$("btnUploadCurrent").onclick=async()=>{try{if(!account)throw new Error("Conecte o OneDrive primeiro.");if(!Array.isArray(data.fixos)||!Array.isArray(data.entradas))throw new Error("Importe um dados.json válido primeiro.");let m=await getMeta();if(m&&remoteMeta?.eTag&&m.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson(data);toast("dados.json salvo no OneDrive. Esta passa a ser a fonte oficial.");render()}catch(e){handleError(e)}}
+$("btnDownloadJson").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="dados.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+$("jsonImport").onchange=async()=>{let f=$("jsonImport").files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(!Array.isArray(obj.fixos)||!Array.isArray(obj.entradas))throw new Error("Formato incompatível.");data=obj;fillFilters(false);refreshCategories();render();toast("JSON privado importado em memória. Agora confirme o envio ao OneDrive.")}catch(e){handleError(e)}}
+
+$("btnLatest").onclick=latest;$("mesSel").onchange=render;$("anoSel").onchange=render;window.addEventListener("resize",()=>setTimeout(render,60));
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkRemoteChange()});
+
+fillFilters(false);
+refreshCategories();
+let td=new Date();$("nData").value=`${td.getFullYear()}-${String(td.getMonth()+1).padStart(2,"0")}-${String(td.getDate()).padStart(2,"0")}`;
+updateForm();render();await initMsal();render();
+syncTimer=setInterval(checkRemoteChange,60000);
+</script>
+</body>
+</html>
