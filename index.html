@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.5</title>
+<title>Controle Financeiro • v8.6</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -59,6 +59,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card kpi"><label>Sem FGTS</label><strong id="gSemFgts">—</strong><small>Último fechamento disponível</small></div>
   <div class="card kpi"><label>Meta sem FGTS</label><strong id="gMeta">—</strong><small id="gGap">—</small></div>
  </div>
+
  <div class="card chart-card section">
   <div class="chart-head">
    <div><h3>Consolida resultados</h3><p>Receitas e despesas consolidadas em linhas; a sobra mensal aparece como coluna translúcida ao fundo.</p></div>
@@ -66,11 +67,13 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   </div>
   <div class="chart-wrap tall"><canvas id="chartConsolidado"></canvas></div>
  </div>
+
  <div class="grid3 section">
   <div class="card chart-card"><div class="chart-head"><div><h3>Gastos fixos</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartFixosOverview"></canvas></div></div>
   <div class="card chart-card"><div class="chart-head"><div><h3>Gastos variáveis</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisOverview"></canvas></div></div>
   <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas</h3><p>Comprometimento mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartParcelasOverview"></canvas></div></div>
  </div>
+
  <div class="card chart-card section">
   <div class="chart-head">
    <div><h3>Alocação de capital</h3><p>Evolução dos componentes do patrimônio e do total.</p></div>
@@ -78,13 +81,6 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   </div>
   <div class="chart-wrap tall"><canvas id="chartCapital"></canvas></div>
  </div>
- <div class="card chart-card section">
- <div class="chart-head">
-  <div><h3>Histórico de investimentos</h3><p>Evolução dos componentes patrimoniais no período selecionado. Dinheiro é incorporado à série Vitória: Conta Corrente.</p></div>
-  <span class="pill">Histórico real</span>
- </div>
- <div class="chart-wrap tall"><canvas id="chartInvestOverview"></canvas></div>
-</div></div>
 </section>
 
 <section id="despesas" class="hidden">
@@ -165,7 +161,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
  <div class="setupgrid section"><div class="step"><b>Redirect URI da SPA</b><div id="redirectUriBox" class="mono"></div></div><div class="step"><b>Permissão Microsoft Graph</b>Delegated permission: <b>Files.ReadWrite.AppFolder</b>. Não use Client Secret no HTML.</div></div>
 </section>
-<footer>Dashboard v8 • HTML público sem dados financeiros • Base privada única: dados_financeiros.json</footer>
+<footer>Dashboard v8.6 • HTML público sem dados financeiros • Base privada única: dados_financeiros.json</footer>
 </main>
 </div></div>
 <div id="toast" class="toast"></div>
@@ -295,7 +291,7 @@ function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=income
  ];
  makeChart("chartConsolidado",{type:"bar",data:{labels,datasets:ds},options:chartOpts()});
  let histMonths=r.months,compNames=componentDefs().map(x=>x.descricao),capitalDs=compNames.map((c,i)=>({type:"bar",label:c,data:histMonths.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):0}),backgroundColor:COLORS[i%COLORS.length],stack:"capital"}));capitalDs.push(lineDataset("Total Geral",histMonths.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#172033",{spanGaps:true,borderWidth:2.5}));makeChart("chartCapital",{type:"bar",data:{labels:labels,datasets:capitalDs},options:chartOpts({stacked:true})});
- stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);renderInvestmentHistoryChart("chartInvestOverview",r);}
+ stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);}
 
 function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
 function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
@@ -386,7 +382,24 @@ function renderJsonInfo(){if(!data)return;$("jsonInfo").innerHTML=`<b>Base carre
 function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();renderPatrimony();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
 
 const titles={geral:["Visão Geral","Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”."],despesas:["Despesas","Gastos fixos e variáveis com filtros, histórico e lançamentos recentes."],receitas:["Receitas","Entradas por pessoa, evolução mensal e últimos lançamentos."],parcelas:["Parcelas","Compromissos atuais e futuros, por categoria."],investimentos:["Investimentos","Histórico completo dos componentes, saldos atuais e composição."],patrimonio:["Patrimônio","Projeção primeiro; evolução por componentes depois, sem linha de meta."],projecao:["Projeção Patrimonial","Premissas personalizáveis e comparação com a Meta sem FGTS mensal."],novo:["Novo Lançamento","Adicionar, editar ou excluir registros individualmente."],config:["Configuração / Importação","Um único JSON consolidado e sincronização privada com OneDrive."]};
-function showTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));Object.keys(titles).forEach(x=>$(x).classList.toggle("hidden",x!==id));$("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];if(id==="novo")renderManage();setTimeout(()=>{Object.values(charts).forEach(c=>c.resize())},60)}
+function renderVisibleTab(id){
+ if(!data)return;
+ if(id==="geral")renderGeneral();
+ else if(id==="despesas")renderExpenses();
+ else if(id==="receitas")renderIncome();
+ else if(id==="parcelas")renderInstallments();
+ else if(id==="investimentos")renderInvestments();
+ else if(id==="patrimonio")renderPatrimony();
+ else if(id==="projecao"){setProjectionInputs();renderProjection()}
+ else if(id==="novo")renderManage();
+ else if(id==="config")renderJsonInfo();
+}
+function showTab(id){
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+ Object.keys(titles).forEach(x=>$(x).classList.toggle("hidden",x!==id));
+ $("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];
+ setTimeout(()=>{renderVisibleTab(id);Object.values(charts).forEach(c=>c.resize())},80)
+}
 
 async function saveProjectionSettings(){if(!data)return;let s=data.configuracoes.projecaoPatrimonial;s.rentabilidadeAplicacoesMensal=parseMoney($("projRentApl").value)/100;s.rentabilidadePrevidenciaFgtsMensal=parseMoney($("projRentPrev").value)/100;s.aportePrevidenciaIgor=parseMoney($("projPrevIgor").value);s.aporteFgtsIgor=parseMoney($("projFgtsIgor").value);s.aporteFgtsVitoria=parseMoney($("projFgtsVit").value);s.aporteAplicacoesIgor=parseMoney($("projAplIgor").value);s.aporteAplicacoesVitoria=parseMoney($("projAplVit").value);s.horizonteMeses=Math.max(1,Math.min(240,Number($("projHorizon").value)||24));touch();await afterMutation("Premissas atualizadas.")}
 async function resetProjection(){if(!data)return;Object.assign(data.configuracoes.projecaoPatrimonial,{rentabilidadeAplicacoesMensal:.01,rentabilidadePrevidenciaFgtsMensal:.005,aportePrevidenciaIgor:1100,aporteFgtsIgor:1100,aporteFgtsVitoria:590,aporteAplicacoesIgor:5000,aporteAplicacoesVitoria:3000,horizonteMeses:24});touch();setProjectionInputs();await afterMutation("Premissas do Excel restauradas.")}
