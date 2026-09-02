@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.8</title>
+<title>Controle Financeiro • v8.9</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -31,12 +31,23 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
 .soft-pink{color:#d97994!important}
 .soft-blue{color:#2563eb!important}
 
+
+.table-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:end;padding:10px 0 12px}
+.table-filters .field{min-width:145px;flex:0 1 190px}
+.table-filters .field.search{flex:1 1 240px;min-width:210px}
+.table-filters input,.table-filters select{width:100%}
+.table-filter-count{font-size:9px;color:#7b8798;margin-left:auto;align-self:center;white-space:nowrap}
+@media(max-width:760px){
+ .table-filters .field,.table-filters .field.search{flex:1 1 100%;min-width:0}
+ .table-filter-count{width:100%;margin-left:0}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.8</small></div></div>
+  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.9</small></div></div>
   <div class="navlabel">Navegação</div>
   <div class="tabs">
     <button class="tab active" data-tab="geral">Visão Geral</button>
@@ -109,8 +120,14 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head">
-   <div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Registros fixos mais recentes até o mês de referência.</p></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Sem filtros, mostra os 10 mais recentes. Use os campos abaixo para consultar o histórico.</p></div></div>
+  <div class="table-filters">
+   <div class="field"><label>Data inicial</label><input id="fxTableStart" type="date" min="2022-05-01"></div>
+   <div class="field"><label>Data final</label><input id="fxTableEnd" type="date" min="2022-05-01"></div>
+   <div class="field search"><label>Descrição</label><input id="fxTableSearch" placeholder="Buscar descrição..."></div>
+   <div class="field"><label>Categoria</label><select id="fxTableCategory"><option value="all">Todas</option></select></div>
+   <button id="btnClearFxTable" class="btn secondary">Limpar filtros</button>
+   <span id="fxTableCount" class="table-filter-count"></span>
   </div>
   <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
 
@@ -133,8 +150,14 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head">
-   <div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Registros variáveis mais recentes até o mês de referência.</p></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Sem filtros, mostra os 10 mais recentes. Use os campos abaixo para consultar o histórico.</p></div></div>
+  <div class="table-filters">
+   <div class="field"><label>Data inicial</label><input id="varTableStart" type="date" min="2022-05-01"></div>
+   <div class="field"><label>Data final</label><input id="varTableEnd" type="date" min="2022-05-01"></div>
+   <div class="field search"><label>Descrição</label><input id="varTableSearch" placeholder="Buscar descrição..."></div>
+   <div class="field"><label>Categoria</label><select id="varTableCategory"><option value="all">Todas</option></select></div>
+   <button id="btnClearVarTable" class="btn secondary">Limpar filtros</button>
+   <span id="varTableCount" class="table-filter-count"></span>
   </div>
   <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenVariable" class="btn green">Adicionar nova despesa variável</button></div>
@@ -152,7 +175,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado sem remover o histórico armazenado no JSON.</p></div></div>
+  <div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado pelos controles gerais da aba, sem remover registros do JSON.</p></div></div>
   <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
  </div>
 </section>
@@ -170,14 +193,22 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
  </div>
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 receitas mais recentes.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Sem filtros, mostra os 10 mais recentes. Os filtros consultam todo o histórico.</p></div></div>
+  <div class="table-filters">
+   <div class="field"><label>Data inicial</label><input id="revTableStart" type="date" min="2022-05-01"></div>
+   <div class="field"><label>Data final</label><input id="revTableEnd" type="date" min="2022-05-01"></div>
+   <div class="field search"><label>Descrição</label><input id="revTableSearch" placeholder="Buscar descrição..."></div>
+   <div class="field"><label>Pessoa</label><select id="revTablePerson"><option value="all">Todas</option></select></div>
+   <button id="btnClearRevTable" class="btn secondary">Limpar filtros</button>
+   <span id="revTableCount" class="table-filter-count"></span>
+  </div>
   <div class="wrap"><table><thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenRevenue" class="btn green">Adicionar nova receita</button></div>
   <div id="revForm" class="inline-editor hidden">
    <div class="context-title" id="revFormTitle">Adicionar nova receita</div>
    <div class="formgrid">
     <div class="field"><label>Data</label><input id="cRevDate" type="date"></div>
-    <div class="field"><label>Pessoa</label><select id="cRevPerson"><option>Igor</option><option>Vitória</option><option>Outro</option></select></div>
+    <div class="field"><label>Pessoa</label><select id="cRevPerson"></select></div>
     <div class="field"><label>Descrição</label><input id="cRevDesc" maxlength="160" placeholder="Ex.: Salário"></div>
     <div class="field"><label>Valor (R$)</label><input id="cRevValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
    </div>
@@ -199,7 +230,15 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div>
  </div>
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 parcelas mais recentes já alcançadas pelo mês de referência.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Sem filtros, mostra as 10 parcelas mais recentes. Os filtros podem consultar inclusive parcelas futuras.</p></div></div>
+  <div class="table-filters">
+   <div class="field"><label>Data inicial</label><input id="parTableStart" type="date" min="2022-05-01"></div>
+   <div class="field"><label>Data final</label><input id="parTableEnd" type="date" min="2022-05-01"></div>
+   <div class="field search"><label>Descrição</label><input id="parTableSearch" placeholder="Buscar descrição..."></div>
+   <div class="field"><label>Categoria</label><select id="parTableCategory"><option value="all">Todas</option></select></div>
+   <button id="btnClearParTable" class="btn secondary">Limpar filtros</button>
+   <span id="parTableCount" class="table-filter-count"></span>
+  </div>
   <div class="wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenInstallment" class="btn green">Adicionar nova parcela</button></div>
   <div id="parForm" class="inline-editor hidden">
@@ -217,8 +256,6 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
 </section>
 
 <section id="investimentos" class="hidden">
- <div class="filterbar"><div class="filter-group"><select id="investmentComponentFilter"><option value="all">Todos os componentes</option></select></div></div>
-
  <div class="grid5">
   <div class="card kpi"><label>Igor • aplicações</label><strong id="iIgorApl">—</strong></div>
   <div class="card kpi"><label>Vitória • aplicações</label><strong id="iVitApl">—</strong></div>
@@ -232,13 +269,8 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card kpi"><label>Diferença para meta</label><strong id="iGap">—</strong></div>
  </div>
 
- <div class="grid2 section">
-  <div class="card chart-card"><div class="chart-head"><div><h3>Histórico dos investimentos</h3><p>Todo o histórico disponível; Dinheiro é somado à série Vitória: Conta Corrente.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestHistory"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Composição atual</h3><p>Último fechamento real disponível.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestDonut"></canvas></div></div>
- </div>
-
  <div class="card chart-card section">
-  <div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Mesma fonte de dados do gráfico da Visão Geral, com filtro global de período e tooltip monetário.</p></div><span class="pill">Histórico</span></div>
+  <div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Evolução histórica da composição patrimonial usando a mesma fonte da Visão Geral.</p></div><span class="pill">Histórico</span></div>
   <div class="chart-wrap tall"><canvas id="chartInvestAllocation"></canvas></div>
  </div>
 
@@ -248,14 +280,10 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card kpi"><label>Meta no fim</label><strong id="projEndMeta">—</strong></div>
   <div class="card kpi"><label>Diferença p/ meta</label><strong id="projEndGap">—</strong></div>
  </div>
- <div class="card chart-card section">
-  <div class="chart-head"><div><h3>Projeção patrimonial</h3><p>Histórico real, patrimônio projetado e Meta sem FGTS mensal proveniente da mesma lógica do Excel.</p></div><span class="pill">Real + projeção + meta</span></div>
-  <div class="chart-wrap tall"><canvas id="chartProjectionDetail"></canvas></div>
- </div>
 
  <div class="card chart-card section">
-  <div class="chart-head"><div><h3>Evolução patrimonial por componente</h3><p>Evolução dos componentes que formam o patrimônio; sem linha de Meta neste gráfico.</p></div><span class="pill">Sem meta</span></div>
-  <div class="chart-wrap tall"><canvas id="chartPatComponents"></canvas></div>
+  <div class="chart-head"><div><h3>Projeção patrimonial</h3><p>Histórico real desde mai/2022, continuação projetada e Meta sem FGTS mensal.</p></div><span class="pill">Real + projeção + meta</span></div>
+  <div class="chart-wrap tall"><canvas id="chartProjectionDetail"></canvas></div>
  </div>
 
  <div class="card section">
@@ -274,7 +302,15 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>10 registros mais recentes da composição patrimonial.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Sem filtros, mostra os 10 mais recentes. Use os filtros para consultar qualquer período ou componente.</p></div></div>
+  <div class="table-filters">
+   <div class="field"><label>Mês inicial</label><input id="invTableStart" type="month" min="2022-05"></div>
+   <div class="field"><label>Mês final</label><input id="invTableEnd" type="month" min="2022-05"></div>
+   <div class="field search"><label>Descrição / componente</label><input id="invTableSearch" placeholder="Buscar componente..."></div>
+   <div class="field"><label>Componente</label><select id="invTableComponent"><option value="all">Todos</option></select></div>
+   <button id="btnClearInvTable" class="btn secondary">Limpar filtros</button>
+   <span id="invTableCount" class="table-filter-count"></span>
+  </div>
   <div class="wrap"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th>Origem</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenInvestment" class="btn green">Adicionar novo registro de investimento</button></div>
   <div id="invForm" class="inline-editor hidden">
@@ -464,6 +500,29 @@ function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=income
 
 function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
 function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
+
+function tableFilterIsActive(ids){
+ return ids.some(id=>{let e=$(id);if(!e)return false;return e.tagName==="SELECT"?e.value!=="all":!!String(e.value||"").trim()})
+}
+function tableDatePass(rec,start,end){
+ let d=String(rec.data||"").slice(0,10),m=monthKey(rec.data);
+ if(start){let s=start.length===7?start:start.slice(0,10);if((start.length===7?m:d)<s)return false}
+ if(end){let e=end.length===7?end:end.slice(0,10);if((end.length===7?m:d)>e)return false}
+ return true
+}
+function filterTableRows(rows,{startId,endId,searchId,selectId,selectField}){
+ let start=$(startId)?.value||"",end=$(endId)?.value||"",q=normSearch($(searchId)?.value||""),sel=$(selectId)?.value||"all";
+ return rows.filter(x=>
+  tableDatePass(x,start,end)&&
+  (!q||normSearch(x.descricao||"").includes(q))&&
+  (sel==="all"||String(x[selectField]||"")===sel)
+ )
+}
+function sortTableRows(rows){return [...rows].sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||String(b.data||"").localeCompare(String(a.data||"")))}
+function tableSlice(rows,filterIds){return rows.slice(0,tableFilterIsActive(filterIds)?250:10)}
+function setTableCount(id,shown,total,filtered){if($(id))$(id).textContent=filtered?`${shown} de ${total} registros encontrados`:`${shown} registros mais recentes`}
+function clearTableFilters(ids,renderFn){ids.forEach(id=>{let e=$(id);if(!e)return;e.value=e.tagName==="SELECT"?"all":""});renderFn()}
+
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
 function renderExpenses(){
@@ -485,14 +544,22 @@ function renderExpenses(){
  let recs=[];if(type==="all"||type==="fixas")recs.push(...data.despesas.fixas);if(type==="all"||type==="variaveis")recs.push(...data.despesas.variaveis);
  horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter));
 
- let rows=expenseRows(true),
-     fixedRecent=data.despesas.fixas.filter(x=>filter(x)&&untilRef(x)).map(x=>({...x,_kind:"fixas",_label:"Fixa"})).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10),
-     varRecent=data.despesas.variaveis.filter(x=>filter(x)&&untilRef(x)).map(x=>({...x,_kind:"variaveis",_label:"Variável"})).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);
+ let rows=expenseRows(true);
 
- $("recentFixas").innerHTML=fixedRecent.length?expenseTableHtml(fixedRecent):`<tr><td colspan="6"><div class="empty">Sem despesas fixas.</div></td></tr>`;
- $("recentVariaveis").innerHTML=varRecent.length?expenseTableHtml(varRecent):`<tr><td colspan="6"><div class="empty">Sem despesas variáveis.</div></td></tr>`;
+ let fxIds=["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory"],
+     fxAll=sortTableRows(filterTableRows(data.despesas.fixas,{startId:"fxTableStart",endId:"fxTableEnd",searchId:"fxTableSearch",selectId:"fxTableCategory",selectField:"categoria"})),
+     fxShown=tableSlice(fxAll,fxIds).map(x=>({...x,_kind:"fixas",_label:"Fixa"}));
+
+ let varIds=["varTableStart","varTableEnd","varTableSearch","varTableCategory"],
+     varAll=sortTableRows(filterTableRows(data.despesas.variaveis,{startId:"varTableStart",endId:"varTableEnd",searchId:"varTableSearch",selectId:"varTableCategory",selectField:"categoria"})),
+     varShown=tableSlice(varAll,varIds).map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
+
+ $("recentFixas").innerHTML=fxShown.length?expenseTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa fixa encontrada.</div></td></tr>`;
+ $("recentVariaveis").innerHTML=varShown.length?expenseTableHtml(varShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
+ setTableCount("fxTableCount",fxShown.length,fxAll.length,tableFilterIsActive(fxIds));
+ setTableCount("varTableCount",varShown.length,varAll.length,tableFilterIsActive(varIds));
+
  $("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
-
  if(!$("fxReplicateTarget").value)$("fxReplicateTarget").value=ref;
  bindActions($("despesas"))
 }
@@ -511,12 +578,14 @@ function renderIncome(){
      incomeColors={"Igor":"#2563eb","Vitória":"#e89aae"};
 
  makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),incomeColors[p]||COLORS[i%COLORS.length]))},options:chartOpts()});
+ let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp,incomeColors);
 
- let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));
- donut("chartReceitasDonut",comp,incomeColors);
+ let ids=["revTableStart","revTableEnd","revTableSearch","revTablePerson"],
+     all=sortTableRows(filterTableRows(data.receitas,{startId:"revTableStart",endId:"revTableEnd",searchId:"revTableSearch",selectId:"revTablePerson",selectField:"pessoa"})),
+     shown=tableSlice(all,ids);
 
- let recent=rows.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);
- $("recentReceitas").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Sem receitas.</div></td></tr>`;
+ $("recentReceitas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Nenhuma receita encontrada.</div></td></tr>`;
+ setTableCount("revTableCount",shown.length,all.length,tableFilterIsActive(ids));
  bindActions($("receitas"))
 }
 function renderInstallments(){
@@ -527,67 +596,33 @@ function renderInstallments(){
      sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),
      future=arr.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor),0);
 
- $("pMes").textContent=brl(sumMonth(arr,ref));
- $("p3").textContent=brl(sumFuture(3));
- $("p6").textContent=brl(sumFuture(6));
- $("pFuture").textContent=brl(future);
+ $("pMes").textContent=brl(sumMonth(arr,ref));$("p3").textContent=brl(sumFuture(3));$("p6").textContent=brl(sumFuture(6));$("pFuture").textContent=brl(future);
 
- // Histórico respeita o filtro global; futuro acrescenta os 12 meses seguintes.
- let historicalMonths=r.months.filter(m=>m<=ref),
-     futureMonths=monthsBetween(addMonths(ref,1),addMonths(ref,12)),
-     labels=[...historicalMonths,...futureMonths],
-     hLen=historicalMonths.length,
-     fLen=futureMonths.length,
+ let historicalMonths=r.months.filter(m=>m<=ref),futureMonths=monthsBetween(addMonths(ref,1),addMonths(ref,12)),
+     labels=[...historicalMonths,...futureMonths],hLen=historicalMonths.length,fLen=futureMonths.length,
      histValues=historicalMonths.map(m=>sumMonth(arr,m)).concat(Array(fLen).fill(null)),
      futureValues=Array(hLen).fill(null).concat(futureMonths.map(m=>sumMonth(arr,m)));
 
  let installmentOpts=chartOpts();
- installmentOpts.plugins.tooltip.callbacks.label=ctx=>{
-   let tipo=ctx.dataset.label.includes("Histórico")?"histórico":"futuro";
-   return `${ctx.dataset.label} (${tipo}): ${brl(ctx.raw)}`
- };
+ installmentOpts.plugins.tooltip.callbacks.label=ctx=>`${ctx.dataset.label}: ${brl(ctx.raw)}`;
 
- makeChart("chartParcelasFuturo",{
-  type:"bar",
-  data:{
-   labels:labels.map(monthLabel),
-   datasets:[
-    {
-     label:"Parcelas — histórico",
-     data:histValues,
-     backgroundColor:"rgba(139,92,246,.82)",
-     borderColor:"#7c3aed",
-     borderWidth:1
-    },
-    {
-     label:"Parcelas — futuro",
-     data:futureValues,
-     backgroundColor:"rgba(139,92,246,.28)",
-     borderColor:"rgba(124,58,237,.65)",
-     borderWidth:1
-    }
-   ]
-  },
-  options:installmentOpts
- });
-
+ makeChart("chartParcelasFuturo",{type:"bar",data:{labels:labels.map(monthLabel),datasets:[
+  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(139,92,246,.82)",borderColor:"#7c3aed",borderWidth:1},
+  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(139,92,246,.28)",borderColor:"rgba(124,58,237,.65)",borderWidth:1}
+ ]},options:installmentOpts});
  horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));
 
- let recent=arr
-  .filter(x=>monthKey(x.data)<=ref)
-  .sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))
-  .slice(0,10);
+ let ids=["parTableStart","parTableEnd","parTableSearch","parTableCategory"],
+     all=sortTableRows(filterTableRows(data.parcelas,{startId:"parTableStart",endId:"parTableEnd",searchId:"parTableSearch",selectId:"parTableCategory",selectField:"categoria"})),
+     shown=tableSlice(all,ids);
 
- $("recentParcelas").innerHTML=recent.length
-  ?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join("")
-  :`<tr><td colspan="6"><div class="empty">Sem parcelas.</div></td></tr>`;
-
+ $("recentParcelas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhuma parcela encontrada.</div></td></tr>`;
+ setTableCount("parTableCount",shown.length,all.length,tableFilterIsActive(ids));
  bindActions($("parcelas"))
 }
 function renderInvestments(){
  if(!data)return;
  let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),
-     filter=$("investmentComponentFilter").value,
      meta=snap?metaForMonth(snap.month):null,
      gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;
 
@@ -601,30 +636,25 @@ function renderInvestments(){
  $("iGap").textContent=Number.isFinite(gap)?brl(gap):"—";
  $("iGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
 
- renderInvestmentHistoryChart("chartInvestHistory",r,filter);
  renderCapitalAllocationChart("chartInvestAllocation",r);
 
- if(snap){
-  let obj={};
-  investmentChartComponents()
-   .filter(c=>filter==="all"||c===filter||(filter==="Dinheiro"&&c==="Vitória: Conta Corrente"))
-   .forEach(c=>{obj[c]=(snap.map[c]||0)+(c==="Vitória: Conta Corrente"?(snap.map["Dinheiro"]||0):0)});
-  donut("chartInvestDonut",obj)
- }
+ let ids=["invTableStart","invTableEnd","invTableSearch","invTableComponent"],
+     all=sortTableRows(filterTableRows(data.investimentos.historico,{startId:"invTableStart",endId:"invTableEnd",searchId:"invTableSearch",selectId:"invTableComponent",selectField:"descricao"})),
+     shown=tableSlice(all,ids);
 
- let comps=componentDefs().map(x=>x.descricao);
- makeChart("chartPatComponents",{type:"line",data:{labels:r.months.map(monthLabel),datasets:comps.map((c,i)=>lineDataset(c,r.months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):null}),COLORS[i%COLORS.length],{spanGaps:true}))},options:chartOpts()});
+ $("recentInvestimentos").innerHTML=shown.length
+  ?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
+  :`<tr><td colspan="6"><div class="empty">Nenhum registro de investimento encontrado.</div></td></tr>`;
 
- let recent=data.investimentos.historico
-  .filter(x=>untilRef(x))
-  .sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))
-  .slice(0,10);
-
- $("recentInvestimentos").innerHTML=recent.length
-  ?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
-  :`<tr><td colspan="6"><div class="empty">Sem registros.</div></td></tr>`;
-
+ setTableCount("invTableCount",shown.length,all.length,tableFilterIsActive(ids));
  bindActions($("investimentos"))
+}
+function projectionHistory(){
+ if(!data)return[];
+ return [...(data.patrimonio?.historico||[])]
+  .filter(x=>monthKey(x.data)>=HISTORY_START)
+  .sort((a,b)=>monthKey(a.data).localeCompare(monthKey(b.data)))
+  .map(x=>({month:monthKey(x.data),total:Number(x.total)||0,semFGTS:Number(x.semFGTS)||0,fgts:Number(x.fgts)||0}))
 }
 function xMonth(x){return monthKey(x.data||x.month)}
 function renderProjectionChart(id,horizon){
@@ -819,15 +849,17 @@ function refreshSelects(){
  ["cFxCat","cVarCat","cParCat"].forEach(id=>{if($(id))$(id).innerHTML=opts});
  $("expenseCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
  $("installmentCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
+ ["fxTableCategory","varTableCategory","parTableCategory"].forEach(id=>{if($(id))$(id).innerHTML='<option value="all">Todas</option>'+opts});
 
  let people=[...new Set(["Igor","Vitória","Outro",...data.receitas.map(x=>x.pessoa).filter(Boolean)])];
  $("incomePersonFilter").innerHTML='<option value="all">Todas as pessoas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
  if($("cRevPerson"))$("cRevPerson").innerHTML=people.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("revTablePerson"))$("revTablePerson").innerHTML='<option value="all">Todas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
 
  let comps=componentDefs().map(x=>x.descricao);
  $("nComponente").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
  if($("cInvComp"))$("cInvComp").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
- $("investmentComponentFilter").innerHTML='<option value="all">Todos os componentes</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")
+ if($("invTableComponent"))$("invTableComponent").innerHTML='<option value="all">Todos</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")
 }
 function renderJsonInfo(){if(!data)return;$("jsonInfo").innerHTML=`<b>Base carregada:</b> ${num(data.despesas.fixas.length)} fixas • ${num(data.despesas.variaveis.length)} variáveis • ${num(data.parcelas.length)} parcelas • ${num(data.receitas.length)} receitas • ${num(data.investimentos.historico.length)} registros históricos de investimento • ${num(data.metas.semFGTS.length)} pontos de meta.`}
 function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
@@ -880,7 +912,7 @@ function handleError(e){console.error(e);if(String(e?.message||e)==="CONFLICT_RE
 $("redirectUriBox").textContent=REDIRECT_URI;
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 $("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").onchange=renderAll;$("periodEnd").onchange=renderAll;
-["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;$("investmentComponentFilter").onchange=renderInvestments;
+["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;
 
 $("btnOpenFixed").onclick=()=>openContextForm("fixas");
 $("btnOpenVariable").onclick=()=>openContextForm("variaveis");
@@ -898,6 +930,17 @@ $("btnCancelRevenue").onclick=()=>closeContextForm("receitas");
 $("btnCancelInstallment").onclick=()=>closeContextForm("parcelas");
 $("btnCancelInvestment").onclick=()=>closeContextForm("investimento");
 $("btnReplicateFixed").onclick=replicateFixedPrevious;
+
+["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory","varTableStart","varTableEnd","varTableSearch","varTableCategory"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderExpenses));
+["revTableStart","revTableEnd","revTableSearch","revTablePerson"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderIncome));
+["parTableStart","parTableEnd","parTableSearch","parTableCategory"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderInstallments));
+["invTableStart","invTableEnd","invTableSearch","invTableComponent"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderInvestments));
+
+$("btnClearFxTable").onclick=()=>clearTableFilters(["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory"],renderExpenses);
+$("btnClearVarTable").onclick=()=>clearTableFilters(["varTableStart","varTableEnd","varTableSearch","varTableCategory"],renderExpenses);
+$("btnClearRevTable").onclick=()=>clearTableFilters(["revTableStart","revTableEnd","revTableSearch","revTablePerson"],renderIncome);
+$("btnClearParTable").onclick=()=>clearTableFilters(["parTableStart","parTableEnd","parTableSearch","parTableCategory"],renderInstallments);
+$("btnClearInvTable").onclick=()=>clearTableFilters(["invTableStart","invTableEnd","invTableSearch","invTableComponent"],renderInvestments);
 $("manageType").onchange=renderManage;$("manageSearch").oninput=renderManage;$("nTipo").onchange=updateLaunchForm;$("btnSaveLaunch").onclick=saveLaunch;$("btnCancelEdit").onclick=cancelEdit;$("btnSaveProjection").onclick=saveProjectionSettings;$("btnResetProjection").onclick=resetProjection;
 document.querySelectorAll(".money-input").forEach(el=>el.addEventListener("blur",()=>{if(el.value.trim()!=="")el.value=moneyInput(parseMoney(el.value))}));
 $("jsonImport").onchange=()=>{let f=$("jsonImport").files?.[0];if(f)importJson(f)};$("btnExportJson").onclick=exportJson;
