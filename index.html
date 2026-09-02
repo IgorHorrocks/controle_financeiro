@@ -513,7 +513,7 @@ td.num,th.num{
 }
 
 
-/* v8.14 — ajustes finais de identidade e legibilidade */
+/* v8.15 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -535,26 +535,21 @@ td.num,th.num{
 .top-title small{margin-top:2px}
 
 
-/* v8.14 — filtros de coluna estilo Excel */
+#pageSubtitle:empty{display:none}
+
 .excel-th{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%}
 .excel-filter-btn{width:19px;height:19px;padding:0;border:0;border-radius:5px;background:transparent;color:#8C7F83;font-size:10px;line-height:19px;flex:0 0 19px}
-.excel-filter-btn:hover{background:#EEE6E3;color:#42363A}
-.excel-filter-btn.active{background:#F5E7EB;color:#A51437}
+.excel-filter-btn:hover{background:#EEE6E3;color:#42363A}.excel-filter-btn.active{background:#F5E7EB;color:#A51437}
 .excel-filter-menu{position:fixed;z-index:9999;width:270px;max-width:calc(100vw - 24px);padding:8px;background:#fff;border:1px solid #DCCFCD;border-radius:10px;box-shadow:0 18px 48px rgba(69,35,41,.18)}
-.excel-filter-menu.hidden{display:none!important}
-.excel-filter-sort{display:grid;gap:2px}
+.excel-filter-menu.hidden{display:none!important}.excel-filter-sort{display:grid;gap:2px}
 .excel-filter-sort button{border:0;background:transparent;color:#4D4246;text-align:left;padding:8px 9px;border-radius:7px;font-size:10px}
 .excel-filter-sort button:hover,.excel-filter-sort button.active{background:#F8F1F2;color:#99152F}
-.excel-filter-sep{height:1px;background:#EEE5E3;margin:6px 0 8px}
-.excel-filter-search{width:100%;margin-bottom:7px;font-size:10px;padding:8px 9px}
+.excel-filter-sep{height:1px;background:#EEE5E3;margin:6px 0 8px}.excel-filter-search{width:100%;margin-bottom:7px;font-size:10px;padding:8px 9px}
 .excel-filter-all,.excel-filter-value{display:flex;align-items:center;gap:7px;min-height:28px;padding:4px 6px;border-radius:6px;color:#4F4448;font-size:10px}
-.excel-filter-all{border-bottom:1px solid #F0E9E7;border-radius:0;font-weight:650}
-.excel-filter-value:hover{background:#FAF6F5}
-.excel-filter-values{max-height:220px;overflow:auto;margin:3px 0 8px}
-.excel-filter-value span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.excel-filter-all{border-bottom:1px solid #F0E9E7;border-radius:0;font-weight:650}.excel-filter-value:hover{background:#FAF6F5}
+.excel-filter-values{max-height:220px;overflow:auto;margin:3px 0 8px}.excel-filter-value span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .excel-filter-menu input[type="checkbox"]{width:13px;height:13px;accent-color:#CC092F;flex:0 0 auto}
-.excel-filter-actions{display:flex;justify-content:space-between;gap:7px;padding-top:7px;border-top:1px solid #EEE5E3}
-.excel-filter-actions .btn{flex:1;min-height:30px;padding:6px 8px}
+.excel-filter-actions{display:flex;justify-content:space-between;gap:7px;padding-top:7px;border-top:1px solid #EEE5E3}.excel-filter-actions .btn{flex:1;min-height:30px;padding:6px 8px}
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 </style>
@@ -581,7 +576,7 @@ td.num,th.num{
 <main>
 <div class="notice warn" id="noDataNotice"><b>Primeiro acesso:</b> vá em “Configuração / Importação” para carregar seus dados.</div>
 <div class="workspace-head">
-<div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle">Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”.</p></div>
+<div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle"></p></div>
 <div><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
 <section id="geral">
@@ -597,7 +592,6 @@ td.num,th.num{
 <div class="card chart-card section">
 <div class="chart-head">
 <div><h3>Consolida resultados</h3><p>Receitas e despesas consolidadas em linhas; a sobra mensal aparece como coluna translúcida ao fundo.</p></div>
-<span class="pill">Resumo - Gráficos</span>
 </div>
 <div class="chart-wrap tall"><canvas id="chartConsolidado"></canvas></div>
 </div>
@@ -609,7 +603,6 @@ td.num,th.num{
 <div class="card chart-card section">
 <div class="chart-head">
 <div><h3>Alocação de capital</h3><p>Evolução dos componentes do patrimônio e do total.</p></div>
-<span class="pill">Resumo - Gráficos</span>
 </div>
 <div class="chart-wrap tall"><canvas id="chartCapital"></canvas></div>
 </div>
@@ -627,7 +620,7 @@ td.num,th.num{
 <div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div>
 </div>
 <div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="fxTableCount"></span></div>
+<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="fxTableCount"></span></div>
 
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="fixas" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="fixas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="fixas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
 <div class="context-toolbar">
@@ -647,7 +640,7 @@ td.num,th.num{
 </div>
 </div>
 <div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
+<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
 
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenVariable">Adicionar nova despesa variável</button></div>
@@ -680,7 +673,7 @@ td.num,th.num{
 <div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
 </div>
 <div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="revTableCount"></span></div>
+<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="revTableCount"></span></div>
 
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Pessoa</span><button aria-label="Filtrar Pessoa" class="excel-filter-btn" data-field="pessoa" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="receitas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="receitas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenRevenue">Adicionar nova receita</button></div>
@@ -709,7 +702,7 @@ td.num,th.num{
 <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div>
 </div>
 <div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="parTableCount"></span></div>
+<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="parTableCount"></span></div>
 
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Parcela</span><button aria-label="Filtrar Parcela" class="excel-filter-btn" data-field="parcela" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenInstallment">Adicionar nova parcela</button></div>
@@ -765,10 +758,10 @@ td.num,th.num{
 <div class="field"><label>Aporte Aplicações Vitória</label><input class="money-input" id="projAplVit" inputmode="decimal"/></div>
 <div class="field"><label>Horizonte da projeção (meses)</label><input id="projHorizon" max="240" min="1" type="number"/></div>
 </div>
-<div class="form-actions"><button class="btn green" id="btnSaveProjection">Salvar premissas</button><button class="btn secondary" id="btnResetProjection">Restaurar premissas do Excel</button></div>
+<div class="form-actions"><button class="btn green" id="btnSaveProjection">Salvar premissas</button><button class="btn secondary" id="btnResetProjection">Restaurar premissas padrão</button></div>
 </div>
 <div class="card section">
-<div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="invTableCount"></span></div>
+<div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="invTableCount"></span></div>
 
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Origem</span><button aria-label="Filtrar Origem" class="excel-filter-btn" data-field="origem" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenInvestment">Adicionar novo registro de investimento</button></div>
@@ -817,7 +810,7 @@ td.num,th.num{
 <input class="excel-filter-search" id="excelFilterSearch" placeholder="Pesquisar..."/>
 <label class="excel-filter-all"><input id="excelFilterSelectAll" type="checkbox"/><span>Selecionar tudo</span></label>
 <div class="excel-filter-values" id="excelFilterValues"></div>
-<div class="excel-filter-actions"><button class="btn secondary" id="excelFilterClear" type="button">Limpar filtro</button><button class="btn green" id="excelFilterApply" type="button">Aplicar</button></div>
+<div class="excel-filter-actions"><button class="btn secondary" id="excelFilterClear" type="button">Limpar</button><button class="btn green" id="excelFilterApply" type="button">Aplicar</button></div>
 </div><div class="toast" id="toast"></div>
 <script type="module">
 import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
@@ -1011,165 +1004,73 @@ function tableSlice(rows,filterIds){return rows}
 function setTableCount(id,shown,total,filtered){if($(id))$(id).textContent=`${shown} ${shown===1?"registro":"registros"} no período selecionado${filtered?" após os filtros da tabela":""}`}
 function clearTableFilters(ids,renderFn){ids.forEach(id=>{let e=$(id);if(!e)return;e.value=e.tagName==="SELECT"?"all":""});renderFn()}
 
-const excelTableFilters={
- fixas:{},variaveis:{},receitas:{},parcelas:{},investimentos:{}
-};
+const excelTableFilters={fixas:{},variaveis:{},receitas:{},parcelas:{},investimentos:{}};
 let excelMenuContext=null,excelMenuSort=null;
-
 const EXCEL_TABLE_CONFIG={
- fixas:{
-  render:()=>renderExpenses(),
-  rows:()=>data.despesas.fixas.filter(x=>inRange(x,periodRange())),
-  columns:{
-   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
-   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
-   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
-   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
-  }
- },
- variaveis:{
-  render:()=>renderExpenses(),
-  rows:()=>data.despesas.variaveis.filter(x=>inRange(x,periodRange())),
-  columns:{
-   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
-   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
-   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
-   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
-  }
- },
- receitas:{
-  render:()=>renderIncome(),
-  rows:()=>data.receitas.filter(x=>inRange(x,periodRange())),
-  columns:{
-   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
-   pessoa:{label:"Pessoa",value:x=>x.pessoa||"—",type:"text"},
-   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
-   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
-  }
- },
- parcelas:{
-  render:()=>renderInstallments(),
-  rows:()=>data.parcelas.filter(x=>inRange(x,periodRange())),
-  columns:{
-   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
-   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
-   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
-   parcela:{label:"Parcela",value:x=>`${x.parcela||"—"}/${x.totalParcelas||"—"}`,type:"text"},
-   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
-  }
- },
- investimentos:{
-  render:()=>renderInvestments(),
-  rows:()=>data.investimentos.historico.filter(x=>inRange(x,periodRange())),
-  columns:{
-   data:{label:"Data",value:x=>x.data,display:v=>monthLabel(monthKey(v)),type:"date"},
-   descricao:{label:"Componente",value:x=>x.descricao||"",type:"text"},
-   classe:{label:"Classe",value:x=>x.classe||investmentClass(x.descricao),type:"text"},
-   origem:{label:"Origem",value:x=>x.origem||"—",type:"text"},
-   valor:{label:"Saldo",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
-  }
- }
+ fixas:{render:()=>renderExpenses(),rows:()=>data.despesas.fixas.filter(x=>inRange(x,periodRange())),columns:{
+  data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+  descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+  categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
+  valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
+ variaveis:{render:()=>renderExpenses(),rows:()=>data.despesas.variaveis.filter(x=>inRange(x,periodRange())),columns:{
+  data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+  descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+  categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
+  valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
+ receitas:{render:()=>renderIncome(),rows:()=>data.receitas.filter(x=>inRange(x,periodRange())),columns:{
+  data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+  pessoa:{label:"Pessoa",value:x=>x.pessoa||"—",type:"text"},
+  descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+  valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
+ parcelas:{render:()=>renderInstallments(),rows:()=>data.parcelas.filter(x=>inRange(x,periodRange())),columns:{
+  data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+  descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+  categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
+  parcela:{label:"Parcela",value:x=>`${x.parcela||"—"}/${x.totalParcelas||"—"}`,type:"text"},
+  valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
+ investimentos:{render:()=>renderInvestments(),rows:()=>data.investimentos.historico.filter(x=>inRange(x,periodRange())),columns:{
+  data:{label:"Data",value:x=>x.data,display:v=>monthLabel(monthKey(v)),type:"date"},
+  descricao:{label:"Componente",value:x=>x.descricao||"",type:"text"},
+  classe:{label:"Classe",value:x=>x.classe||investmentClass(x.descricao),type:"text"},
+  origem:{label:"Origem",value:x=>x.origem||"—",type:"text"},
+  valor:{label:"Saldo",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}}
 };
-
 function excelRawKey(v){return typeof v==="number"?`n:${v}`:`s:${String(v)}`}
-function excelCompare(a,b,type){
- if(type==="number")return Number(a)-Number(b);
- if(type==="date")return String(a).localeCompare(String(b));
- return String(a).localeCompare(String(b),"pt-BR",{sensitivity:"base",numeric:true})
-}
-function excelTableHasFilters(key){
- return Object.values(excelTableFilters[key]||{}).some(s=>s&&(s.sort||s.selected instanceof Set))
-}
+function excelCompare(a,b,type){if(type==="number")return Number(a)-Number(b);if(type==="date")return String(a).localeCompare(String(b));return String(a).localeCompare(String(b),"pt-BR",{sensitivity:"base",numeric:true})}
+function excelTableHasFilters(key){return Object.values(excelTableFilters[key]||{}).some(s=>s&&(s.sort||s.selected instanceof Set))}
 function excelFilteredRows(key,rows){
  let cfg=EXCEL_TABLE_CONFIG[key],states=excelTableFilters[key]||{},out=[...rows];
- for(let [field,state] of Object.entries(states)){
-  let col=cfg.columns[field];
-  if(!col||!state)continue;
-  if(state.selected instanceof Set)out=out.filter(x=>state.selected.has(excelRawKey(col.value(x))))
- }
+ for(let [field,state] of Object.entries(states)){let col=cfg.columns[field];if(!col||!state)continue;if(state.selected instanceof Set)out=out.filter(x=>state.selected.has(excelRawKey(col.value(x))))}
  let sortField=Object.keys(states).find(f=>states[f]?.sort);
- if(sortField){
-  let state=states[sortField],col=cfg.columns[sortField],dir=state.sort==="asc"?1:-1;
-  out.sort((a,b)=>excelCompare(col.value(a),col.value(b),col.type)*dir)
- }else out=sortTableRows(out);
+ if(sortField){let state=states[sortField],col=cfg.columns[sortField],dir=state.sort==="asc"?1:-1;out.sort((a,b)=>excelCompare(col.value(a),col.value(b),col.type)*dir)}else out=sortTableRows(out);
  return out
 }
 function excelUniqueValues(key,field){
  let cfg=EXCEL_TABLE_CONFIG[key],col=cfg.columns[field],map=new Map();
- cfg.rows().forEach(x=>{
-  let raw=col.value(x),k=excelRawKey(raw);
-  if(!map.has(k))map.set(k,{key:k,raw,display:col.display?col.display(raw):String(raw||"—")})
- });
+ cfg.rows().forEach(x=>{let raw=col.value(x),k=excelRawKey(raw);if(!map.has(k))map.set(k,{key:k,raw,display:col.display?col.display(raw):String(raw||"—")})});
  return [...map.values()].sort((a,b)=>excelCompare(a.raw,b.raw,col.type))
 }
-function excelSortLabels(type){
- if(type==="number")return["Ordenar do menor para o maior","Ordenar do maior para o menor"];
- if(type==="date")return["Ordenar do mais antigo para o mais recente","Ordenar do mais recente para o mais antigo"];
- return["Ordenar de A a Z","Ordenar de Z a A"]
-}
-function closeExcelFilterMenu(){
- let m=$("excelFilterMenu");if(m)m.classList.add("hidden");
- excelMenuContext=null
-}
-function excelRefreshValueSearch(){
- let q=normSearch($("excelFilterSearch").value);
- $("excelFilterValues").querySelectorAll(".excel-filter-value").forEach(el=>{
-  el.classList.toggle("hidden",q&&!normSearch(el.dataset.display).includes(q))
- })
-}
-function excelSyncSelectAll(){
- let visible=[...$("excelFilterValues").querySelectorAll(".excel-filter-value:not(.hidden) input")];
- $("excelFilterSelectAll").checked=visible.length>0&&visible.every(x=>x.checked);
- $("excelFilterSelectAll").indeterminate=visible.some(x=>x.checked)&&!$("excelFilterSelectAll").checked
-}
+function excelSortLabels(type){if(type==="number")return["Ordenar do menor para o maior","Ordenar do maior para o menor"];if(type==="date")return["Ordenar do mais antigo para o mais recente","Ordenar do mais recente para o mais antigo"];return["Ordenar de A a Z","Ordenar de Z a A"]}
+function closeExcelFilterMenu(){let menu=$("excelFilterMenu");if(menu)menu.classList.add("hidden");excelMenuContext=null}
+function excelRefreshValueSearch(){let q=normSearch($("excelFilterSearch").value);$("excelFilterValues").querySelectorAll(".excel-filter-value").forEach(el=>el.classList.toggle("hidden",q&&!normSearch(el.dataset.display).includes(q)))}
+function excelSyncSelectAll(){let visible=[...$("excelFilterValues").querySelectorAll(".excel-filter-value:not(.hidden) input")];$("excelFilterSelectAll").checked=visible.length>0&&visible.every(x=>x.checked);$("excelFilterSelectAll").indeterminate=visible.some(x=>x.checked)&&!$("excelFilterSelectAll").checked}
 function openExcelFilterMenu(button){
- let key=button.dataset.tableFilter,field=button.dataset.field,cfg=EXCEL_TABLE_CONFIG[key],col=cfg?.columns?.[field];
- if(!cfg||!col)return;
- excelMenuContext={key,field,button};
- let state=excelTableFilters[key][field]||{},values=excelUniqueValues(key,field);
- excelMenuSort=state.sort||null;
- let labels=excelSortLabels(col.type);
- $("excelSortAsc").textContent="↕  "+labels[0];
- $("excelSortDesc").textContent="↕  "+labels[1];
- $("excelSortAsc").classList.toggle("active",excelMenuSort==="asc");
- $("excelSortDesc").classList.toggle("active",excelMenuSort==="desc");
- $("excelFilterSearch").value="";
- $("excelFilterValues").innerHTML=values.map(v=>{
-  let checked=!(state.selected instanceof Set)||state.selected.has(v.key);
-  return `<label class="excel-filter-value" data-display="${esc(v.display)}"><input type="checkbox" data-filter-value="${esc(v.key)}" ${checked?"checked":""}><span title="${esc(v.display)}">${esc(v.display)}</span></label>`
- }).join("");
- $("excelFilterValues").querySelectorAll('input[type="checkbox"]').forEach(x=>x.onchange=excelSyncSelectAll);
- excelSyncSelectAll();
- let r=button.getBoundingClientRect(),menu=$("excelFilterMenu");
- menu.classList.remove("hidden");
- let left=Math.min(r.left,window.innerWidth-282),top=Math.min(r.bottom+4,window.innerHeight-430);
- menu.style.left=Math.max(8,left)+"px";
- menu.style.top=Math.max(8,top)+"px";
- setTimeout(()=>$("excelFilterSearch").focus(),20)
+ let key=button.dataset.tableFilter,field=button.dataset.field,cfg=EXCEL_TABLE_CONFIG[key],col=cfg?.columns?.[field];if(!cfg||!col)return;
+ excelMenuContext={key,field,button};let state=excelTableFilters[key][field]||{},values=excelUniqueValues(key,field);excelMenuSort=state.sort||null;
+ let labels=excelSortLabels(col.type);$("excelSortAsc").textContent="↕  "+labels[0];$("excelSortDesc").textContent="↕  "+labels[1];
+ $("excelSortAsc").classList.toggle("active",excelMenuSort==="asc");$("excelSortDesc").classList.toggle("active",excelMenuSort==="desc");$("excelFilterSearch").value="";
+ $("excelFilterValues").innerHTML=values.map(v=>{let checked=!(state.selected instanceof Set)||state.selected.has(v.key);return `<label class="excel-filter-value" data-display="${esc(v.display)}"><input type="checkbox" data-filter-value="${esc(v.key)}" ${checked?"checked":""}><span title="${esc(v.display)}">${esc(v.display)}</span></label>`}).join("");
+ $("excelFilterValues").querySelectorAll('input[type="checkbox"]').forEach(x=>x.onchange=excelSyncSelectAll);excelSyncSelectAll();
+ let r=button.getBoundingClientRect(),menu=$("excelFilterMenu");menu.classList.remove("hidden");let left=Math.min(r.left,window.innerWidth-282),top=Math.min(r.bottom+4,window.innerHeight-430);menu.style.left=Math.max(8,left)+"px";menu.style.top=Math.max(8,top)+"px";
 }
 function excelApplyCurrent(){
- if(!excelMenuContext)return;
- let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key],values=excelUniqueValues(key,field),
-     checked=[...$("excelFilterValues").querySelectorAll('input[data-filter-value]:checked')].map(x=>x.dataset.filterValue),
-     selected=checked.length===values.length?null:new Set(checked);
- if(!selected&&!excelMenuSort)delete excelTableFilters[key][field];
- else excelTableFilters[key][field]={selected,sort:excelMenuSort};
+ if(!excelMenuContext)return;let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key],values=excelUniqueValues(key,field),checked=[...$("excelFilterValues").querySelectorAll('input[data-filter-value]:checked')].map(x=>x.dataset.filterValue),selected=checked.length===values.length?null:new Set(checked);
+ if(!selected&&!excelMenuSort)delete excelTableFilters[key][field];else excelTableFilters[key][field]={selected,sort:excelMenuSort};
  if(excelMenuSort)Object.keys(excelTableFilters[key]).forEach(f=>{if(f!==field&&excelTableFilters[key][f])excelTableFilters[key][f].sort=null});
  closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()
 }
-function excelClearCurrent(){
- if(!excelMenuContext)return;
- let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key];
- delete excelTableFilters[key][field];
- closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()
-}
-function updateExcelFilterHeaders(){
- document.querySelectorAll(".excel-filter-btn").forEach(btn=>{
-  let state=excelTableFilters[btn.dataset.tableFilter]?.[btn.dataset.field];
-  btn.classList.toggle("active",!!(state&&(state.sort||state.selected instanceof Set)));
-  btn.textContent=state&&(state.selected instanceof Set)?"◆":"▾"
- })
-}
+function excelClearCurrent(){if(!excelMenuContext)return;let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key];delete excelTableFilters[key][field];closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()}
+function updateExcelFilterHeaders(){document.querySelectorAll(".excel-filter-btn").forEach(btn=>{let state=excelTableFilters[btn.dataset.tableFilter]?.[btn.dataset.field];btn.classList.toggle("active",!!(state&&(state.sort||state.selected instanceof Set)));btn.textContent=state&&(state.selected instanceof Set)?"◆":"▾"})}
 
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
@@ -1178,7 +1079,425 @@ function syncTableFilterBounds(range){
  let startDate=range.start+"-01",
      endObj=new Date(Date.UTC(Number(range.end.slice(0,4)),Number(range.end.slice(5,7)),0)),
      endDate=endObj.toISOString().slice(0,10);
- 
+ ["fxTableStart","fxTableEnd","varTableStart","varTableEnd","revTableStart","revTableEnd","parTableStart","parTableEnd"].forEach(id=>{
+   let e=$(id);if(!e)return;
+   e.min=startDate;e.max=endDate;
+   if(e.value&&(e.value<startDate||e.value>endDate))e.value=""
+ });
+ ["invTableStart","invTableEnd"].forEach(id=>{
+   let e=$(id);if(!e)return;
+   e.min=range.start;e.max=range.end;
+   if(e.value&&(e.value<range.start||e.value>range.end))e.value=""
+ })
+}
+function renderExpenses(){
+ if(!data)return;
+ let r=periodRange();syncTableFilterBounds(r);
+ let ref=r.ref,cat=$("expenseCategoryFilter").value,type=$("expenseTypeFilter").value,
+     filter=x=>cat==="all"||x.categoria===cat,
+     fix=sumMonth(data.despesas.fixas,ref,filter),
+     vr=sumMonth(data.despesas.variaveis,ref,filter),
+     tot=(type==="fixas"?fix:type==="variaveis"?vr:fix+vr),
+     monthly=r.months.map(m=>(type==="fixas"?sumMonth(data.despesas.fixas,m,filter):type==="variaveis"?sumMonth(data.despesas.variaveis,m,filter):sumMonth(data.despesas.fixas,m,filter)+sumMonth(data.despesas.variaveis,m,filter)));
+
+ $("dFixas").textContent=brl(fix);$("dVariaveis").textContent=brl(vr);$("dTotal").textContent=brl(tot);$("dMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
+
+ makeChart("chartDespesasEvolucao",{type:"bar",data:{labels:r.months.map(monthLabel),datasets:[
+  {label:"Fixas",data:r.months.map(m=>sumMonth(data.despesas.fixas,m,filter)),backgroundColor:"#A61729"},
+  {label:"Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m,filter)),backgroundColor:"#D65B6D"}
+ ]},options:chartOpts({stacked:true})});
+
+ let recs=[];if(type==="all"||type==="fixas")recs.push(...data.despesas.fixas);if(type==="all"||type==="variaveis")recs.push(...data.despesas.variaveis);
+ horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter));
+
+ let rows=expenseRows(true);
+
+ let fxAll=excelFilteredRows("fixas",data.despesas.fixas.filter(x=>inRange(x,r))),
+     fxShown=fxAll.map(x=>({...x,_kind:"fixas",_label:"Fixa"}));
+
+ let varAll=excelFilteredRows("variaveis",data.despesas.variaveis.filter(x=>inRange(x,r))),
+     varShown=varAll.map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
+
+ $("recentFixas").innerHTML=fxShown.length?expenseTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa fixa encontrada.</div></td></tr>`;
+ $("recentVariaveis").innerHTML=varShown.length?expenseTableHtml(varShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
+ setTableCount("fxTableCount",fxShown.length,fxAll.length,excelTableHasFilters("fixas"));
+ setTableCount("varTableCount",varShown.length,varAll.length,excelTableHasFilters("variaveis"));
+ updateExcelFilterHeaders();
+
+ $("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
+ if(!$("fxReplicateTarget").value)$("fxReplicateTarget").value=ref;
+ bindActions($("despesas"))
+}
+function renderIncome(){
+ if(!data)return;
+ let r=periodRange();syncTableFilterBounds(r);
+ let ref=r.ref,person=$("incomePersonFilter").value,
+     filter=x=>(person==="all"||x.pessoa===person),
+     rows=data.receitas.filter(filter),
+     ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),
+     total=rows.filter(x=>monthKey(x.data)===ref).reduce((s,x)=>s+Number(x.valor),0),
+     monthly=r.months.map(m=>rows.filter(x=>monthKey(x.data)===m).reduce((s,x)=>s+Number(x.valor),0));
+
+ $("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rTotal").textContent=brl(total);$("rMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
+
+ let people=[...new Set(data.receitas.map(x=>x.pessoa).filter(Boolean))].sort(),
+     incomeColors=INCOME_COLORS;
+
+ makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),incomeColors[p]||COLORS[i%COLORS.length]))},options:chartOpts()});
+ let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp,incomeColors);
+
+ let all=excelFilteredRows("receitas",data.receitas.filter(x=>inRange(x,r))),
+     shown=all;
+
+ $("recentReceitas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Nenhuma receita encontrada.</div></td></tr>`;
+ setTableCount("revTableCount",shown.length,all.length,excelTableHasFilters("receitas"));
+ updateExcelFilterHeaders();
+ bindActions($("receitas"))
+}
+function renderInstallments(){
+ if(!data)return;
+ let r=periodRange();syncTableFilterBounds(r);
+ let ref=r.ref,cat=$("installmentCategoryFilter").value,
+     filter=x=>cat==="all"||x.categoria===cat,
+     arr=data.parcelas.filter(filter),
+     sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),
+     future=arr.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor),0);
+
+ $("pMes").textContent=brl(sumMonth(arr,ref));$("p3").textContent=brl(sumFuture(3));$("p6").textContent=brl(sumFuture(6));$("pFuture").textContent=brl(future);
+
+ let historicalMonths=r.months.filter(m=>m<=ref),futureMonths=monthsBetween(addMonths(ref,1),addMonths(ref,12)),
+     labels=[...historicalMonths,...futureMonths],hLen=historicalMonths.length,fLen=futureMonths.length,
+     histValues=historicalMonths.map(m=>sumMonth(arr,m)).concat(Array(fLen).fill(null)),
+     futureValues=Array(hLen).fill(null).concat(futureMonths.map(m=>sumMonth(arr,m)));
+
+ let installmentOpts=chartOpts();
+ installmentOpts.plugins.tooltip.callbacks.label=ctx=>`${ctx.dataset.label}: ${brl(ctx.raw)}`;
+
+ makeChart("chartParcelasFuturo",{type:"bar",data:{labels:labels.map(monthLabel),datasets:[
+  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(184,21,112,.78)",borderColor:"#9D145F",borderWidth:1},
+  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(184,21,112,.22)",borderColor:"rgba(144,15,21,.55)",borderWidth:1}
+ ]},options:installmentOpts});
+ horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));
+
+ let all=excelFilteredRows("parcelas",data.parcelas.filter(x=>inRange(x,r))),
+     shown=all;
+
+ $("recentParcelas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhuma parcela encontrada.</div></td></tr>`;
+ setTableCount("parTableCount",shown.length,all.length,excelTableHasFilters("parcelas"));
+ updateExcelFilterHeaders();
+ bindActions($("parcelas"))
+}
+function renderInvestments(){
+ if(!data)return;
+ let r=periodRange();syncTableFilterBounds(r);
+ let snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),
+     meta=snap?metaForMonth(snap.month):null,
+     gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;
+
+ $("iIgorApl").textContent=snap?brl(snap.map["Igor: Aplicações"]||0):"—";
+ $("iVitApl").textContent=snap?brl(snap.map["Vitória: Aplicações"]||0):"—";
+ $("iPrev").textContent=snap?brl(snap.map["Igor: Previdência"]||0):"—";
+ $("iFgts").textContent=snap?brl((snap.map["Igor: FGTS"]||0)+(snap.map["Vitória: FGTS"]||0)):"—";
+ $("iTotal").textContent=snap?brl(snap.total):"—";
+ $("iSemFgts").textContent=snap?brl(snap.semFGTS):"—";
+ $("iMeta").textContent=Number.isFinite(meta)?brl(meta):"—";
+ $("iGap").textContent=Number.isFinite(gap)?brl(gap):"—";
+ $("iGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
+
+ renderCapitalAllocationChart("chartInvestAllocation",r);
+
+ let all=excelFilteredRows("investimentos",data.investimentos.historico.filter(x=>inRange(x,r))),
+     shown=all;
+
+ $("recentInvestimentos").innerHTML=shown.length
+  ?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
+  :`<tr><td colspan="6"><div class="empty">Nenhum registro de investimento encontrado.</div></td></tr>`;
+
+ setTableCount("invTableCount",shown.length,all.length,excelTableHasFilters("investimentos"));
+ updateExcelFilterHeaders();
+ bindActions($("investimentos"))
+}
+function projectionHistory(){
+ if(!data)return[];
+ return [...(data.patrimonio?.historico||[])]
+  .filter(x=>monthKey(x.data)>=HISTORY_START)
+  .sort((a,b)=>monthKey(a.data).localeCompare(monthKey(b.data)))
+  .map(x=>({month:monthKey(x.data),total:Number(x.total)||0,semFGTS:Number(x.semFGTS)||0,fgts:Number(x.fgts)||0}))
+}
+function xMonth(x){return monthKey(x.data||x.month)}
+function renderProjectionChart(id,horizon){
+ let hist=projectionHistory(),base=hist.at(-1),proj=projectPatrimony(horizon);
+ if(!base){makeChart(id,{type:"line",data:{labels:[],datasets:[]},options:chartOpts()});return}
+ let labels=[...hist.map(x=>x.month),...proj.map(x=>x.month)];
+ let total=[...hist.map(x=>x.total),...proj.map(x=>x.total)];
+ let sem=[...hist.map(x=>x.semFGTS),...proj.map(x=>x.semFGTS)];
+ let meta=labels.map(metaForMonth);
+ let lastActualIndex=hist.length-1;
+ let segmentDash=ctx=>ctx.p0DataIndex>=lastActualIndex?[7,4]:undefined;
+ let totalDs=lineDataset("Patrimônio total",total,CHART_TOTAL,{
+   borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
+   segment:{borderDash:segmentDash}
+ });
+ let semDs=lineDataset("Patrimônio sem FGTS",sem,CHART_META,{
+   borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
+   segment:{borderDash:segmentDash}
+ });
+ let metaDs=lineDataset("Meta sem FGTS",meta,CHART_EXPENSE,{
+   borderDash:[3,4],spanGaps:false,borderWidth:1.8,pointRadius:0,pointHoverRadius:4
+ });
+ let opts=chartOpts();
+ opts.plugins.tooltip.callbacks.label=ctx=>{
+   let suffix=ctx.dataIndex<=lastActualIndex?"real":"projetado";
+   if(ctx.dataset.label==="Meta sem FGTS")suffix="meta";
+   return `${ctx.dataset.label} (${suffix}): ${brl(ctx.raw)}`
+ };
+ makeChart(id,{type:"line",data:{labels:labels.map(monthLabel),datasets:[totalDs,semDs,metaDs]},options:opts})
+}
+function renderPatrimony(){if(!data)return;let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),meta=metaForMonth(r.ref),gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;$("patTotal").textContent=snap?brl(snap.total):"—";$("patSemFgts").textContent=snap?brl(snap.semFGTS):"—";$("patFgts").textContent=snap?brl(snap.fgts):"—";$("patMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("patGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("patGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";$("patDate").textContent=snap?`Fechamento ${monthLabel(snap.month)}`:"—";renderProjectionChart("chartPatProjection",Math.min(24,Number(projectionSettings().horizonteMeses)||24));let comps=componentDefs().map(x=>x.descricao);makeChart("chartPatComponents",{type:"line",data:{labels:r.months.map(monthLabel),datasets:comps.map((c,i)=>lineDataset(c,r.months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):null}),COLORS[i%COLORS.length],{spanGaps:true}))},options:chartOpts()});if(snap)donut("chartPatDonut",snap.map);let recent=data.investimentos.historico.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentPatrimonio").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join(""):`<tr><td colspan="4"><div class="empty">Sem registros.</div></td></tr>`;bindActions($("patrimonio"))}
+
+function setProjectionInputs(){if(!data)return;let s=projectionSettings();$("projRentApl").value=moneyInput(Number(s.rentabilidadeAplicacoesMensal)*100);$("projRentPrev").value=moneyInput(Number(s.rentabilidadePrevidenciaFgtsMensal)*100);$("projPrevIgor").value=moneyInput(s.aportePrevidenciaIgor);$("projFgtsIgor").value=moneyInput(s.aporteFgtsIgor);$("projFgtsVit").value=moneyInput(s.aporteFgtsVitoria);$("projAplIgor").value=moneyInput(s.aporteAplicacoesIgor);$("projAplVit").value=moneyInput(s.aporteAplicacoesVitoria);$("projHorizon").value=s.horizonteMeses||24}
+function renderProjection(){if(!data)return;let n=Number(projectionSettings().horizonteMeses)||24,proj=projectPatrimony(n),end=proj.at(-1);renderProjectionChart("chartProjectionDetail",n);if(end){$("projEndTotal").textContent=brl(end.total);$("projEndSem").textContent=brl(end.semFGTS);$("projEndMeta").textContent=Number.isFinite(end.meta)?brl(end.meta):"—";let gap=Number.isFinite(end.meta)?end.semFGTS-end.meta:null;$("projEndGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("projEndGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):""}}
+
+function manageRecords(){if(!data)return[];let rows=[];data.despesas.fixas.forEach(x=>rows.push({...x,_kind:"fixas",_label:"Despesa fixa",_detail:x.categoria}));data.despesas.variaveis.forEach(x=>rows.push({...x,_kind:"variaveis",_label:"Despesa variável",_detail:x.categoria}));data.parcelas.forEach(x=>rows.push({...x,_kind:"parcelas",_label:"Parcela",_detail:x.categoria}));data.receitas.forEach(x=>rows.push({...x,_kind:"receitas",_label:"Receita",_detail:x.pessoa}));data.investimentos.historico.forEach(x=>rows.push({...x,_kind:"investimento",_label:"Investimento / patrimônio",_detail:x.classe||investmentClass(x.descricao)}));return rows.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")||b.data.localeCompare(a.data))}
+function renderManage(){if(!data)return;let type=$("manageType").value,q=normSearch($("manageSearch").value),rows=manageRecords().filter(x=>(type==="all"||x._kind===type)&&(!q||normSearch(x.descricao).includes(q))).slice(0,250);$("manageBody").innerHTML=rows.length?rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x._detail||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhum lançamento encontrado.</div></td></tr>`;bindActions($("novo"))}
+function normSearch(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
+function findRecord(kind,id){let arr=kind==="fixas"?data.despesas.fixas:kind==="variaveis"?data.despesas.variaveis:kind==="parcelas"?data.parcelas:kind==="receitas"?data.receitas:data.investimentos.historico;return{arr,rec:arr.find(x=>String(x.id)===String(id))}}
+async function deleteRecord(kind,id){if(!data)return;let{arr,rec}=findRecord(kind,id);if(!rec)return;let extra=kind==="parcelas"?` Parcela ${rec.parcela||"?"}/${rec.totalParcelas||"?"}.`:"";if(!confirm(`Excluir somente este lançamento?\n\n${rec.descricao}\n${dateLabel(rec.data)}\n${brl(rec.valor)}${extra}\n\nOs gráficos e totais serão recalculados automaticamente.`))return;let i=arr.indexOf(rec);arr.splice(i,1);touch();await afterMutation("Lançamento excluído.")}
+function contextConfig(kind){
+ return {
+  fixas:{tab:"despesas",form:"fxForm",title:"fxFormTitle",date:"cFxDate",desc:"cFxDesc",cat:"cFxCat",value:"cFxValue"},
+  variaveis:{tab:"despesas",form:"varForm",title:"varFormTitle",date:"cVarDate",desc:"cVarDesc",cat:"cVarCat",value:"cVarValue"},
+  receitas:{tab:"receitas",form:"revForm",title:"revFormTitle",date:"cRevDate",desc:"cRevDesc",person:"cRevPerson",value:"cRevValue"},
+  parcelas:{tab:"parcelas",form:"parForm",title:"parFormTitle",date:"cParDate",desc:"cParDesc",cat:"cParCat",value:"cParValue",num:"cParNum",valueLabel:"cParValueLabel"},
+  investimento:{tab:"investimentos",form:"invForm",title:"invFormTitle",date:"cInvDate",comp:"cInvComp",value:"cInvValue"}
+ }[kind]
+}
+function defaultContextDate(){
+ let ref=periodRange().ref,current=currentCalendarMonth();
+ return ref===current?new Date().toISOString().slice(0,10):ref+"-01"
+}
+function contextTitle(kind,editingMode=false){
+ let base={fixas:"despesa fixa",variaveis:"despesa variável",receitas:"receita",parcelas:"parcela",investimento:"registro de investimento"}[kind];
+ return `${editingMode?"Editar":"Adicionar novo"} ${base}`
+}
+function openContextForm(kind,rec=null){
+ let c=contextConfig(kind);if(!c)return;
+ contextEditing=rec?{kind,id:rec.id}:null;
+ showTab(c.tab);
+ $(c.form).classList.remove("hidden");
+ $(c.title).textContent=contextTitle(kind,!!rec);
+
+ if(kind==="investimento"){
+  $(c.date).value=rec?monthKey(rec.data):periodRange().ref;
+  $(c.comp).value=rec?.descricao||componentDefs()[0]?.descricao||"";
+  $(c.value).value=rec?moneyInput(rec.valor):"";
+ }else{
+  $(c.date).value=rec?.data||defaultContextDate();
+  if(c.desc)$(c.desc).value=rec?.descricao||"";
+  if(c.cat)$(c.cat).value=rec?.categoria||categories()[0]||"";
+  if(c.person)$(c.person).value=rec?.pessoa||"Igor";
+  $(c.value).value=rec?moneyInput(rec.valor):"";
+  if(kind==="parcelas"){
+   $(c.num).value=rec?.totalParcelas||1;
+   $(c.num).disabled=!!rec;
+   $(c.valueLabel).textContent=rec?"Valor desta parcela (R$)":"Valor total da compra (R$)";
+  }
+ }
+ setTimeout(()=>$(c.form).scrollIntoView({behavior:"smooth",block:"nearest"}),120)
+}
+function closeContextForm(kind){
+ let c=contextConfig(kind);if(!c)return;
+ $(c.form).classList.add("hidden");
+ contextEditing=null;
+ if(c.desc)$(c.desc).value="";
+ if(c.value)$(c.value).value="";
+ if(kind==="parcelas"){$(c.num).disabled=false;$(c.num).value=1;$(c.valueLabel).textContent="Valor total da compra (R$)"}
+}
+function beginEdit(kind,id){
+ let{rec}=findRecord(kind,id);if(!rec)return;
+ openContextForm(kind,rec)
+}
+async function saveContextRecord(kind){
+ if(!data){toast("Importe dados_financeiros.json primeiro.");return}
+ let c=contextConfig(kind),val=parseMoney($(c.value).value),isEdit=contextEditing?.kind===kind&&contextEditing?.id;
+ if(!$(c.value).value.trim()||!Number.isFinite(val)){toast("Informe um valor válido.");return}
+
+ let createdAt=new Date().toISOString();
+
+ if(isEdit){
+  let{rec}=findRecord(kind,contextEditing.id);if(!rec)return;
+  if(kind==="investimento"){
+   let ym=$(c.date).value,comp=$(c.comp).value;
+   if(!ym||!comp){toast("Informe mês e componente.");return}
+   let collision=data.investimentos.historico.find(x=>x.id!==rec.id&&monthKey(x.data)===ym&&x.descricao===comp);
+   if(collision){toast("Já existe um registro desse componente nesse mês.");return}
+   rec.data=ym+"-01";rec.descricao=comp;rec.valor=val;
+   let def=componentDefs().find(x=>x.descricao===comp);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||"";
+  }else{
+   let date=$(c.date).value,desc=$(c.desc).value.trim();
+   if(!date||!desc){toast("Preencha data e descrição.");return}
+   rec.data=date;rec.descricao=desc;rec.valor=val;
+   if(kind==="receitas")rec.pessoa=$(c.person).value;
+   else rec.categoria=$(c.cat).value;
+  }
+  rec.origem="app";rec.updatedAt=createdAt;
+  touch();closeContextForm(kind);await afterMutation("Lançamento editado.");return
+ }
+
+ if(kind==="fixas"||kind==="variaveis"){
+  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value;
+  if(!date||!desc){toast("Preencha data e descrição.");return}
+  data.despesas[kind].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})
+ }else if(kind==="receitas"){
+  let date=$(c.date).value,desc=$(c.desc).value.trim();
+  if(!date||!desc){toast("Preencha data e descrição.");return}
+  data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$(c.person).value,valor:val,origem:"app",createdAt})
+ }else if(kind==="parcelas"){
+  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value,n=Math.max(1,Number($(c.num).value)||1);
+  if(!date||!desc){toast("Preencha data e descrição.");return}
+  let cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();
+  for(let i=0;i<n;i++)data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})
+ }else if(kind==="investimento"){
+  let ym=$(c.date).value,comp=$(c.comp).value;
+  if(!ym||!comp){toast("Informe mês e componente.");return}
+  let existedBefore=data.investimentos.historico.some(x=>monthKey(x.data)===ym&&x.descricao===comp);
+  ensureInvestmentMonth(ym);
+  let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);
+  if(rec){
+   if(existedBefore&&!confirm(`Já existe saldo para ${comp} em ${monthLabel(ym)}.\n\nDeseja atualizar esse registro para ${brl(val)}?`))return;
+   rec.valor=val;rec.origem="app";rec.updatedAt=createdAt
+  }else{
+   let def=componentDefs().find(x=>x.descricao===comp);
+   data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})
+  }
+ }
+ touch();closeContextForm(kind);await afterMutation("Lançamento adicionado.")
+}
+async function replicateFixedPrevious(){
+ if(!data)return;
+ let target=$("fxReplicateTarget").value||periodRange().ref;
+ if(target<HISTORY_START){toast("O histórico começa em mai/2022.");return}
+ let source=addMonths(target,-1),
+     sourceRows=data.despesas.fixas.filter(x=>monthKey(x.data)===source),
+     targetRows=data.despesas.fixas.filter(x=>monthKey(x.data)===target);
+
+ if(!sourceRows.length){toast(`Não há despesas fixas em ${monthLabel(source)} para replicar.`);return}
+
+ let key=x=>`${normSearch(x.descricao)}|${normSearch(x.categoria)}`,
+     existing=new Set(targetRows.map(key)),
+     seen=new Set(existing),toCopy=[];
+ sourceRows.forEach(x=>{let k=key(x);if(!seen.has(k)){toCopy.push(x);seen.add(k)}});
+
+ if(!toCopy.length){toast(`Todos os lançamentos equivalentes de ${monthLabel(source)} já existem em ${monthLabel(target)}.`);return}
+
+ let skipped=sourceRows.length-toCopy.length;
+ let msg=`Replicar despesas fixas de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} lançamentos.${skipped?`\n${skipped} equivalentes já existentes serão ignorados.`:""}\n\nDepois você poderá editar cada lançamento individualmente.`;
+ if(!confirm(msg))return;
+
+ let now=new Date().toISOString();
+ toCopy.forEach(x=>{
+  let newDate=addMonthsDate(x.data,1);
+  data.despesas.fixas.push({id:uid(),data:newDate,descricao:x.descricao,categoria:x.categoria,valor:Number(x.valor),origem:"app",createdAt:now,replicadoDe:x.id,replicadoDeMes:source})
+ });
+ touch();await afterMutation(`${toCopy.length} despesas fixas replicadas para ${monthLabel(target)}.`)
+}
+function cancelEdit(){editing=null;$("editBanner").classList.add("hidden");$("btnCancelEdit").classList.add("hidden");$("nTipo").disabled=false;$("nDescricao").value="";$("nValor").value="";updateLaunchForm()}
+function updateLaunchForm(){let t=$("nTipo").value;$("fCategoria").classList.toggle("hidden",!['fixas','variaveis','parcelas'].includes(t));$("fPessoa").classList.toggle("hidden",t!=="receitas");$("fComponente").classList.toggle("hidden",t!=="investimento");$("fNumParcelas").classList.toggle("hidden",t!=="parcelas"||!!editing);$("fDescricao").classList.toggle("hidden",t==="investimento");$("nValorLabel").textContent=t==="parcelas"&&!editing?"Valor total da compra (R$)":t==="investimento"?"Saldo do componente (R$)":"Valor (R$)"}
+function prevSnapshotBefore(ym){let months=[...new Set(data.investimentos.historico.map(x=>monthKey(x.data)))].filter(m=>m<ym).sort(),m=months.at(-1);if(!m)return{};let o={};data.investimentos.historico.filter(x=>monthKey(x.data)===m).forEach(x=>o[x.descricao]=Number(x.valor)||0);return o}
+function ensureInvestmentMonth(ym){let existing=data.investimentos.historico.filter(x=>monthKey(x.data)===ym);if(existing.length)return;let prev=prevSnapshotBefore(ym);componentDefs().forEach(c=>data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:c.descricao,classe:c.classe,pessoa:c.pessoa,valor:Number(prev[c.descricao]||0),origem:"app",tipoRegistro:"saldoMensal",createdAt:new Date().toISOString()}))}
+async function saveLaunch(){if(!data){toast("Importe dados_financeiros.json primeiro.");return}let t=$("nTipo").value,date=$("nData").value,val=parseMoney($("nValor").value);if(!date||!$("nValor").value.trim()||!Number.isFinite(val)){toast("Preencha data e valor.");return}if(editing){let{rec}=findRecord(editing.kind,editing.id);if(!rec)return;rec.data=editing.kind==="investimento"?monthKey(date)+"-01":date;rec.valor=val;if(editing.kind==="receitas"){rec.descricao=$("nDescricao").value.trim()||"Entrada";rec.pessoa=$("nPessoa").value}else if(editing.kind==="investimento"){rec.descricao=$("nComponente").value;let def=componentDefs().find(x=>x.descricao===rec.descricao);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||""}else{rec.descricao=$("nDescricao").value.trim()||$("nCategoria").value;rec.categoria=$("nCategoria").value}rec.updatedAt=new Date().toISOString();touch();cancelEdit();await afterMutation("Lançamento editado.");return}
+ let desc=$("nDescricao").value.trim(),cat=$("nCategoria").value,createdAt=new Date().toISOString();if(t==="fixas"||t==="variaveis"){if(!desc){toast("Informe a descrição do gasto.");return}data.despesas[t].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})}else if(t==="receitas"){if(!desc){toast("Informe a descrição da receita.");return}data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$("nPessoa").value,valor:val,origem:"app",createdAt,legado:false})}else if(t==="parcelas"){if(!desc){toast("Informe a descrição da compra.");return}let n=Math.max(1,Number($("nNumParcelas").value)||1),cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();for(let i=0;i<n;i++){data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})}}else{let ym=monthKey(date),comp=$("nComponente").value;ensureInvestmentMonth(ym);let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);if(rec){rec.valor=val;rec.origem="app";rec.updatedAt=createdAt}else{let def=componentDefs().find(x=>x.descricao===comp);data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})}}
+ touch();$("nDescricao").value="";$("nValor").value="";await afterMutation("Lançamento adicionado.")}
+async function afterMutation(msg){rebuildPatrimonyHistory();renderAll();if(account&&remoteMeta){try{await saveRemoteWithConflictCheck();dirty=false;updateStatus();toast(msg+" Salvo no OneDrive.")}catch(e){handleError(e);toast(msg+" Alteração mantida localmente; exporte o JSON.")}}else toast(msg+" Exporte o JSON para guardar a alteração.")}
+
+function refreshSelects(){
+ if(!data)return;
+ let opts=categories().map(c=>`<option>${esc(c)}</option>`).join("");
+ $("nCategoria").innerHTML=opts;
+ ["cFxCat","cVarCat","cParCat"].forEach(id=>{if($(id))$(id).innerHTML=opts});
+ $("expenseCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
+ $("installmentCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
+ ["fxTableCategory","varTableCategory","parTableCategory"].forEach(id=>{if($(id))$(id).innerHTML='<option value="all">Todas</option>'+opts});
+
+ let people=[...new Set(["Igor","Vitória","Outro",...data.receitas.map(x=>x.pessoa).filter(Boolean)])];
+ $("incomePersonFilter").innerHTML='<option value="all">Todas as pessoas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("cRevPerson"))$("cRevPerson").innerHTML=people.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("revTablePerson"))$("revTablePerson").innerHTML='<option value="all">Todas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
+
+ let comps=componentDefs().map(x=>x.descricao);
+ $("nComponente").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("cInvComp"))$("cInvComp").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("invTableComponent"))$("invTableComponent").innerHTML='<option value="all">Todos</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")
+}
+function renderJsonInfo(){if(!data)return;$("jsonInfo").textContent="Dados carregados com sucesso."}
+function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
+
+const titles={
+ geral:["Visão Geral",""],
+ despesas:["Despesas",""],
+ receitas:["Receitas",""],
+ parcelas:["Parcelas",""],
+ investimentos:["Investimentos",""],
+ config:["Configuração / Importação",""]
+};
+function renderVisibleTab(id){
+ if(!data)return;
+ if(id==="geral")renderGeneral();
+ else if(id==="despesas")renderExpenses();
+ else if(id==="receitas")renderIncome();
+ else if(id==="parcelas")renderInstallments();
+ else if(id==="investimentos"){renderInvestments();setProjectionInputs();renderProjection()}
+ else if(id==="config")renderJsonInfo()
+}
+function showTab(id){
+ if(!titles[id])id="geral";
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+ Object.keys(titles).forEach(x=>$(x).classList.toggle("hidden",x!==id));
+ ["patrimonio","projecao","novo"].forEach(x=>{if($(x))$(x).classList.add("hidden")});
+ $("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];
+ setTimeout(()=>{renderVisibleTab(id);Object.values(charts).forEach(c=>c.resize())},80)
+}
+
+async function saveProjectionSettings(){if(!data)return;let s=data.configuracoes.projecaoPatrimonial;s.rentabilidadeAplicacoesMensal=parseMoney($("projRentApl").value)/100;s.rentabilidadePrevidenciaFgtsMensal=parseMoney($("projRentPrev").value)/100;s.aportePrevidenciaIgor=parseMoney($("projPrevIgor").value);s.aporteFgtsIgor=parseMoney($("projFgtsIgor").value);s.aporteFgtsVitoria=parseMoney($("projFgtsVit").value);s.aporteAplicacoesIgor=parseMoney($("projAplIgor").value);s.aporteAplicacoesVitoria=parseMoney($("projAplVit").value);s.horizonteMeses=Math.max(1,Math.min(240,Number($("projHorizon").value)||24));touch();await afterMutation("Premissas atualizadas.")}
+async function resetProjection(){if(!data)return;Object.assign(data.configuracoes.projecaoPatrimonial,{rentabilidadeAplicacoesMensal:.01,rentabilidadePrevidenciaFgtsMensal:.005,aportePrevidenciaIgor:1100,aporteFgtsIgor:1100,aporteFgtsVitoria:590,aporteAplicacoesIgor:5000,aporteAplicacoesVitoria:3000,horizonteMeses:24});touch();setProjectionInputs();await afterMutation("Premissas padrão restauradas.")}
+
+function exportJson(){if(!data){toast("Nenhuma base carregada.");return}let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=FILE_NAME;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);dirty=false;updateStatus();toast("Dados exportados.")}
+async function importJson(file){try{let obj=JSON.parse(await file.text());if(!validateData(obj))throw new Error("O arquivo selecionado não é compatível.");data=obj;dirty=false;refreshSelects();let latest=latestOperationalMonth();$("periodEnd").value=latest;$("nData").value=new Date().toISOString().slice(0,10);renderAll();toast("Dados importados com sucesso.")}catch(e){handleError(e)}finally{$("jsonImport").value=""}}
+
+function setSyncStatus(t,state=""){$("syncPill").textContent=t;$("syncPill").className="syncpill "+state}
+function updateCloudUi(){$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?"Dados sincronizados com o OneDrive.":"Ainda não sincronizado.";if(account&&remoteMeta&&!dirty)setSyncStatus("OneDrive sincronizado","online");else if(account)setSyncStatus(dirty?"Alterado localmente":"Conectado","warn");else if(data)setSyncStatus("Dados carregados");else setSyncStatus("Sem dados")}
+function clientId(){return localStorage.getItem(CLIENT_KEY)||""}
+async function initPca(){let id=clientId();$("clientIdInput").value=id;if(!id){pca=null;return}pca=new PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let resp=await pca.handleRedirectPromise();account=resp?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);updateCloudUi()}
+async function token(){if(!pca||!account)throw new Error("Entre com a conta Microsoft primeiro.");try{let r=await pca.acquireTokenSilent({scopes:SCOPES,account});accessToken=r.accessToken;return accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});return null}throw e}}
+async function graph(path,opts={}){let t=await token();return fetch("https://graph.microsoft.com/v1.0"+path,{...opts,headers:{Authorization:`Bearer ${t}`,...(opts.headers||{})}})}
+async function ensureAppRoot(){let r=await graph("/me/drive/special/approot");if(!r.ok)throw new Error(`Não foi possível acessar a pasta do aplicativo (${r.status}).`);appRoot=await r.json();return appRoot}
+async function getMeta(){await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}`);if(r.status===404)return null;if(!r.ok)throw new Error(`Erro ao ler metadados de ${FILE_NAME} (${r.status}).`);return r.json()}
+async function uploadJson(){if(!data)throw new Error("Importe o JSON consolidado primeiro.");await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}:/content`,{method:"PUT",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify(data,null,2)});if(!r.ok)throw new Error(`Falha ao gravar ${FILE_NAME} no OneDrive (${r.status}).`);remoteMeta=await r.json();dirty=false;updateCloudUi();return remoteMeta}
+async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus(`${FILE_NAME} não existe`,"warn");toast("Primeiro uso: importe dados_financeiros.json e envie ao OneDrive.");updateCloudUi();return}let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error(`Falha ao baixar ${FILE_NAME} (${r.status}).`);let obj=JSON.parse(await r.text());if(!validateData(obj))throw new Error("Os dados remotos têm formato incompatível.");data=obj;remoteMeta=meta;dirty=false;refreshSelects();renderAll();toast("Base sincronizada do OneDrive.")}
+async function saveRemoteWithConflictCheck(){let current=await getMeta();if(current&&remoteMeta?.eTag&&current.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson()}
+function handleError(e){console.error(e);if(String(e?.message||e)==="CONFLICT_REMOTE"){toast("Conflito: existe uma versão mais nova no OneDrive. Sincronize antes de salvar.");return}toast(e?.message||String(e))}
+
+$("redirectUriBox").textContent=REDIRECT_URI;
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+$("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").onchange=renderAll;$("periodEnd").onchange=renderAll;
+["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;
+
+$("btnOpenFixed").onclick=()=>openContextForm("fixas");
+$("btnOpenVariable").onclick=()=>openContextForm("variaveis");
+$("btnOpenRevenue").onclick=()=>openContextForm("receitas");
+$("btnOpenInstallment").onclick=()=>openContextForm("parcelas");
+$("btnOpenInvestment").onclick=()=>openContextForm("investimento");
+$("btnSaveFixed").onclick=()=>saveContextRecord("fixas");
+$("btnSaveVariable").onclick=()=>saveContextRecord("variaveis");
+$("btnSaveRevenue").onclick=()=>saveContextRecord("receitas");
+$("btnSaveInstallment").onclick=()=>saveContextRecord("parcelas");
+$("btnSaveInvestment").onclick=()=>saveContextRecord("investimento");
+$("btnCancelFixed").onclick=()=>closeContextForm("fixas");
+$("btnCancelVariable").onclick=()=>closeContextForm("variaveis");
+$("btnCancelRevenue").onclick=()=>closeContextForm("receitas");
+$("btnCancelInstallment").onclick=()=>closeContextForm("parcelas");
+$("btnCancelInvestment").onclick=()=>closeContextForm("investimento");
+$("btnReplicateFixed").onclick=replicateFixedPrevious;
 
 document.addEventListener("click",e=>{
  let btn=e.target.closest(".excel-filter-btn");
@@ -1187,17 +1506,13 @@ document.addEventListener("click",e=>{
 });
 $("excelFilterMenu").onclick=e=>e.stopPropagation();
 $("excelFilterSearch").oninput=()=>{excelRefreshValueSearch();excelSyncSelectAll()};
-$("excelFilterSelectAll").onchange=()=>{
- $("excelFilterValues").querySelectorAll(".excel-filter-value:not(.hidden) input").forEach(x=>x.checked=$("excelFilterSelectAll").checked);
- excelSyncSelectAll()
-};
+$("excelFilterSelectAll").onchange=()=>{$("excelFilterValues").querySelectorAll(".excel-filter-value:not(.hidden) input").forEach(x=>x.checked=$("excelFilterSelectAll").checked);excelSyncSelectAll()};
 $("excelSortAsc").onclick=()=>{excelMenuSort=excelMenuSort==="asc"?null:"asc";$("excelSortAsc").classList.toggle("active",excelMenuSort==="asc");$("excelSortDesc").classList.remove("active")};
 $("excelSortDesc").onclick=()=>{excelMenuSort=excelMenuSort==="desc"?null:"desc";$("excelSortDesc").classList.toggle("active",excelMenuSort==="desc");$("excelSortAsc").classList.remove("active")};
 $("excelFilterApply").onclick=excelApplyCurrent;
 $("excelFilterClear").onclick=excelClearCurrent;
 window.addEventListener("resize",closeExcelFilterMenu);
 window.addEventListener("scroll",closeExcelFilterMenu,true);
-
 $("manageType").onchange=renderManage;$("manageSearch").oninput=renderManage;$("nTipo").onchange=updateLaunchForm;$("btnSaveLaunch").onclick=saveLaunch;$("btnCancelEdit").onclick=cancelEdit;$("btnSaveProjection").onclick=saveProjectionSettings;$("btnResetProjection").onclick=resetProjection;
 document.querySelectorAll(".money-input").forEach(el=>el.addEventListener("blur",()=>{if(el.value.trim()!=="")el.value=moneyInput(parseMoney(el.value))}));
 $("jsonImport").onchange=()=>{let f=$("jsonImport").files?.[0];if(f)importJson(f)};$("btnExportJson").onclick=exportJson;
