@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.6</title>
+<title>Controle Financeiro • v8.8</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -17,12 +17,26 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
 @media(max-width:1200px){.grid7{grid-template-columns:repeat(4,1fr)}.grid5{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr}.projection-form{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){.app{display:block}.sidebar{height:auto;position:sticky;top:0;padding:8px 9px;display:block}.brand,.navlabel,.sidebar-foot{display:none}.tabs{display:flex;flex-direction:row;overflow:auto;gap:4px}.tab{white-space:nowrap;padding:8px}.tab.active{box-shadow:none}.topbar{top:46px;height:auto;min-height:60px;padding:8px 11px}.topbar-inner{align-items:flex-start}.top-title small{display:none}main{padding:13px 11px 80px}.workspace-head{align-items:flex-start;flex-direction:column}.grid2,.setupgrid{grid-template-columns:1fr}}
 @media(max-width:560px){.grid7,.grid5,.grid4{grid-template-columns:repeat(2,1fr)}.formgrid,.projection-form{grid-template-columns:1fr}.top-actions .syncpill{display:none}.chart-wrap{height:260px}.periodbar{width:100%}.periodbar select{flex:1}.workspace-head h1{font-size:21px}.kpi strong{font-size:16px}}
+
+.context-card{border:1px solid #e6eaf0;background:#fbfcfe;border-radius:12px;padding:12px;margin-top:12px}
+.context-card .context-title{font-size:12px;font-weight:800;margin-bottom:8px}
+.context-toolbar{display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin-top:10px}
+.context-toolbar .field{min-width:170px}
+.context-toolbar .btn{margin:0}
+.inline-editor{border-top:1px solid #e8edf3;margin-top:12px;padding-top:12px}
+.inline-editor.hidden{display:none}
+.inline-editor .formgrid{margin-top:4px}
+.section-subtitle{font-size:10px;color:#748297;margin-top:3px}
+.divider-label{margin:20px 0 8px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:#55657b}
+.soft-pink{color:#d97994!important}
+.soft-blue{color:#2563eb!important}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8</small></div></div>
+  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.8</small></div></div>
   <div class="navlabel">Navegação</div>
   <div class="tabs">
     <button class="tab active" data-tab="geral">Visão Geral</button>
@@ -30,9 +44,6 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
     <button class="tab" data-tab="receitas">Receitas</button>
     <button class="tab" data-tab="parcelas">Parcelas</button>
     <button class="tab" data-tab="investimentos">Investimentos</button>
-    <button class="tab" data-tab="patrimonio">Patrimônio</button>
-    <button class="tab" data-tab="projecao">Projeção Patrimonial</button>
-    <button class="tab" data-tab="novo">Novo Lançamento</button>
     <button class="tab" data-tab="config">Configuração / Importação</button>
   </div>
   <div class="sidebar-foot">GitHub Pages: somente o HTML.<br>Dados privados: <b>dados_financeiros.json</b> no OneDrive.</div>
@@ -85,42 +96,170 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
 
 <section id="despesas" class="hidden">
  <div class="filterbar"><div class="filter-group"><select id="expenseTypeFilter"><option value="all">Fixas + variáveis</option><option value="fixas">Somente fixas</option><option value="variaveis">Somente variáveis</option></select><select id="expenseCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
- <div class="grid4"><div class="card kpi"><label>Fixas • mês</label><strong id="dFixas">—</strong></div><div class="card kpi"><label>Variáveis • mês</label><strong id="dVariaveis">—</strong></div><div class="card kpi"><label>Total • mês</label><strong id="dTotal">—</strong></div><div class="card kpi"><label>Média no período</label><strong id="dMedia">—</strong></div></div>
- <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Evolução das despesas</h3><p>Fixas e variáveis por mês.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasEvolucao"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div></div>
- <div class="card section"><div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 despesas mais recentes até o mês de referência.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentDespesas"></tbody></table></div></div>
- <div class="card section"><div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado sem remover o histórico armazenado no JSON.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div></div>
+ <div class="grid4">
+  <div class="card kpi"><label>Fixas • mês</label><strong id="dFixas">—</strong></div>
+  <div class="card kpi"><label>Variáveis • mês</label><strong id="dVariaveis">—</strong></div>
+  <div class="card kpi"><label>Total • mês</label><strong id="dTotal">—</strong></div>
+  <div class="card kpi"><label>Média no período</label><strong id="dMedia">—</strong></div>
+ </div>
+
+ <div class="grid2 section">
+  <div class="card chart-card"><div class="chart-head"><div><h3>Evolução das despesas</h3><p>Fixas e variáveis por mês.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasEvolucao"></canvas></div></div>
+  <div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div>
+ </div>
+
+ <div class="card section">
+  <div class="chart-head">
+   <div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Registros fixos mais recentes até o mês de referência.</p></div>
+  </div>
+  <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
+
+  <div class="context-toolbar">
+   <div class="field"><label>Mês de destino</label><input id="fxReplicateTarget" type="month" min="2022-05"></div>
+   <button id="btnReplicateFixed" class="btn secondary">Replicar mês anterior</button>
+   <button id="btnOpenFixed" class="btn green">Adicionar nova despesa fixa</button>
+  </div>
+
+  <div id="fxForm" class="inline-editor hidden">
+   <div class="context-title" id="fxFormTitle">Adicionar nova despesa fixa</div>
+   <div class="formgrid">
+    <div class="field"><label>Data</label><input id="cFxDate" type="date"></div>
+    <div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"></div>
+    <div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
+    <div class="field"><label>Valor (R$)</label><input id="cFxValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
+   </div>
+   <div class="form-actions"><button id="btnSaveFixed" class="btn green">Salvar</button><button id="btnCancelFixed" class="btn secondary">Cancelar</button></div>
+  </div>
+ </div>
+
+ <div class="card section">
+  <div class="chart-head">
+   <div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Registros variáveis mais recentes até o mês de referência.</p></div>
+  </div>
+  <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
+  <div class="context-toolbar"><button id="btnOpenVariable" class="btn green">Adicionar nova despesa variável</button></div>
+
+  <div id="varForm" class="inline-editor hidden">
+   <div class="context-title" id="varFormTitle">Adicionar nova despesa variável</div>
+   <div class="formgrid">
+    <div class="field"><label>Data</label><input id="cVarDate" type="date"></div>
+    <div class="field"><label>Descrição</label><input id="cVarDesc" maxlength="160" placeholder="Ex.: Supermercado"></div>
+    <div class="field"><label>Categoria</label><select id="cVarCat"></select></div>
+    <div class="field"><label>Valor (R$)</label><input id="cVarValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
+   </div>
+   <div class="form-actions"><button id="btnSaveVariable" class="btn green">Salvar</button><button id="btnCancelVariable" class="btn secondary">Cancelar</button></div>
+  </div>
+ </div>
+
+ <div class="card section">
+  <div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado sem remover o histórico armazenado no JSON.</p></div></div>
+  <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
+ </div>
 </section>
 
 <section id="receitas" class="hidden">
  <div class="filterbar"><div class="filter-group"><select id="incomePersonFilter"><option value="all">Todas as pessoas</option></select></div></div>
- <div class="grid4"><div class="card kpi"><label>Igor • mês</label><strong id="rIgor">—</strong></div><div class="card kpi"><label>Vitória • mês</label><strong id="rVitoria">—</strong></div><div class="card kpi"><label>Total • mês</label><strong id="rTotal">—</strong></div><div class="card kpi"><label>Média no período</label><strong id="rMedia">—</strong></div></div>
- <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Receitas mensais</h3><p>Histórico por pessoa.</p></div></div><div class="chart-wrap"><canvas id="chartReceitas"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div></div>
- <div class="card section"><div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 receitas mais recentes.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div></div>
+ <div class="grid4">
+  <div class="card kpi"><label>Igor • mês</label><strong id="rIgor" class="soft-blue">—</strong></div>
+  <div class="card kpi"><label>Vitória • mês</label><strong id="rVitoria" class="soft-pink">—</strong></div>
+  <div class="card kpi"><label>Total • mês</label><strong id="rTotal">—</strong></div>
+  <div class="card kpi"><label>Média no período</label><strong id="rMedia">—</strong></div>
+ </div>
+ <div class="grid2 section">
+  <div class="card chart-card"><div class="chart-head"><div><h3>Receitas mensais</h3><p>Igor em azul e Vitória em rosa pastel.</p></div></div><div class="chart-wrap"><canvas id="chartReceitas"></canvas></div></div>
+  <div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
+ </div>
+ <div class="card section">
+  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 receitas mais recentes.</p></div></div>
+  <div class="wrap"><table><thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
+  <div class="context-toolbar"><button id="btnOpenRevenue" class="btn green">Adicionar nova receita</button></div>
+  <div id="revForm" class="inline-editor hidden">
+   <div class="context-title" id="revFormTitle">Adicionar nova receita</div>
+   <div class="formgrid">
+    <div class="field"><label>Data</label><input id="cRevDate" type="date"></div>
+    <div class="field"><label>Pessoa</label><select id="cRevPerson"><option>Igor</option><option>Vitória</option><option>Outro</option></select></div>
+    <div class="field"><label>Descrição</label><input id="cRevDesc" maxlength="160" placeholder="Ex.: Salário"></div>
+    <div class="field"><label>Valor (R$)</label><input id="cRevValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
+   </div>
+   <div class="form-actions"><button id="btnSaveRevenue" class="btn green">Salvar</button><button id="btnCancelRevenue" class="btn secondary">Cancelar</button></div>
+  </div>
+ </div>
 </section>
 
 <section id="parcelas" class="hidden">
  <div class="filterbar"><div class="filter-group"><select id="installmentCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
- <div class="grid4"><div class="card kpi"><label>Parcelas • mês</label><strong id="pMes">—</strong></div><div class="card kpi"><label>Próximos 3 meses</label><strong id="p3">—</strong></div><div class="card kpi"><label>Próximos 6 meses</label><strong id="p6">—</strong></div><div class="card kpi"><label>Total futuro</label><strong id="pFuture">—</strong></div></div>
- <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Projeção das parcelas</h3><p>Comprometimento mensal futuro.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasFuturo"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div></div>
- <div class="card section"><div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 parcelas mais recentes já alcançadas pelo mês de referência.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div></div>
+ <div class="grid4">
+  <div class="card kpi"><label>Parcelas • mês</label><strong id="pMes">—</strong></div>
+  <div class="card kpi"><label>Próximos 3 meses</label><strong id="p3">—</strong></div>
+  <div class="card kpi"><label>Próximos 6 meses</label><strong id="p6">—</strong></div>
+  <div class="card kpi"><label>Total futuro</label><strong id="pFuture">—</strong></div>
+ </div>
+ <div class="grid2 section">
+  <div class="card chart-card"><div class="chart-head"><div><h3>Histórico e projeção das parcelas</h3><p>Histórico no período selecionado e comprometimento futuro dos próximos 12 meses.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasFuturo"></canvas></div></div>
+  <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div>
+ </div>
+ <div class="card section">
+  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>10 parcelas mais recentes já alcançadas pelo mês de referência.</p></div></div>
+  <div class="wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
+  <div class="context-toolbar"><button id="btnOpenInstallment" class="btn green">Adicionar nova parcela</button></div>
+  <div id="parForm" class="inline-editor hidden">
+   <div class="context-title" id="parFormTitle">Adicionar nova compra parcelada</div>
+   <div class="formgrid">
+    <div class="field"><label>Data da primeira parcela</label><input id="cParDate" type="date"></div>
+    <div class="field"><label>Descrição</label><input id="cParDesc" maxlength="160" placeholder="Ex.: Passagem aérea"></div>
+    <div class="field"><label>Categoria</label><select id="cParCat"></select></div>
+    <div class="field"><label id="cParValueLabel">Valor total da compra (R$)</label><input id="cParValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
+    <div class="field"><label>Número de parcelas</label><input id="cParNum" type="number" min="1" max="120" value="1"></div>
+   </div>
+   <div class="form-actions"><button id="btnSaveInstallment" class="btn green">Salvar</button><button id="btnCancelInstallment" class="btn secondary">Cancelar</button></div>
+  </div>
+ </div>
 </section>
 
 <section id="investimentos" class="hidden">
  <div class="filterbar"><div class="filter-group"><select id="investmentComponentFilter"><option value="all">Todos os componentes</option></select></div></div>
- <div class="grid5"><div class="card kpi"><label>Igor • aplicações</label><strong id="iIgorApl">—</strong></div><div class="card kpi"><label>Vitória • aplicações</label><strong id="iVitApl">—</strong></div><div class="card kpi"><label>Previdência</label><strong id="iPrev">—</strong></div><div class="card kpi"><label>FGTS total</label><strong id="iFgts">—</strong></div><div class="card kpi"><label>Patrimônio total</label><strong id="iTotal">—</strong></div></div>
- <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Histórico dos investimentos</h3><p>Todo o histórico disponível no Excel. Dinheiro é somado à série Vitória: Conta Corrente.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestHistory"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Composição atual</h3><p>Último fechamento real disponível.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestDonut"></canvas></div></div></div>
- <div class="card section"><div class="chart-head"><div><h3>Últimos registros / atualizações</h3><p>10 saldos patrimoniais mais recentes.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div></div>
-</section>
 
-<section id="patrimonio" class="hidden">
- <div class="grid5"><div class="card kpi"><label>Patrimônio total</label><strong id="patTotal">—</strong><small id="patDate">—</small></div><div class="card kpi"><label>Sem FGTS</label><strong id="patSemFgts">—</strong></div><div class="card kpi"><label>FGTS</label><strong id="patFgts">—</strong></div><div class="card kpi"><label>Meta sem FGTS</label><strong id="patMeta">—</strong></div><div class="card kpi"><label>Diferença p/ meta</label><strong id="patGap">—</strong></div></div>
- <div class="card chart-card section"><div class="chart-head"><div><h3>1. Projeção patrimonial</h3><p>Linha contínua = histórico real desde mai/2022 • tracejada = projeção futura • Meta sem FGTS preservada.</p></div><span class="pill">Meta preservada aqui</span></div><div class="chart-wrap tall"><canvas id="chartPatProjection"></canvas></div><div class="chart-note"><b>Histórico:</b> mai/2022 até o último fechamento real • <b>Projeção:</b> linha tracejada a partir do mês seguinte.</div></div>
- <div class="card chart-card section"><div class="chart-head"><div><h3>2. Evolução patrimonial por componente</h3><p>Somente os componentes do patrimônio. A Meta não aparece neste gráfico nem na legenda.</p></div><span class="pill">Sem linha de meta</span></div><div class="chart-wrap tall"><canvas id="chartPatComponents"></canvas></div></div>
- <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Composição atual</h3><p>Distribuição do último fechamento real.</p></div></div><div class="chart-wrap"><canvas id="chartPatDonut"></canvas></div></div><div class="card"><div class="chart-head"><div><h3>Últimos lançamentos patrimoniais</h3><p>10 atualizações mais recentes.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Componente</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentPatrimonio"></tbody></table></div></div></div>
-</section>
+ <div class="grid5">
+  <div class="card kpi"><label>Igor • aplicações</label><strong id="iIgorApl">—</strong></div>
+  <div class="card kpi"><label>Vitória • aplicações</label><strong id="iVitApl">—</strong></div>
+  <div class="card kpi"><label>Previdência</label><strong id="iPrev">—</strong></div>
+  <div class="card kpi"><label>FGTS total</label><strong id="iFgts">—</strong></div>
+  <div class="card kpi"><label>Patrimônio total</label><strong id="iTotal">—</strong></div>
+ </div>
+ <div class="grid3 section">
+  <div class="card kpi"><label>Patrimônio sem FGTS</label><strong id="iSemFgts">—</strong></div>
+  <div class="card kpi"><label>Meta sem FGTS</label><strong id="iMeta">—</strong></div>
+  <div class="card kpi"><label>Diferença para meta</label><strong id="iGap">—</strong></div>
+ </div>
 
-<section id="projecao" class="hidden">
- <div class="card"><div class="chart-head"><div><h3>Premissas personalizáveis</h3><p>As premissas ficam dentro do mesmo dados_financeiros.json e recalculam a projeção imediatamente.</p></div><span class="pill">Base Excel</span></div>
+ <div class="grid2 section">
+  <div class="card chart-card"><div class="chart-head"><div><h3>Histórico dos investimentos</h3><p>Todo o histórico disponível; Dinheiro é somado à série Vitória: Conta Corrente.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestHistory"></canvas></div></div>
+  <div class="card chart-card"><div class="chart-head"><div><h3>Composição atual</h3><p>Último fechamento real disponível.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestDonut"></canvas></div></div>
+ </div>
+
+ <div class="card chart-card section">
+  <div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Mesma fonte de dados do gráfico da Visão Geral, com filtro global de período e tooltip monetário.</p></div><span class="pill">Histórico</span></div>
+  <div class="chart-wrap tall"><canvas id="chartInvestAllocation"></canvas></div>
+ </div>
+
+ <div class="grid4 section">
+  <div class="card kpi"><label>Total no fim</label><strong id="projEndTotal">—</strong></div>
+  <div class="card kpi"><label>Sem FGTS no fim</label><strong id="projEndSem">—</strong></div>
+  <div class="card kpi"><label>Meta no fim</label><strong id="projEndMeta">—</strong></div>
+  <div class="card kpi"><label>Diferença p/ meta</label><strong id="projEndGap">—</strong></div>
+ </div>
+ <div class="card chart-card section">
+  <div class="chart-head"><div><h3>Projeção patrimonial</h3><p>Histórico real, patrimônio projetado e Meta sem FGTS mensal proveniente da mesma lógica do Excel.</p></div><span class="pill">Real + projeção + meta</span></div>
+  <div class="chart-wrap tall"><canvas id="chartProjectionDetail"></canvas></div>
+ </div>
+
+ <div class="card chart-card section">
+  <div class="chart-head"><div><h3>Evolução patrimonial por componente</h3><p>Evolução dos componentes que formam o patrimônio; sem linha de Meta neste gráfico.</p></div><span class="pill">Sem meta</span></div>
+  <div class="chart-wrap tall"><canvas id="chartPatComponents"></canvas></div>
+ </div>
+
+ <div class="card section">
+  <div class="chart-head"><div><h3>Premissas da projeção</h3><p>As premissas continuam armazenadas dentro do mesmo dados_financeiros.json.</p></div><span class="pill">Base Excel</span></div>
   <div class="projection-form">
    <div class="field"><label>Rentabilidade aplicações (% a.m.)</label><input id="projRentApl" class="money-input" inputmode="decimal"></div>
    <div class="field"><label>Rentabilidade Previdência/FGTS (% a.m.)</label><input id="projRentPrev" class="money-input" inputmode="decimal"></div>
@@ -133,9 +272,27 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   </div>
   <div class="form-actions"><button id="btnSaveProjection" class="btn green">Salvar premissas</button><button id="btnResetProjection" class="btn secondary">Restaurar premissas do Excel</button></div>
  </div>
- <div class="grid4 section"><div class="card kpi"><label>Total no fim</label><strong id="projEndTotal">—</strong></div><div class="card kpi"><label>Sem FGTS no fim</label><strong id="projEndSem">—</strong></div><div class="card kpi"><label>Meta no fim</label><strong id="projEndMeta">—</strong></div><div class="card kpi"><label>Diferença p/ meta</label><strong id="projEndGap">—</strong></div></div>
- <div class="card chart-card section"><div class="chart-head"><div><h3>Projeção patrimonial detalhada</h3><p>Histórico real desde mai/2022 no mesmo traçado da projeção futura; a mudança para tracejado marca o início da projeção.</p></div></div><div class="chart-wrap tall"><canvas id="chartProjectionDetail"></canvas></div><div class="chart-note"><b>Histórico:</b> mai/2022 até o último fechamento real • <b>Projeção:</b> linha tracejada a partir do mês seguinte.</div></div>
+
+ <div class="card section">
+  <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>10 registros mais recentes da composição patrimonial.</p></div></div>
+  <div class="wrap"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th>Origem</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
+  <div class="context-toolbar"><button id="btnOpenInvestment" class="btn green">Adicionar novo registro de investimento</button></div>
+  <div id="invForm" class="inline-editor hidden">
+   <div class="context-title" id="invFormTitle">Adicionar novo registro de investimento</div>
+   <div class="formgrid">
+    <div class="field"><label>Mês</label><input id="cInvDate" type="month" min="2022-05"></div>
+    <div class="field"><label>Componente patrimonial</label><select id="cInvComp"></select></div>
+    <div class="field"><label>Saldo (R$)</label><input id="cInvValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
+   </div>
+   <div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e altera apenas o componente informado.</div>
+   <div class="form-actions"><button id="btnSaveInvestment" class="btn green">Salvar</button><button id="btnCancelInvestment" class="btn secondary">Cancelar</button></div>
+  </div>
+ </div>
 </section>
+
+<section id="patrimonio" class="hidden"></section>
+
+<section id="projecao" class="hidden"></section>
 
 <section id="novo" class="hidden">
  <div class="card form-card"><div id="editBanner" class="edit-banner hidden"></div><div class="chart-head"><div><h3>Novo lançamento</h3><p>Inclua ou edite registros. Categoria e descrição são armazenadas separadamente.</p></div></div>
@@ -176,7 +333,7 @@ const fmtNumber=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:0,maximumFr
 const fmtPct=new Intl.NumberFormat("pt-BR",{style:"percent",minimumFractionDigits:1,maximumFractionDigits:2});
 const fmtDateLong=new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"UTC"});
 const fmtMonthLong=new Intl.DateTimeFormat("pt-BR",{month:"short",year:"numeric",timeZone:"UTC"});
-let data=null, charts={}, dirty=false, editing=null, pca=null, account=null, appRoot=null, remoteMeta=null, accessToken=null;
+let data=null, charts={}, dirty=false, editing=null, contextEditing=null, pca=null, account=null, appRoot=null, remoteMeta=null, accessToken=null;
 
 function brl(v){return fmtMoney.format(Number(v)||0)}
 function num(v){return fmtNumber.format(Number(v)||0)}
@@ -230,7 +387,7 @@ function chartOpts({stacked=false,indexMode=true}={}){return{responsive:true,mai
 function makeChart(id,config){if(charts[id])charts[id].destroy();let el=$(id);if(!el||typeof Chart==="undefined")return;charts[id]=new Chart(el,config)}
 function lineDataset(label,data,color,extra={}){return{type:"line",label,data,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:1.5,pointHoverRadius:4,tension:.2,fill:false,stack:`line:${label}`,...extra}}
 function stackedByCategory(id,records,range){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map((c,i)=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:COLORS[i%COLORS.length],stack:"total",borderWidth:0}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#172033",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
-function donut(id,obj){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
+function donut(id,obj,colorMap=null){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
 function horizontalBar(id,obj){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map((x,i)=>COLORS[i%COLORS.length])}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#edf0f4"},ticks:{font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{font:{size:8}}}}}})}
 
 
@@ -269,6 +426,18 @@ function renderInvestmentHistoryChart(id,range,filter="all"){
  })
 }
 
+
+function renderCapitalAllocationChart(id,range){
+ let months=range.months,compNames=componentDefs().map(x=>x.descricao),
+     datasets=compNames.map((c,i)=>({
+      type:"bar",label:c,
+      data:months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):0}),
+      backgroundColor:COLORS[i%COLORS.length],stack:"capital"
+     }));
+ datasets.push(lineDataset("Total Geral",months.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#172033",{spanGaps:true,borderWidth:2.5}));
+ makeChart(id,{type:"bar",data:{labels:months.map(monthLabel),datasets},options:chartOpts({stacked:true})})
+}
+
 function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),rec=incomeMonth(ref),fix=sumMonth(data.despesas.fixas,ref),vr=sumMonth(data.despesas.variaveis,ref),pa=sumMonth(data.parcelas,ref),desp=fix+vr+pa,saldo=rec-desp,pat=actualSnapshot(ref),meta=metaForMonth(ref),gap=pat&&Number.isFinite(meta)?pat.semFGTS-meta:null;$("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSaldo").textContent=brl(saldo);$("gSaldo").className=saldo>=0?"good":"bad";$("gSaldoPct").textContent=rec?pct(saldo/rec)+" da receita":"—";$("gParcelas").textContent=brl(pa);$("gPat").textContent=pat?brl(pat.total):"—";$("gPatData").textContent=pat?`Fechamento ${monthLabel(pat.month)}`:"—";$("gSemFgts").textContent=pat?brl(pat.semFGTS):"—";$("gMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("gGap").textContent=Number.isFinite(gap)?`${gap>=0?"Acima":"Abaixo"} por ${brl(Math.abs(gap))}`:"Meta não disponível";$("gGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
  let labels=r.months.map(monthLabel),
  gastos=r.months.map(m=>expenseMonth(m)),
@@ -290,42 +459,171 @@ function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=income
   lineDataset("Receitas",receitas,"#2563eb",{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1})
  ];
  makeChart("chartConsolidado",{type:"bar",data:{labels,datasets:ds},options:chartOpts()});
- let histMonths=r.months,compNames=componentDefs().map(x=>x.descricao),capitalDs=compNames.map((c,i)=>({type:"bar",label:c,data:histMonths.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):0}),backgroundColor:COLORS[i%COLORS.length],stack:"capital"}));capitalDs.push(lineDataset("Total Geral",histMonths.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#172033",{spanGaps:true,borderWidth:2.5}));makeChart("chartCapital",{type:"bar",data:{labels:labels,datasets:capitalDs},options:chartOpts({stacked:true})});
+ renderCapitalAllocationChart("chartCapital",r);
  stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);}
 
 function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
 function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
-function renderExpenses(){if(!data)return;let r=periodRange(),ref=r.ref,cat=$("expenseCategoryFilter").value,type=$("expenseTypeFilter").value,filter=x=>cat==="all"||x.categoria===cat,fix=sumMonth(data.despesas.fixas,ref,filter),vr=sumMonth(data.despesas.variaveis,ref,filter),tot=(type==="fixas"?fix:type==="variaveis"?vr:fix+vr),monthly=r.months.map(m=>(type==="fixas"?sumMonth(data.despesas.fixas,m,filter):type==="variaveis"?sumMonth(data.despesas.variaveis,m,filter):sumMonth(data.despesas.fixas,m,filter)+sumMonth(data.despesas.variaveis,m,filter)));$("dFixas").textContent=brl(fix);$("dVariaveis").textContent=brl(vr);$("dTotal").textContent=brl(tot);$("dMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));makeChart("chartDespesasEvolucao",{type:"bar",data:{labels:r.months.map(monthLabel),datasets:[{label:"Fixas",data:r.months.map(m=>sumMonth(data.despesas.fixas,m,filter)),backgroundColor:"#2563eb"},{label:"Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m,filter)),backgroundColor:"#f59e0b"}]},options:chartOpts({stacked:true})});let recs=[];if(type==="all"||type==="fixas")recs.push(...data.despesas.fixas);if(type==="all"||type==="variaveis")recs.push(...data.despesas.variaveis);horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter));let rows=expenseRows(true),recent=expenseRows(false).filter(x=>untilRef(x)).slice(0,10);$("recentDespesas").innerHTML=recent.length?expenseTableHtml(recent):`<tr><td colspan="6"><div class="empty">Sem lançamentos.</div></td></tr>`;$("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;bindActions($("despesas"))}
+function renderExpenses(){
+ if(!data)return;
+ let r=periodRange(),ref=r.ref,cat=$("expenseCategoryFilter").value,type=$("expenseTypeFilter").value,
+     filter=x=>cat==="all"||x.categoria===cat,
+     fix=sumMonth(data.despesas.fixas,ref,filter),
+     vr=sumMonth(data.despesas.variaveis,ref,filter),
+     tot=(type==="fixas"?fix:type==="variaveis"?vr:fix+vr),
+     monthly=r.months.map(m=>(type==="fixas"?sumMonth(data.despesas.fixas,m,filter):type==="variaveis"?sumMonth(data.despesas.variaveis,m,filter):sumMonth(data.despesas.fixas,m,filter)+sumMonth(data.despesas.variaveis,m,filter)));
 
-function renderIncome(){if(!data)return;let r=periodRange(),ref=r.ref,person=$("incomePersonFilter").value,filter=x=>!x.legado&&(person==="all"||x.pessoa===person),rows=data.receitas.filter(filter),ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),total=rows.filter(x=>monthKey(x.data)===ref).reduce((s,x)=>s+Number(x.valor),0),monthly=r.months.map(m=>rows.filter(x=>monthKey(x.data)===m).reduce((s,x)=>s+Number(x.valor),0));$("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rTotal").textContent=brl(total);$("rMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));let people=[...new Set(data.receitas.filter(x=>!x.legado).map(x=>x.pessoa))].sort();makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),COLORS[i%COLORS.length]))},options:chartOpts()});let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp);let recent=rows.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentReceitas").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Sem receitas.</div></td></tr>`;bindActions($("receitas"))}
+ $("dFixas").textContent=brl(fix);$("dVariaveis").textContent=brl(vr);$("dTotal").textContent=brl(tot);$("dMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
 
-function renderInstallments(){if(!data)return;let r=periodRange(),ref=r.ref,cat=$("installmentCategoryFilter").value,filter=x=>cat==="all"||x.categoria===cat,arr=data.parcelas.filter(filter),sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),future=arr.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor),0);$("pMes").textContent=brl(sumMonth(arr,ref));$("p3").textContent=brl(sumFuture(3));$("p6").textContent=brl(sumFuture(6));$("pFuture").textContent=brl(future);let fut=monthsBetween(ref,addMonths(ref,11));makeChart("chartParcelasFuturo",{type:"bar",data:{labels:fut.map(monthLabel),datasets:[{label:"Parcelas",data:fut.map(m=>sumMonth(arr,m)),backgroundColor:"#8b5cf6"}]},options:chartOpts()});horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));let recent=arr.filter(x=>monthKey(x.data)<=ref).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentParcelas").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Sem parcelas.</div></td></tr>`;bindActions($("parcelas"))}
+ makeChart("chartDespesasEvolucao",{type:"bar",data:{labels:r.months.map(monthLabel),datasets:[
+  {label:"Fixas",data:r.months.map(m=>sumMonth(data.despesas.fixas,m,filter)),backgroundColor:"#2563eb"},
+  {label:"Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m,filter)),backgroundColor:"#f59e0b"}
+ ]},options:chartOpts({stacked:true})});
 
+ let recs=[];if(type==="all"||type==="fixas")recs.push(...data.despesas.fixas);if(type==="all"||type==="variaveis")recs.push(...data.despesas.variaveis);
+ horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter));
+
+ let rows=expenseRows(true),
+     fixedRecent=data.despesas.fixas.filter(x=>filter(x)&&untilRef(x)).map(x=>({...x,_kind:"fixas",_label:"Fixa"})).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10),
+     varRecent=data.despesas.variaveis.filter(x=>filter(x)&&untilRef(x)).map(x=>({...x,_kind:"variaveis",_label:"Variável"})).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);
+
+ $("recentFixas").innerHTML=fixedRecent.length?expenseTableHtml(fixedRecent):`<tr><td colspan="6"><div class="empty">Sem despesas fixas.</div></td></tr>`;
+ $("recentVariaveis").innerHTML=varRecent.length?expenseTableHtml(varRecent):`<tr><td colspan="6"><div class="empty">Sem despesas variáveis.</div></td></tr>`;
+ $("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
+
+ if(!$("fxReplicateTarget").value)$("fxReplicateTarget").value=ref;
+ bindActions($("despesas"))
+}
+function renderIncome(){
+ if(!data)return;
+ let r=periodRange(),ref=r.ref,person=$("incomePersonFilter").value,
+     filter=x=>(person==="all"||x.pessoa===person),
+     rows=data.receitas.filter(filter),
+     ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),
+     total=rows.filter(x=>monthKey(x.data)===ref).reduce((s,x)=>s+Number(x.valor),0),
+     monthly=r.months.map(m=>rows.filter(x=>monthKey(x.data)===m).reduce((s,x)=>s+Number(x.valor),0));
+
+ $("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rTotal").textContent=brl(total);$("rMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
+
+ let people=[...new Set(data.receitas.map(x=>x.pessoa).filter(Boolean))].sort(),
+     incomeColors={"Igor":"#2563eb","Vitória":"#e89aae"};
+
+ makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),incomeColors[p]||COLORS[i%COLORS.length]))},options:chartOpts()});
+
+ let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));
+ donut("chartReceitasDonut",comp,incomeColors);
+
+ let recent=rows.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);
+ $("recentReceitas").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Sem receitas.</div></td></tr>`;
+ bindActions($("receitas"))
+}
+function renderInstallments(){
+ if(!data)return;
+ let r=periodRange(),ref=r.ref,cat=$("installmentCategoryFilter").value,
+     filter=x=>cat==="all"||x.categoria===cat,
+     arr=data.parcelas.filter(filter),
+     sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),
+     future=arr.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor),0);
+
+ $("pMes").textContent=brl(sumMonth(arr,ref));
+ $("p3").textContent=brl(sumFuture(3));
+ $("p6").textContent=brl(sumFuture(6));
+ $("pFuture").textContent=brl(future);
+
+ // Histórico respeita o filtro global; futuro acrescenta os 12 meses seguintes.
+ let historicalMonths=r.months.filter(m=>m<=ref),
+     futureMonths=monthsBetween(addMonths(ref,1),addMonths(ref,12)),
+     labels=[...historicalMonths,...futureMonths],
+     hLen=historicalMonths.length,
+     fLen=futureMonths.length,
+     histValues=historicalMonths.map(m=>sumMonth(arr,m)).concat(Array(fLen).fill(null)),
+     futureValues=Array(hLen).fill(null).concat(futureMonths.map(m=>sumMonth(arr,m)));
+
+ let installmentOpts=chartOpts();
+ installmentOpts.plugins.tooltip.callbacks.label=ctx=>{
+   let tipo=ctx.dataset.label.includes("Histórico")?"histórico":"futuro";
+   return `${ctx.dataset.label} (${tipo}): ${brl(ctx.raw)}`
+ };
+
+ makeChart("chartParcelasFuturo",{
+  type:"bar",
+  data:{
+   labels:labels.map(monthLabel),
+   datasets:[
+    {
+     label:"Parcelas — histórico",
+     data:histValues,
+     backgroundColor:"rgba(139,92,246,.82)",
+     borderColor:"#7c3aed",
+     borderWidth:1
+    },
+    {
+     label:"Parcelas — futuro",
+     data:futureValues,
+     backgroundColor:"rgba(139,92,246,.28)",
+     borderColor:"rgba(124,58,237,.65)",
+     borderWidth:1
+    }
+   ]
+  },
+  options:installmentOpts
+ });
+
+ horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));
+
+ let recent=arr
+  .filter(x=>monthKey(x.data)<=ref)
+  .sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))
+  .slice(0,10);
+
+ $("recentParcelas").innerHTML=recent.length
+  ?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join("")
+  :`<tr><td colspan="6"><div class="empty">Sem parcelas.</div></td></tr>`;
+
+ bindActions($("parcelas"))
+}
 function renderInvestments(){
  if(!data)return;
- let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),filter=$("investmentComponentFilter").value;
+ let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),
+     filter=$("investmentComponentFilter").value,
+     meta=snap?metaForMonth(snap.month):null,
+     gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;
+
  $("iIgorApl").textContent=snap?brl(snap.map["Igor: Aplicações"]||0):"—";
  $("iVitApl").textContent=snap?brl(snap.map["Vitória: Aplicações"]||0):"—";
  $("iPrev").textContent=snap?brl(snap.map["Igor: Previdência"]||0):"—";
  $("iFgts").textContent=snap?brl((snap.map["Igor: FGTS"]||0)+(snap.map["Vitória: FGTS"]||0)):"—";
  $("iTotal").textContent=snap?brl(snap.total):"—";
+ $("iSemFgts").textContent=snap?brl(snap.semFGTS):"—";
+ $("iMeta").textContent=Number.isFinite(meta)?brl(meta):"—";
+ $("iGap").textContent=Number.isFinite(gap)?brl(gap):"—";
+ $("iGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
+
  renderInvestmentHistoryChart("chartInvestHistory",r,filter);
+ renderCapitalAllocationChart("chartInvestAllocation",r);
+
  if(snap){
   let obj={};
   investmentChartComponents()
    .filter(c=>filter==="all"||c===filter||(filter==="Dinheiro"&&c==="Vitória: Conta Corrente"))
-   .forEach(c=>{
-    obj[c]=(snap.map[c]||0)+(c==="Vitória: Conta Corrente"?(snap.map["Dinheiro"]||0):0)
-   });
+   .forEach(c=>{obj[c]=(snap.map[c]||0)+(c==="Vitória: Conta Corrente"?(snap.map["Dinheiro"]||0):0)});
   donut("chartInvestDonut",obj)
  }
+
+ let comps=componentDefs().map(x=>x.descricao);
+ makeChart("chartPatComponents",{type:"line",data:{labels:r.months.map(monthLabel),datasets:comps.map((c,i)=>lineDataset(c,r.months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):null}),COLORS[i%COLORS.length],{spanGaps:true}))},options:chartOpts()});
+
  let recent=data.investimentos.historico
   .filter(x=>untilRef(x))
   .sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))
   .slice(0,10);
- $("recentInvestimentos").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Sem registros.</div></td></tr>`;
+
+ $("recentInvestimentos").innerHTML=recent.length
+  ?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
+  :`<tr><td colspan="6"><div class="empty">Sem registros.</div></td></tr>`;
+
  bindActions($("investimentos"))
 }
 function xMonth(x){return monthKey(x.data||x.month)}
@@ -367,7 +665,144 @@ function renderManage(){if(!data)return;let type=$("manageType").value,q=normSea
 function normSearch(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
 function findRecord(kind,id){let arr=kind==="fixas"?data.despesas.fixas:kind==="variaveis"?data.despesas.variaveis:kind==="parcelas"?data.parcelas:kind==="receitas"?data.receitas:data.investimentos.historico;return{arr,rec:arr.find(x=>String(x.id)===String(id))}}
 async function deleteRecord(kind,id){if(!data)return;let{arr,rec}=findRecord(kind,id);if(!rec)return;let extra=kind==="parcelas"?` Parcela ${rec.parcela||"?"}/${rec.totalParcelas||"?"}.`:"";if(!confirm(`Excluir somente este lançamento?\n\n${rec.descricao}\n${dateLabel(rec.data)}\n${brl(rec.valor)}${extra}\n\nOs gráficos e totais serão recalculados automaticamente.`))return;let i=arr.indexOf(rec);arr.splice(i,1);touch();await afterMutation("Lançamento excluído.")}
-function beginEdit(kind,id){let{rec}=findRecord(kind,id);if(!rec)return;editing={kind,id};showTab("novo");$("editBanner").classList.remove("hidden");$("editBanner").textContent=`Editando: ${rec.descricao} • ${dateLabel(rec.data)} • ${brl(rec.valor)}`;$("btnCancelEdit").classList.remove("hidden");$("nTipo").value=kind==="investimento"?"investimento":kind;$("nTipo").disabled=true;updateLaunchForm();$("nData").value=rec.data;$("nDescricao").value=rec.descricao||"";$("nValor").value=moneyInput(rec.valor);if(kind==="fixas"||kind==="variaveis"||kind==="parcelas")$("nCategoria").value=rec.categoria||categories()[0];if(kind==="receitas")$("nPessoa").value=rec.pessoa||"Igor";if(kind==="investimento")$("nComponente").value=rec.descricao;$("nNumParcelas").value=rec.totalParcelas||1;$("nValorLabel").textContent=kind==="parcelas"?"Valor desta parcela (R$)":"Valor (R$)"}
+function contextConfig(kind){
+ return {
+  fixas:{tab:"despesas",form:"fxForm",title:"fxFormTitle",date:"cFxDate",desc:"cFxDesc",cat:"cFxCat",value:"cFxValue"},
+  variaveis:{tab:"despesas",form:"varForm",title:"varFormTitle",date:"cVarDate",desc:"cVarDesc",cat:"cVarCat",value:"cVarValue"},
+  receitas:{tab:"receitas",form:"revForm",title:"revFormTitle",date:"cRevDate",desc:"cRevDesc",person:"cRevPerson",value:"cRevValue"},
+  parcelas:{tab:"parcelas",form:"parForm",title:"parFormTitle",date:"cParDate",desc:"cParDesc",cat:"cParCat",value:"cParValue",num:"cParNum",valueLabel:"cParValueLabel"},
+  investimento:{tab:"investimentos",form:"invForm",title:"invFormTitle",date:"cInvDate",comp:"cInvComp",value:"cInvValue"}
+ }[kind]
+}
+function defaultContextDate(){
+ let ref=periodRange().ref,current=currentCalendarMonth();
+ return ref===current?new Date().toISOString().slice(0,10):ref+"-01"
+}
+function contextTitle(kind,editingMode=false){
+ let base={fixas:"despesa fixa",variaveis:"despesa variável",receitas:"receita",parcelas:"parcela",investimento:"registro de investimento"}[kind];
+ return `${editingMode?"Editar":"Adicionar novo"} ${base}`
+}
+function openContextForm(kind,rec=null){
+ let c=contextConfig(kind);if(!c)return;
+ contextEditing=rec?{kind,id:rec.id}:null;
+ showTab(c.tab);
+ $(c.form).classList.remove("hidden");
+ $(c.title).textContent=contextTitle(kind,!!rec);
+
+ if(kind==="investimento"){
+  $(c.date).value=rec?monthKey(rec.data):periodRange().ref;
+  $(c.comp).value=rec?.descricao||componentDefs()[0]?.descricao||"";
+  $(c.value).value=rec?moneyInput(rec.valor):"";
+ }else{
+  $(c.date).value=rec?.data||defaultContextDate();
+  if(c.desc)$(c.desc).value=rec?.descricao||"";
+  if(c.cat)$(c.cat).value=rec?.categoria||categories()[0]||"";
+  if(c.person)$(c.person).value=rec?.pessoa||"Igor";
+  $(c.value).value=rec?moneyInput(rec.valor):"";
+  if(kind==="parcelas"){
+   $(c.num).value=rec?.totalParcelas||1;
+   $(c.num).disabled=!!rec;
+   $(c.valueLabel).textContent=rec?"Valor desta parcela (R$)":"Valor total da compra (R$)";
+  }
+ }
+ setTimeout(()=>$(c.form).scrollIntoView({behavior:"smooth",block:"nearest"}),120)
+}
+function closeContextForm(kind){
+ let c=contextConfig(kind);if(!c)return;
+ $(c.form).classList.add("hidden");
+ contextEditing=null;
+ if(c.desc)$(c.desc).value="";
+ if(c.value)$(c.value).value="";
+ if(kind==="parcelas"){$(c.num).disabled=false;$(c.num).value=1;$(c.valueLabel).textContent="Valor total da compra (R$)"}
+}
+function beginEdit(kind,id){
+ let{rec}=findRecord(kind,id);if(!rec)return;
+ openContextForm(kind,rec)
+}
+async function saveContextRecord(kind){
+ if(!data){toast("Importe dados_financeiros.json primeiro.");return}
+ let c=contextConfig(kind),val=parseMoney($(c.value).value),isEdit=contextEditing?.kind===kind&&contextEditing?.id;
+ if(!$(c.value).value.trim()||!Number.isFinite(val)){toast("Informe um valor válido.");return}
+
+ let createdAt=new Date().toISOString();
+
+ if(isEdit){
+  let{rec}=findRecord(kind,contextEditing.id);if(!rec)return;
+  if(kind==="investimento"){
+   let ym=$(c.date).value,comp=$(c.comp).value;
+   if(!ym||!comp){toast("Informe mês e componente.");return}
+   let collision=data.investimentos.historico.find(x=>x.id!==rec.id&&monthKey(x.data)===ym&&x.descricao===comp);
+   if(collision){toast("Já existe um registro desse componente nesse mês.");return}
+   rec.data=ym+"-01";rec.descricao=comp;rec.valor=val;
+   let def=componentDefs().find(x=>x.descricao===comp);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||"";
+  }else{
+   let date=$(c.date).value,desc=$(c.desc).value.trim();
+   if(!date||!desc){toast("Preencha data e descrição.");return}
+   rec.data=date;rec.descricao=desc;rec.valor=val;
+   if(kind==="receitas")rec.pessoa=$(c.person).value;
+   else rec.categoria=$(c.cat).value;
+  }
+  rec.origem="app";rec.updatedAt=createdAt;
+  touch();closeContextForm(kind);await afterMutation("Lançamento editado.");return
+ }
+
+ if(kind==="fixas"||kind==="variaveis"){
+  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value;
+  if(!date||!desc){toast("Preencha data e descrição.");return}
+  data.despesas[kind].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})
+ }else if(kind==="receitas"){
+  let date=$(c.date).value,desc=$(c.desc).value.trim();
+  if(!date||!desc){toast("Preencha data e descrição.");return}
+  data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$(c.person).value,valor:val,origem:"app",createdAt})
+ }else if(kind==="parcelas"){
+  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value,n=Math.max(1,Number($(c.num).value)||1);
+  if(!date||!desc){toast("Preencha data e descrição.");return}
+  let cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();
+  for(let i=0;i<n;i++)data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})
+ }else if(kind==="investimento"){
+  let ym=$(c.date).value,comp=$(c.comp).value;
+  if(!ym||!comp){toast("Informe mês e componente.");return}
+  let existedBefore=data.investimentos.historico.some(x=>monthKey(x.data)===ym&&x.descricao===comp);
+  ensureInvestmentMonth(ym);
+  let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);
+  if(rec){
+   if(existedBefore&&!confirm(`Já existe saldo para ${comp} em ${monthLabel(ym)}.\n\nDeseja atualizar esse registro para ${brl(val)}?`))return;
+   rec.valor=val;rec.origem="app";rec.updatedAt=createdAt
+  }else{
+   let def=componentDefs().find(x=>x.descricao===comp);
+   data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})
+  }
+ }
+ touch();closeContextForm(kind);await afterMutation("Lançamento adicionado.")
+}
+async function replicateFixedPrevious(){
+ if(!data)return;
+ let target=$("fxReplicateTarget").value||periodRange().ref;
+ if(target<HISTORY_START){toast("O histórico começa em mai/2022.");return}
+ let source=addMonths(target,-1),
+     sourceRows=data.despesas.fixas.filter(x=>monthKey(x.data)===source),
+     targetRows=data.despesas.fixas.filter(x=>monthKey(x.data)===target);
+
+ if(!sourceRows.length){toast(`Não há despesas fixas em ${monthLabel(source)} para replicar.`);return}
+
+ let key=x=>`${normSearch(x.descricao)}|${normSearch(x.categoria)}`,
+     existing=new Set(targetRows.map(key)),
+     seen=new Set(existing),toCopy=[];
+ sourceRows.forEach(x=>{let k=key(x);if(!seen.has(k)){toCopy.push(x);seen.add(k)}});
+
+ if(!toCopy.length){toast(`Todos os lançamentos equivalentes de ${monthLabel(source)} já existem em ${monthLabel(target)}.`);return}
+
+ let skipped=sourceRows.length-toCopy.length;
+ let msg=`Replicar despesas fixas de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} lançamentos.${skipped?`\n${skipped} equivalentes já existentes serão ignorados.`:""}\n\nDepois você poderá editar cada lançamento individualmente.`;
+ if(!confirm(msg))return;
+
+ let now=new Date().toISOString();
+ toCopy.forEach(x=>{
+  let newDate=addMonthsDate(x.data,1);
+  data.despesas.fixas.push({id:uid(),data:newDate,descricao:x.descricao,categoria:x.categoria,valor:Number(x.valor),origem:"app",createdAt:now,replicadoDe:x.id,replicadoDeMes:source})
+ });
+ touch();await afterMutation(`${toCopy.length} despesas fixas replicadas para ${monthLabel(target)}.`)
+}
 function cancelEdit(){editing=null;$("editBanner").classList.add("hidden");$("btnCancelEdit").classList.add("hidden");$("nTipo").disabled=false;$("nDescricao").value="";$("nValor").value="";updateLaunchForm()}
 function updateLaunchForm(){let t=$("nTipo").value;$("fCategoria").classList.toggle("hidden",!['fixas','variaveis','parcelas'].includes(t));$("fPessoa").classList.toggle("hidden",t!=="receitas");$("fComponente").classList.toggle("hidden",t!=="investimento");$("fNumParcelas").classList.toggle("hidden",t!=="parcelas"||!!editing);$("fDescricao").classList.toggle("hidden",t==="investimento");$("nValorLabel").textContent=t==="parcelas"&&!editing?"Valor total da compra (R$)":t==="investimento"?"Saldo do componente (R$)":"Valor (R$)"}
 function prevSnapshotBefore(ym){let months=[...new Set(data.investimentos.historico.map(x=>monthKey(x.data)))].filter(m=>m<ym).sort(),m=months.at(-1);if(!m)return{};let o={};data.investimentos.historico.filter(x=>monthKey(x.data)===m).forEach(x=>o[x.descricao]=Number(x.valor)||0);return o}
@@ -377,26 +812,48 @@ async function saveLaunch(){if(!data){toast("Importe dados_financeiros.json prim
  touch();$("nDescricao").value="";$("nValor").value="";await afterMutation("Lançamento adicionado.")}
 async function afterMutation(msg){rebuildPatrimonyHistory();renderAll();if(account&&remoteMeta){try{await saveRemoteWithConflictCheck();dirty=false;updateStatus();toast(msg+" Salvo no OneDrive.")}catch(e){handleError(e);toast(msg+" Alteração mantida localmente; exporte o JSON.")}}else toast(msg+" Exporte o JSON para guardar a alteração.")}
 
-function refreshSelects(){if(!data)return;let opts=categories().map(c=>`<option>${esc(c)}</option>`).join("");$("nCategoria").innerHTML=opts;$("expenseCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;$("installmentCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;let people=[...new Set(data.receitas.map(x=>x.pessoa).filter(Boolean))].sort();$("incomePersonFilter").innerHTML='<option value="all">Todas as pessoas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");let comps=componentDefs().map(x=>x.descricao);$("nComponente").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");$("investmentComponentFilter").innerHTML='<option value="all">Todos os componentes</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")}
-function renderJsonInfo(){if(!data)return;$("jsonInfo").innerHTML=`<b>Base carregada:</b> ${num(data.despesas.fixas.length)} fixas • ${num(data.despesas.variaveis.length)} variáveis • ${num(data.parcelas.length)} parcelas • ${num(data.receitas.length)} receitas • ${num(data.investimentos.historico.length)} registros históricos de investimento • ${num(data.metas.semFGTS.length)} pontos de meta.`}
-function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();renderPatrimony();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
+function refreshSelects(){
+ if(!data)return;
+ let opts=categories().map(c=>`<option>${esc(c)}</option>`).join("");
+ $("nCategoria").innerHTML=opts;
+ ["cFxCat","cVarCat","cParCat"].forEach(id=>{if($(id))$(id).innerHTML=opts});
+ $("expenseCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
+ $("installmentCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
 
-const titles={geral:["Visão Geral","Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”."],despesas:["Despesas","Gastos fixos e variáveis com filtros, histórico e lançamentos recentes."],receitas:["Receitas","Entradas por pessoa, evolução mensal e últimos lançamentos."],parcelas:["Parcelas","Compromissos atuais e futuros, por categoria."],investimentos:["Investimentos","Histórico completo dos componentes, saldos atuais e composição."],patrimonio:["Patrimônio","Projeção primeiro; evolução por componentes depois, sem linha de meta."],projecao:["Projeção Patrimonial","Premissas personalizáveis e comparação com a Meta sem FGTS mensal."],novo:["Novo Lançamento","Adicionar, editar ou excluir registros individualmente."],config:["Configuração / Importação","Um único JSON consolidado e sincronização privada com OneDrive."]};
+ let people=[...new Set(["Igor","Vitória","Outro",...data.receitas.map(x=>x.pessoa).filter(Boolean)])];
+ $("incomePersonFilter").innerHTML='<option value="all">Todas as pessoas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("cRevPerson"))$("cRevPerson").innerHTML=people.map(x=>`<option>${esc(x)}</option>`).join("");
+
+ let comps=componentDefs().map(x=>x.descricao);
+ $("nComponente").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
+ if($("cInvComp"))$("cInvComp").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
+ $("investmentComponentFilter").innerHTML='<option value="all">Todos os componentes</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")
+}
+function renderJsonInfo(){if(!data)return;$("jsonInfo").innerHTML=`<b>Base carregada:</b> ${num(data.despesas.fixas.length)} fixas • ${num(data.despesas.variaveis.length)} variáveis • ${num(data.parcelas.length)} parcelas • ${num(data.receitas.length)} receitas • ${num(data.investimentos.historico.length)} registros históricos de investimento • ${num(data.metas.semFGTS.length)} pontos de meta.`}
+function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
+
+const titles={
+ geral:["Visão Geral","Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”."],
+ despesas:["Despesas","Despesas fixas e variáveis com gestão e inclusão contextual."],
+ receitas:["Receitas","Entradas por pessoa, histórico e inclusão direta."],
+ parcelas:["Parcelas","Histórico, projeção e inclusão direta de compras parceladas."],
+ investimentos:["Investimentos","Investimentos, patrimônio, metas e projeções reunidos em uma única área."],
+ config:["Configuração / Importação","Um único JSON consolidado e sincronização privada com OneDrive."]
+};
 function renderVisibleTab(id){
  if(!data)return;
  if(id==="geral")renderGeneral();
  else if(id==="despesas")renderExpenses();
  else if(id==="receitas")renderIncome();
  else if(id==="parcelas")renderInstallments();
- else if(id==="investimentos")renderInvestments();
- else if(id==="patrimonio")renderPatrimony();
- else if(id==="projecao"){setProjectionInputs();renderProjection()}
- else if(id==="novo")renderManage();
- else if(id==="config")renderJsonInfo();
+ else if(id==="investimentos"){renderInvestments();setProjectionInputs();renderProjection()}
+ else if(id==="config")renderJsonInfo()
 }
 function showTab(id){
+ if(!titles[id])id="geral";
  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
  Object.keys(titles).forEach(x=>$(x).classList.toggle("hidden",x!==id));
+ ["patrimonio","projecao","novo"].forEach(x=>{if($(x))$(x).classList.add("hidden")});
  $("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];
  setTimeout(()=>{renderVisibleTab(id);Object.values(charts).forEach(c=>c.resize())},80)
 }
@@ -424,6 +881,23 @@ $("redirectUriBox").textContent=REDIRECT_URI;
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 $("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").onchange=renderAll;$("periodEnd").onchange=renderAll;
 ["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;$("investmentComponentFilter").onchange=renderInvestments;
+
+$("btnOpenFixed").onclick=()=>openContextForm("fixas");
+$("btnOpenVariable").onclick=()=>openContextForm("variaveis");
+$("btnOpenRevenue").onclick=()=>openContextForm("receitas");
+$("btnOpenInstallment").onclick=()=>openContextForm("parcelas");
+$("btnOpenInvestment").onclick=()=>openContextForm("investimento");
+$("btnSaveFixed").onclick=()=>saveContextRecord("fixas");
+$("btnSaveVariable").onclick=()=>saveContextRecord("variaveis");
+$("btnSaveRevenue").onclick=()=>saveContextRecord("receitas");
+$("btnSaveInstallment").onclick=()=>saveContextRecord("parcelas");
+$("btnSaveInvestment").onclick=()=>saveContextRecord("investimento");
+$("btnCancelFixed").onclick=()=>closeContextForm("fixas");
+$("btnCancelVariable").onclick=()=>closeContextForm("variaveis");
+$("btnCancelRevenue").onclick=()=>closeContextForm("receitas");
+$("btnCancelInstallment").onclick=()=>closeContextForm("parcelas");
+$("btnCancelInvestment").onclick=()=>closeContextForm("investimento");
+$("btnReplicateFixed").onclick=replicateFixedPrevious;
 $("manageType").onchange=renderManage;$("manageSearch").oninput=renderManage;$("nTipo").onchange=updateLaunchForm;$("btnSaveLaunch").onclick=saveLaunch;$("btnCancelEdit").onclick=cancelEdit;$("btnSaveProjection").onclick=saveProjectionSettings;$("btnResetProjection").onclick=resetProjection;
 document.querySelectorAll(".money-input").forEach(el=>el.addEventListener("blur",()=>{if(el.value.trim()!=="")el.value=moneyInput(parseMoney(el.value))}));
 $("jsonImport").onchange=()=>{let f=$("jsonImport").files?.[0];if(f)importJson(f)};$("btnExportJson").onclick=exportJson;
