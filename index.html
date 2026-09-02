@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>Controle Financeiro • Produção v3</title>
+<title>Controle Financeiro • Produção v5</title>
 
 <style>
 :root{
@@ -99,6 +99,30 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 @media(max-width:1050px){.projection-form{grid-template-columns:repeat(2,1fr)}.projection-summary{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.projection-form{grid-template-columns:1fr}.projection-summary{grid-template-columns:1fr 1fr}}
 
+
+.chart-period-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;margin-bottom:11px}
+.chart-period-main{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chart-period-title{font-size:10px;text-transform:uppercase;letter-spacing:.045em;color:var(--muted);font-weight:850;margin-right:3px}
+.chart-period-card select,.chart-period-card input{border:1px solid #d8e0ea;background:#fff;color:var(--text);border-radius:9px;padding:7px 9px;min-height:36px;font-size:11px}
+.chart-period-summary{font-size:10px;color:var(--muted);font-weight:700;text-align:right}
+.recent-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.delete-entry{border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:800}
+.delete-entry:hover{background:#fef2f2}
+.type-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.empty-state{padding:18px;text-align:center;color:#94a3b8;font-size:10px}
+@media(max-width:820px){.chart-period-card{align-items:flex-start;flex-direction:column}.chart-period-summary{text-align:left}}
+@media(max-width:520px){.chart-period-main{display:grid;grid-template-columns:1fr 1fr;width:100%}.chart-period-title{grid-column:1/-1}.chart-period-card select,.chart-period-card input{width:100%}}
+
+
+.panel-recent-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:9px}
+.panel-recent-head .title{margin-bottom:2px}
+.panel-recent-note{font-size:9px;color:var(--muted);text-align:right}
+.record-kind{display:inline-flex;align-items:center;gap:5px;font-weight:750}
+.record-kind i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.recent-desc{font-weight:650;color:#243248}
+.recent-secondary{font-size:9px;color:#8492a6;margin-top:2px}
+@media(max-width:520px){.panel-recent-head{align-items:flex-start;flex-direction:column}.panel-recent-note{text-align:left}}
+
 </style>
 </head>
 <body>
@@ -133,6 +157,22 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
  <div><div class="eyebrow">Financeiro</div><h2>Visão geral</h2><p>Controle integrado de receitas, despesas, parcelas e patrimônio.</p></div>
  <div class="toolbar"><select id="mesSel"></select><select id="anoSel"></select><button class="btn secondary" id="btnLatest">Período mais recente</button></div>
 </div>
+<div class="card chart-period-card">
+ <div class="chart-period-main">
+   <span class="chart-period-title">Período dos gráficos</span>
+   <select id="chartPeriodPreset">
+     <option value="3">Últimos 3 meses</option>
+     <option value="6">Últimos 6 meses</option>
+     <option value="12" selected>Últimos 12 meses</option>
+     <option value="24">Últimos 24 meses</option>
+     <option value="all">Todo o histórico</option>
+     <option value="custom">Personalizado</option>
+   </select>
+   <input id="chartStart" type="month" class="hidden">
+   <input id="chartEnd" type="month" class="hidden">
+ </div>
+ <div id="chartPeriodSummary" class="chart-period-summary">—</div>
+</div>
 
 <section id="geral">
 <div class="quick-grid">
@@ -154,18 +194,29 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 <div class="card kpi"><div class="label">Média 3 meses • Sobra</div><div class="value" id="avgSob">—</div></div>
 </div>
 <div class="grid2 section">
-<div class="card"><div class="title">Consolidado — média dos últimos 3 meses</div><canvas id="chartConsolidado"></canvas></div>
+<div class="card"><div class="title">Consolidado — média do período dos gráficos</div><canvas id="chartConsolidado"></canvas></div>
 <div class="card"><div class="title">Receitas x despesas x sobra</div><canvas id="chartFluxo"></canvas></div>
 </div>
 </section>
 
 <section id="gastos" class="hidden">
 <div class="grid3">
-<div class="card"><div class="title">Fixos — média 3 meses</div><canvas id="chartFixos"></canvas></div>
-<div class="card"><div class="title">Variáveis — média 3 meses</div><canvas id="chartVariaveis"></canvas></div>
-<div class="card"><div class="title">Parcelas — média 3 meses</div><canvas id="chartParcelasCat"></canvas></div>
+<div class="card"><div class="title">Fixos — média do período</div><canvas id="chartFixos"></canvas></div>
+<div class="card"><div class="title">Variáveis — média do período</div><canvas id="chartVariaveis"></canvas></div>
+<div class="card"><div class="title">Parcelas — média do período</div><canvas id="chartParcelasCat"></canvas></div>
 </div>
 <div class="card section"><div class="title">Categorias consolidadas</div><div class="wrap"><table><thead><tr><th>Categoria</th><th class="num">Fixos</th><th class="num">Variáveis</th><th class="num">Parcelas</th><th class="num">Total médio</th></tr></thead><tbody id="gastosBody"></tbody></table></div></div>
+
+<div class="card section">
+ <div class="panel-recent-head">
+  <div><div class="title">Últimos lançamentos de despesas</div><div class="subtitle">Gastos fixos e variáveis mais recentes.</div></div>
+  <div class="panel-recent-note">Até o mês selecionado • últimos 10</div>
+ </div>
+ <div class="wrap"><table>
+  <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th></tr></thead>
+  <tbody id="recentExpensesPanel"></tbody>
+ </table></div>
+</div>
 </section>
 
 <section id="receitas" class="hidden">
@@ -179,6 +230,17 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 <div class="card"><div class="title">Receitas mensais</div><canvas id="chartReceitas"></canvas></div>
 <div class="card"><div class="title">Composição do mês</div><canvas id="chartReceitaDonut"></canvas><div id="receitaLegend" class="legend"></div></div>
 </div>
+
+<div class="card section">
+ <div class="panel-recent-head">
+  <div><div class="title">Últimos lançamentos de receitas</div><div class="subtitle">Entradas mais recentes registradas na base.</div></div>
+  <div class="panel-recent-note">Até o mês selecionado • últimos 10</div>
+ </div>
+ <div class="wrap"><table>
+  <thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th></tr></thead>
+  <tbody id="recentIncomePanel"></tbody>
+ </table></div>
+</div>
 </section>
 
 <section id="parcelas" class="hidden">
@@ -189,6 +251,17 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 <div class="card kpi"><div class="label">Registros futuros</div><div class="value" id="pFutureCount">—</div></div>
 </div>
 <div class="card section"><div class="title">Projeção das parcelas</div><canvas id="chartParcelasFut"></canvas></div>
+
+<div class="card section">
+ <div class="panel-recent-head">
+  <div><div class="title">Últimos lançamentos de parcelas</div><div class="subtitle">Parcelas mais recentes já alcançadas pelo período selecionado.</div></div>
+  <div class="panel-recent-note">Não inclui meses futuros • últimos 10</div>
+ </div>
+ <div class="wrap"><table>
+  <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th></tr></thead>
+  <tbody id="recentInstallmentsPanel"></tbody>
+ </table></div>
+</div>
 </section>
 
 <section id="patrimonio" class="hidden">
@@ -209,7 +282,7 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
   <div class="title">Projeção patrimonial</div>
   <div class="subtitle">Total projetado e total sem FGTS com as premissas configuradas abaixo.</div>
   <canvas id="chartPatProjection"></canvas>
-  <div class="legend"><span><i class="dot" style="background:#2563eb"></i>Total</span><span><i class="dot" style="background:#08a36d"></i>Sem FGTS</span></div>
+  <div class="legend"><span><i class="dot" style="background:#2563eb"></i>Total</span><span><i class="dot" style="background:#08a36d"></i>Sem FGTS</span><span><i class="dot" style="background:#dc2626"></i>Meta sem FGTS</span></div>
 </div>
 </div>
 
@@ -246,6 +319,17 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
     <div class="mini-kpi"><div class="mk-label">Diferença p/ meta no fim</div><div class="mk-value" id="projEndGap">—</div></div>
   </div>
 </div>
+
+<div class="card section">
+ <div class="panel-recent-head">
+  <div><div class="title">Últimos lançamentos patrimoniais</div><div class="subtitle">Últimos saldos/componentes informados no patrimônio.</div></div>
+  <div class="panel-recent-note">Até o mês selecionado • últimos 10</div>
+ </div>
+ <div class="wrap"><table>
+  <thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th class="num">Saldo</th></tr></thead>
+  <tbody id="recentPatrimonyPanel"></tbody>
+ </table></div>
+</div>
 </section>
 
 <section id="novo" class="hidden">
@@ -264,6 +348,25 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 <div class="field" id="fNumParc"><label>Número de parcelas</label><input id="nNumParc" type="number" min="1" max="120" value="2"></div>
 </div>
 <div class="form-actions"><button class="btn green" id="btnSalvar">Salvar no OneDrive</button></div>
+</div>
+
+<div class="card section">
+ <div class="recent-actions">
+   <div><div class="title">Lançamentos recentes feitos pelo dashboard</div><div class="subtitle">Se um lançamento foi incluído incorretamente, exclua aqui. A exclusão também é gravada no OneDrive.</div></div>
+   <select id="recentTypeFilter" style="border:1px solid #d8e0ea;background:#fff;border-radius:9px;padding:7px 9px;font-size:10px">
+     <option value="all">Todos</option>
+     <option value="variaveis">Variáveis</option>
+     <option value="fixos">Fixos</option>
+     <option value="parcelas">Parcelas</option>
+     <option value="entradas">Entradas</option>
+   </select>
+ </div>
+ <div class="wrap">
+  <table>
+   <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria / pessoa</th><th class="num">Valor</th><th></th></tr></thead>
+   <tbody id="recentEntriesBody"></tbody>
+  </table>
+ </div>
 </div>
 </section>
 
@@ -358,7 +461,79 @@ function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(
 function periods(){let a=[...data.fixos,...data.variaveis,...data.entradas];let map=new Map();a.forEach(x=>map.set(keyYM(x.ano,x.mes),{ano:x.ano,mes:x.mes}));return [...map.values()].sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes))}
 function fillFilters(keep=true){let oy=+$("anoSel").value,om=+$("mesSel").value,ps=periods(),ys=[...new Set(ps.map(x=>x.ano))];$("anoSel").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("mesSel").innerHTML=MESES.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");if(keep&&ys.includes(oy)){$("anoSel").value=oy;$("mesSel").value=om}else{let p=ps.at(-1)||{ano:2026,mes:8};$("anoSel").value=p.ano;$("mesSel").value=p.mes}}
 function selected(){return{y:+$("anoSel").value,m:+$("mesSel").value}}
+function recordDay(x){
+ let m=String(x?.data||"").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);return m?parseInt(m[1]):1
+}
+function recordOrder(x){
+ return keyYM(Number(x.ano)||0,Number(x.mes)||0)*100+recordDay(x)
+}
+function beforeSelected(x){
+ let s=selected();return keyYM(Number(x.ano)||0,Number(x.mes)||0)<=keyYM(s.y,s.m)
+}
+function latestRows(arr,limit=10){
+ return [...arr].filter(beforeSelected).sort((a,b)=>{
+   let d=recordOrder(b)-recordOrder(a);if(d)return d;
+   return String(b.createdAt||"").localeCompare(String(a.createdAt||""))
+ }).slice(0,limit)
+}
+function emptyPanelRow(cols,msg="Nenhum lançamento disponível até este período."){
+ return `<tr><td colspan="${cols}"><div class="empty-state">${msg}</div></td></tr>`
+}
+
 function latest(){let p=periods().at(-1);if(p){$("anoSel").value=p.ano;$("mesSel").value=p.mes;render()}}
+function monthKeyObj(y,m){return{y,m,key:keyYM(y,m),label:`${MESES[m-1].slice(0,3)}/${String(y).slice(2)}`}}
+function allAvailableMonths(){
+ let keys=new Set();
+ ["fixos","variaveis","parcelas","entradas"].forEach(k=>(data[k]||[]).forEach(x=>keys.add(keyYM(x.ano,x.mes))));
+ (data.investimentos||[]).filter(x=>x.natureza==="Componente"||x.natureza==="Total histórico").forEach(x=>keys.add(keyYM(x.ano,x.mes)));
+ return [...keys].sort((a,b)=>a-b).map(k=>monthKeyObj(Math.floor(k/100),k%100));
+}
+function monthsBetween(startY,startM,endY,endM){
+ let out=[],cur=keyYM(startY,startM),end=keyYM(endY,endM),guard=0,y=startY,m=startM;
+ while(cur<=end&&guard<600){out.push(monthKeyObj(y,m));let n=shift(y,m,1);y=n.y;m=n.m;cur=keyYM(y,m);guard++}
+ return out;
+}
+function setMonthInput(id,y,m){$(id).value=`${y}-${String(m).padStart(2,"0")}`}
+function parseMonthInput(id){
+ let v=$(id).value;if(!/^\d{4}-\d{2}$/.test(v))return null;let[y,m]=v.split("-").map(Number);return{y,m}
+}
+function chartRange(){
+ let preset=$("chartPeriodPreset")?.value||"12",available=allAvailableMonths(),sel=selected();
+ if(!available.length)return[monthKeyObj(sel.y,sel.m)];
+ if(preset==="all")return monthsBetween(available[0].y,available[0].m,available.at(-1).y,available.at(-1).m);
+ if(preset==="custom"){
+   let a=parseMonthInput("chartStart"),b=parseMonthInput("chartEnd");
+   if(!a||!b){a=available[0];b=available.at(-1)}
+   if(keyYM(a.y,a.m)>keyYM(b.y,b.m)){let t=a;a=b;b=t}
+   return monthsBetween(a.y,a.m,b.y,b.m);
+ }
+ let n=Math.max(1,parseInt(preset)||12),end={y:sel.y,m:sel.m},start=shift(end.y,end.m,-(n-1));
+ return monthsBetween(start.y,start.m,end.y,end.m);
+}
+function rangeAverage(arr,months){
+ if(!months.length)return 0;
+ return months.reduce((s,t)=>s+sumMonth(arr,t.y,t.m),0)/months.length;
+}
+function rangeIncomeAverage(months,nome){
+ if(!months.length)return 0;
+ return months.reduce((s,t)=>s+income(t.y,t.m,nome),0)/months.length;
+}
+function rangeCats(arr,months){
+ let o={};if(!months.length)return o;
+ months.forEach(t=>rowsMonth(arr,t.y,t.m).forEach(x=>{let c=x.categoria||x.descricao||"Outros";o[c]=(o[c]||0)+(Number(x.valor)||0)/months.length}));
+ return o;
+}
+function refreshChartPeriodUi(){
+ let preset=$("chartPeriodPreset").value,custom=preset==="custom",available=allAvailableMonths(),r=chartRange();
+ $("chartStart").classList.toggle("hidden",!custom);$("chartEnd").classList.toggle("hidden",!custom);
+ if(custom&&available.length){
+   if(!$("chartStart").value)setMonthInput("chartStart",available[0].y,available[0].m);
+   if(!$("chartEnd").value)setMonthInput("chartEnd",available.at(-1).y,available.at(-1).m);
+   r=chartRange();
+ }
+ if(r.length)$("chartPeriodSummary").textContent=`${r[0].label} → ${r.at(-1).label} • ${r.length} ${r.length===1?"mês":"meses"}`;
+ else $("chartPeriodSummary").textContent="Sem período disponível";
+}
 function refreshCategories(){
  const defaults=["Alimentação","Casa / Bens Pessoais","Saúde","Aplicação","Assinatura","Transporte","Educação","Lazer","Viagem","Vestuário / Maquiagem","Trabalho"];
  const found=[...data.fixos,...data.variaveis,...data.parcelas].map(x=>x.categoria||x.descricao).filter(Boolean);
@@ -469,13 +644,14 @@ function noData(ctx,w,h){ctx.fillStyle="#94a3b8";ctx.font="12px system-ui";ctx.t
 function drawBar(id,labels,vals,colors=COLORS){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z;if(!vals.length||Math.max(...vals.map(Math.abs),0)===0){noData(ctx,w,h);return}let max=Math.max(...vals,1),L=44,R=12,T=24,B=58,pw=w-L-R,ph=h-T-B,gap=pw/vals.length,bw=Math.min(54,gap*.62);ctx.font="10px system-ui";ctx.textAlign="center";vals.forEach((v,i)=>{let bh=ph*v/max,x=L+i*gap+gap/2-bw/2,y=T+ph-bh;ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x,y,bw,bh);ctx.fillStyle="#475569";ctx.fillText(brl(v).replace(",00",""),x+bw/2,Math.max(11,y-6));ctx.save();ctx.translate(x+bw/2,h-9);ctx.rotate(-.42);ctx.fillStyle="#64748b";ctx.fillText(labels[i],0,0);ctx.restore()})}
 function drawHBar(id,obj){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);if(!es.length){noData(ctx,w,h);return}let max=Math.max(...es.map(x=>x[1])),L=Math.min(145,w*.43),R=56,T=10,B=10,ph=(h-T-B)/es.length,bh=Math.min(20,ph*.58);ctx.font="10px system-ui";es.forEach(([k,v],i)=>{let y=T+i*ph+(ph-bh)/2;ctx.textAlign="right";ctx.fillStyle="#475569";ctx.fillText(k.length>23?k.slice(0,21)+"…":k,L-7,y+bh*.75);ctx.fillStyle=COLORS[i%COLORS.length];ctx.fillRect(L,y,(w-L-R)*v/max,bh);ctx.textAlign="left";ctx.fillStyle="#64748b";ctx.fillText(brl(v).replace(",00",""),L+(w-L-R)*v/max+4,y+bh*.75)})}
 function drawDonut(id,obj,legendId){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),total=es.reduce((s,x)=>s+x[1],0);if(!total){noData(ctx,w,h);if(legendId)$(legendId).innerHTML="";return}let cx=w/2,cy=h/2,r=Math.min(w,h)*.32,a=-Math.PI/2;es.forEach(([k,v],i)=>{let b=a+Math.PI*2*v/total;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,b);ctx.closePath();ctx.fillStyle=COLORS[i%COLORS.length];ctx.fill();a=b});ctx.globalCompositeOperation="destination-out";ctx.beginPath();ctx.arc(cx,cy,r*.56,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation="source-over";ctx.fillStyle="#111827";ctx.font="800 14px system-ui";ctx.textAlign="center";ctx.fillText(brl(total),cx,cy+5);if(legendId)$(legendId).innerHTML=es.map(([k,v],i)=>`<span><i class="dot" style="background:${COLORS[i%COLORS.length]}"></i>${esc(k)} (${(v/total*100).toFixed(0)}%)</span>`).join("")}
-function drawLines(id,labels,series){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,all=series.flatMap(s=>s.vals).filter(Number.isFinite);if(!all.length){noData(ctx,w,h);return}let min=Math.min(0,...all),max=Math.max(1,...all);if(max===min)max=min+1;let L=52,R=12,T=17,B=35,pw=w-L-R,ph=h-T-B;ctx.font="9px system-ui";ctx.strokeStyle="#e5e7eb";ctx.fillStyle="#64748b";ctx.textAlign="right";for(let i=0;i<=4;i++){let val=max-(max-min)*i/4,y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(Math.round(val).toLocaleString("pt-BR"),L-5,y+3)}let X=i=>labels.length===1?L+pw/2:L+pw*i/(labels.length-1),Y=v=>T+(max-v)/(max-min)*ph;series.forEach((s,si)=>{ctx.strokeStyle=s.color||COLORS[si];ctx.lineWidth=2.2;ctx.beginPath();s.vals.forEach((v,i)=>{let x=X(i),y=Y(v);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()});ctx.fillStyle="#64748b";ctx.textAlign="center";labels.forEach((l,i)=>{if(labels.length<=12||i%Math.ceil(labels.length/10)===0)ctx.fillText(l,X(i),h-10)})}
+function drawLines(id,labels,series){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,all=series.flatMap(s=>s.vals).filter(Number.isFinite);if(!all.length){noData(ctx,w,h);return}let min=Math.min(0,...all),max=Math.max(1,...all);if(max===min)max=min+1;let L=52,R=12,T=17,B=35,pw=w-L-R,ph=h-T-B;ctx.font="9px system-ui";ctx.strokeStyle="#e5e7eb";ctx.fillStyle="#64748b";ctx.textAlign="right";for(let i=0;i<=4;i++){let val=max-(max-min)*i/4,y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(Math.round(val).toLocaleString("pt-BR"),L-5,y+3)}let X=i=>labels.length===1?L+pw/2:L+pw*i/(labels.length-1),Y=v=>T+(max-v)/(max-min)*ph;series.forEach((s,si)=>{ctx.save();ctx.strokeStyle=s.color||COLORS[si];ctx.lineWidth=s.lineWidth||2.2;ctx.setLineDash(s.dash||[]);ctx.beginPath();s.vals.forEach((v,i)=>{let x=X(i),y=Y(v);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.restore()});ctx.fillStyle="#64748b";ctx.textAlign="center";labels.forEach((l,i)=>{if(labels.length<=12||i%Math.ceil(labels.length/10)===0||i===labels.length-1)ctx.fillText(l,X(i),h-10)})}
 function drawPatComponents(){
- let h=componentHistory();
+ let selectedMonths=chartRange(),minK=selectedMonths.length?selectedMonths[0].key:-Infinity,maxK=selectedMonths.length?selectedMonths.at(-1).key:Infinity;
+ let h=componentHistory().filter(x=>keyYM(x.y,x.m)>=minK&&keyYM(x.y,x.m)<=maxK);
  if(!h.length){let z=setupCanvas("chartPatComponents",300);if(z)noData(z[0],z[1],z[2]);$("patEvolutionLegend").innerHTML="";return}
  let labels=h.map(x=>x.label),classes=["Conta Corrente","Previdência","FGTS","Aplicações","Dinheiro"],series=[];
  classes.forEach(c=>{if(h.some(x=>(x.classes[c]||0)>0))series.push({label:c,vals:h.map(x=>x.classes[c]||0),color:PAT_COLORS[c]})});
- series.push({label:"Total",vals:h.map(x=>x.total),color:PAT_COLORS.Total});
+ series.push({label:"Total",vals:h.map(x=>x.total),color:PAT_COLORS.Total,lineWidth:2.8});
  drawLines("chartPatComponents",labels,series);
  $("patEvolutionLegend").innerHTML=series.map(s=>`<span><i class="dot" style="background:${s.color}"></i>${s.label}</span>`).join("");
 }
@@ -483,15 +659,35 @@ function drawPatProjection(){
  let p=projectionFromSettings();
  if(!p.months.length){let z=setupCanvas("chartPatProjection",285);if(z)noData(z[0],z[1],z[2]);return}
  let labels=[`${String(p.start.m).padStart(2,"0")}/${String(p.start.y).slice(2)}`,...p.months.map(x=>x.label)];
- let total=[p.start.total,...p.months.map(x=>x.total)],sem=[p.start.sem,...p.months.map(x=>x.sem)];
- drawLines("chartPatProjection",labels,[{vals:total,color:"#2563eb"},{vals:sem,color:"#08a36d"}]);
+ let total=[p.start.total,...p.months.map(x=>x.total)],sem=[p.start.sem,...p.months.map(x=>x.sem)],meta=labels.map(()=>p.pr.meta);
+ drawLines("chartPatProjection",labels,[{vals:total,color:"#2563eb"},{vals:sem,color:"#08a36d"},{vals:meta,color:"#dc2626",dash:[7,5],lineWidth:1.8}]);
  let end=p.months.at(-1),growth=end.total-p.start.total,gap=end.sem-p.pr.meta;
  $("projEndTotal").textContent=brl(end.total);$("projEndSemFgts").textContent=brl(end.sem);$("projGrowth").textContent=brl(growth);$("projGrowth").className="mk-value "+(growth>=0?"good":"bad");$("projEndGap").textContent=brl(gap);$("projEndGap").className="mk-value "+(gap>=0?"good":"bad");
 }
 
-function renderGeneral(){let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória"),rec=ig+vi,fix=sumMonth(data.fixos,y,m),vr=sumMonth(data.variaveis,y,m),par=sumMonth(data.parcelas,y,m),desp=fix+vr+par,sobra=rec-desp,p=currentPat(y,m),af=avg3Total(data.fixos,y,m),av=avg3Total(data.variaveis,y,m),ap=avg3Total(data.parcelas,y,m),ai=avg3Income(y,m,"Igor"),avt=avg3Income(y,m,"Vitória"),as=ai+avt-af-av-ap;$("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSobra").textContent=brl(sobra);$("gSobra").className="value "+(sobra>=0?"good":"bad");$("gPat").textContent=brl(p.total);$("gPatSub").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";$("avgFix").textContent=brl(af);$("avgVar").textContent=brl(av);$("avgPar").textContent=brl(ap);$("avgSob").textContent=brl(as);$("avgSob").className="value "+(as>=0?"good":"bad");drawBar("chartConsolidado",["Variáveis","Fixos","Parcelas","Igor","Vitória"],[av,af,ap,ai,avt],["#f59e0b","#2563eb","#8b5cf6","#059669","#0891b2"]);let rr=[],dd=[],ss=[];for(let mm=1;mm<=12;mm++){let r=income(y,mm,"Igor")+income(y,mm,"Vitória"),d=sumMonth(data.fixos,y,mm)+sumMonth(data.variaveis,y,mm)+sumMonth(data.parcelas,y,mm);rr.push(r);dd.push(d);ss.push(r-d)}drawLines("chartFluxo",MESES.map(x=>x.slice(0,3)),[{vals:rr,color:"#059669"},{vals:dd,color:"#dc2626"},{vals:ss,color:"#2563eb"}])}
-function renderGastos(){let{y,m}=selected(),f=avg3Cats(data.fixos,y,m),v=avg3Cats(data.variaveis,y,m),p=avg3Cats(data.parcelas,y,m);drawHBar("chartFixos",f);drawHBar("chartVariaveis",v);drawHBar("chartParcelasCat",p);let ks=[...new Set([...Object.keys(f),...Object.keys(v),...Object.keys(p)])].sort((a,b)=>((f[b]||0)+(v[b]||0)+(p[b]||0))-((f[a]||0)+(v[a]||0)+(p[a]||0)));$("gastosBody").innerHTML=ks.map(k=>`<tr><td>${esc(k)}</td><td class="num">${brl(f[k]||0)}</td><td class="num">${brl(v[k]||0)}</td><td class="num">${brl(p[k]||0)}</td><td class="num"><b>${brl((f[k]||0)+(v[k]||0)+(p[k]||0))}</b></td></tr>`).join("")}
-function renderReceitas(){let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória");$("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rIgor3").textContent=brl(avg3Income(y,m,"Igor"));$("rVitoria3").textContent=brl(avg3Income(y,m,"Vitória"));let a=[],b=[];for(let mm=1;mm<=12;mm++){a.push(income(y,mm,"Igor"));b.push(income(y,mm,"Vitória"))}drawLines("chartReceitas",MESES.map(x=>x.slice(0,3)),[{vals:a,color:"#2563eb"},{vals:b,color:"#db2777"}]);drawDonut("chartReceitaDonut",{Igor:ig,Vitória:vi},"receitaLegend")}
+function renderGeneral(){
+ let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória"),rec=ig+vi,fix=sumMonth(data.fixos,y,m),vr=sumMonth(data.variaveis,y,m),par=sumMonth(data.parcelas,y,m),desp=fix+vr+par,sobra=rec-desp,p=currentPat(y,m);
+ let af=avg3Total(data.fixos,y,m),av=avg3Total(data.variaveis,y,m),ap=avg3Total(data.parcelas,y,m),ai3=avg3Income(y,m,"Igor"),avt3=avg3Income(y,m,"Vitória"),as=ai3+avt3-af-av-ap;
+ $("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSobra").textContent=brl(sobra);$("gSobra").className="value "+(sobra>=0?"good":"bad");$("gPat").textContent=brl(p.total);$("gPatSub").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";$("avgFix").textContent=brl(af);$("avgVar").textContent=brl(av);$("avgPar").textContent=brl(ap);$("avgSob").textContent=brl(as);$("avgSob").className="value "+(as>=0?"good":"bad");
+ let range=chartRange(),raf=rangeAverage(data.fixos,range),rav=rangeAverage(data.variaveis,range),rap=rangeAverage(data.parcelas,range),rai=rangeIncomeAverage(range,"Igor"),ravt=rangeIncomeAverage(range,"Vitória");
+ drawBar("chartConsolidado",["Variáveis","Fixos","Parcelas","Igor","Vitória"],[rav,raf,rap,rai,ravt],["#f59e0b","#2563eb","#8b5cf6","#059669","#0891b2"]);
+ let labels=range.map(t=>t.label),rr=[],dd=[],ss=[];
+ range.forEach(t=>{let r=income(t.y,t.m,"Igor")+income(t.y,t.m,"Vitória"),d=sumMonth(data.fixos,t.y,t.m)+sumMonth(data.variaveis,t.y,t.m)+sumMonth(data.parcelas,t.y,t.m);rr.push(r);dd.push(d);ss.push(r-d)});
+ drawLines("chartFluxo",labels,[{vals:rr,color:"#059669"},{vals:dd,color:"#dc2626"},{vals:ss,color:"#2563eb"}])
+}
+function renderGastos(){
+ let range=chartRange(),f=rangeCats(data.fixos,range),v=rangeCats(data.variaveis,range),p=rangeCats(data.parcelas,range);
+ drawHBar("chartFixos",f);drawHBar("chartVariaveis",v);drawHBar("chartParcelasCat",p);
+ let ks=[...new Set([...Object.keys(f),...Object.keys(v),...Object.keys(p)])].sort((a,b)=>((f[b]||0)+(v[b]||0)+(p[b]||0))-((f[a]||0)+(v[a]||0)+(p[a]||0)));
+ $("gastosBody").innerHTML=ks.map(k=>`<tr><td>${esc(k)}</td><td class="num">${brl(f[k]||0)}</td><td class="num">${brl(v[k]||0)}</td><td class="num">${brl(p[k]||0)}</td><td class="num"><b>${brl((f[k]||0)+(v[k]||0)+(p[k]||0))}</b></td></tr>`).join("")
+}
+function renderReceitas(){
+ let{y,m}=selected(),ig=income(y,m,"Igor"),vi=income(y,m,"Vitória");
+ $("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rIgor3").textContent=brl(avg3Income(y,m,"Igor"));$("rVitoria3").textContent=brl(avg3Income(y,m,"Vitória"));
+ let range=chartRange(),a=range.map(t=>income(t.y,t.m,"Igor")),b=range.map(t=>income(t.y,t.m,"Vitória"));
+ drawLines("chartReceitas",range.map(t=>t.label),[{vals:a,color:"#2563eb"},{vals:b,color:"#db2777"}]);
+ drawDonut("chartReceitaDonut",{Igor:ig,Vitória:vi},"receitaLegend")
+}
 function renderParcelas(){let{y,m}=selected(),vals=[],labs=[];for(let k=0;k<12;k++){let t=shift(y,m,k);labs.push(`${MESES[t.m-1].slice(0,3)}/${String(t.y).slice(2)}`);vals.push(sumMonth(data.parcelas,t.y,t.m))}$("pMes").textContent=brl(vals[0]);$("pMedia").textContent=brl(avg3Total(data.parcelas,y,m));$("p6").textContent=brl(vals.slice(0,6).reduce((a,b)=>a+b,0));$("pFutureCount").textContent=data.parcelas.filter(x=>keyYM(x.ano,x.mes)>keyYM(y,m)&&Number(x.valor)>0).length.toLocaleString("pt-BR");drawBar("chartParcelasFut",labs,vals,Array(12).fill("#8b5cf6"))}
 function renderPat(){
  let{y,m}=selected(),p=currentPat(y,m),meta=Number(data.settings?.metaPatrimonioSemFGTS)||0,gap=p.sem-meta;
@@ -499,8 +695,69 @@ function renderPat(){
  let by=classTotals(p.rows);drawDonut("chartPatDonut",by,"patLegend");
  setProjectionInputs();drawPatComponents();drawPatProjection();
 }
+
+function recentEntries(){
+ let items=[];
+ ["fixos","variaveis","entradas"].forEach(k=>(data[k]||[]).filter(x=>x.origem==="app").forEach(x=>items.push({kind:k,groupId:null,records:[x],dateKey:keyYM(x.ano,x.mes)*100+(parseInt(String(x.data||"01").slice(0,2))||1),data:x.data,descricao:x.descricao||"",detail:k==="entradas"?(x.pessoa||""):(x.categoria||""),valor:Number(x.valor)||0,createdAt:x.createdAt||""})));
+ let parcelRows=(data.parcelas||[]).filter(x=>x.origem==="app"),groups=new Map();
+ parcelRows.forEach(x=>{let g=x.grupoParcelas||x.id;if(!groups.has(g))groups.set(g,[]);groups.get(g).push(x)});
+ groups.forEach((rs,g)=>{rs.sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes));let first=rs[0];items.push({kind:"parcelas",groupId:g,records:rs,dateKey:keyYM(first.ano,first.mes)*100+(parseInt(String(first.data||"01").slice(0,2))||1),data:first.data,descricao:first.descricao||"",detail:`${first.categoria||""} • ${rs.length}x`,valor:sum(rs),createdAt:first.createdAt||""})});
+ return items.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")||b.dateKey-a.dateKey);
+}
+function renderRecentEntries(){
+ let body=$("recentEntriesBody");if(!body)return;
+ let filter=$("recentTypeFilter")?.value||"all",rows=recentEntries().filter(x=>filter==="all"||x.kind===filter).slice(0,30);
+ const names={fixos:"Fixo",variaveis:"Variável",parcelas:"Parcelado",entradas:"Entrada"};
+ const colors={fixos:"#2563eb",variaveis:"#f59e0b",parcelas:"#8b5cf6",entradas:"#08a36d"};
+ if(!rows.length){body.innerHTML=`<tr><td colspan="6"><div class="empty-state">Nenhum lançamento recente feito pelo dashboard.</div></td></tr>`;return}
+ body.innerHTML=rows.map((x,i)=>`<tr><td>${esc(x.data)}</td><td><span class="type-dot" style="background:${colors[x.kind]}"></span>${names[x.kind]}</td><td>${esc(x.descricao)}</td><td>${esc(x.detail)}</td><td class="num">${brl(x.valor)}</td><td><button class="delete-entry" data-recent-index="${i}">Excluir</button></td></tr>`).join("");
+ document.querySelectorAll(".delete-entry").forEach(btn=>btn.onclick=()=>deleteRecentEntry(rows[+btn.dataset.recentIndex]));
+}
+async function deleteRecentEntry(item){
+ if(!account||!remoteMeta){toast("Conecte e sincronize o OneDrive primeiro.");return}
+ let what=item.kind==="parcelas"?`a compra parcelada "${item.descricao}" e todas as ${item.records.length} parcelas`:`o lançamento "${item.descricao}"`;
+ if(!confirm(`Excluir ${what}? Esta alteração será gravada no OneDrive.`))return;
+ let before=structuredClone(data);
+ try{
+   let ids=new Set(item.records.map(x=>x.id));
+   data[item.kind]=data[item.kind].filter(x=>!ids.has(x.id));
+   await saveRemoteWithConflictCheck();toast("Lançamento excluído do OneDrive.");fillFilters(true);render();
+ }catch(e){data=before;handleError(e)}
+}
+
+
+function renderPanelRecentExpenses(){
+ let body=$("recentExpensesPanel");if(!body)return;
+ let rows=[
+  ...(data.fixos||[]).map(x=>({...x,_kind:"Fixo",_color:"#2563eb"})),
+  ...(data.variaveis||[]).map(x=>({...x,_kind:"Variável",_color:"#f59e0b"}))
+ ].filter(beforeSelected).sort((a,b)=>recordOrder(b)-recordOrder(a)||String(b.createdAt||"").localeCompare(String(a.createdAt||""))).slice(0,10);
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td><span class="record-kind"><i style="background:${x._color}"></i>${x._kind}</span></td><td><div class="recent-desc">${esc(x.descricao||x.categoria||"—")}</div></td><td>${esc(x.categoria||"—")}</td><td class="num">${brl(x.valor)}</td></tr>`).join(""):emptyPanelRow(5);
+}
+function renderPanelRecentIncome(){
+ let body=$("recentIncomePanel");if(!body)return;
+ let rows=latestRows(data.entradas||[],10);
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td>${esc(x.pessoa||"—")}</td><td><div class="recent-desc">${esc(x.descricao||"Entrada")}</div></td><td class="num">${brl(x.valor)}</td></tr>`).join(""):emptyPanelRow(4);
+}
+function renderPanelRecentInstallments(){
+ let body=$("recentInstallmentsPanel");if(!body)return;
+ let rows=latestRows(data.parcelas||[],10);
+ body.innerHTML=rows.length?rows.map(x=>{
+   let parcela=(x.parcela&&x.totalParcelas)?`${x.parcela}/${x.totalParcelas}`:"—";
+   return `<tr><td>${esc(x.data)}</td><td><div class="recent-desc">${esc(x.descricao||x.categoria||"—")}</div></td><td>${esc(x.categoria||"—")}</td><td>${parcela}</td><td class="num">${brl(x.valor)}</td></tr>`
+ }).join(""):emptyPanelRow(5);
+}
+function renderPanelRecentPatrimony(){
+ let body=$("recentPatrimonyPanel");if(!body)return;
+ let rows=latestRows((data.investimentos||[]).filter(x=>x.natureza==="Componente"),10);
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td><div class="recent-desc">${esc(x.descricao||"—")}</div></td><td>${esc(patrimonyClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td></tr>`).join(""):emptyPanelRow(4);
+}
+function renderAllPanelRecent(){
+ renderPanelRecentExpenses();renderPanelRecentIncome();renderPanelRecentInstallments();renderPanelRecentPatrimony();
+}
+
 function renderData(){let{y,m}=selected(),rows=[];[["Fixo","fixos"],["Variável","variaveis"],["Parcela","parcelas"],["Entrada","entradas"],["Patrimônio","investimentos"]].forEach(([tipo,k])=>rowsMonth(data[k],y,m).filter(x=>k!=="investimentos"||x.natureza==="Componente").forEach(x=>rows.push({...x,tipo})));$("dFix").textContent=data.fixos.length.toLocaleString("pt-BR");$("dVar").textContent=data.variaveis.length.toLocaleString("pt-BR");$("dPar").textContent=data.parcelas.length.toLocaleString("pt-BR");$("dOther").textContent=(data.entradas.length+data.investimentos.length).toLocaleString("pt-BR");$("dadosBody").innerHTML=rows.map(x=>`<tr><td><span class="chip">${x.tipo}</span></td><td>${x.data}</td><td>${esc(x.descricao)}</td><td>${esc(x.pessoa||x.natureza||"")}</td><td class="num">${brl(x.valor)}</td></tr>`).join("")}
-function render(){renderGeneral();renderGastos();renderReceitas();renderParcelas();renderPat();renderData();updateCloudUi()}
+function render(){refreshChartPeriodUi();renderGeneral();renderGastos();renderReceitas();renderParcelas();renderPat();renderData();renderRecentEntries();renderAllPanelRecent();updateCloudUi()}
 function showTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["geral","gastos","receitas","parcelas","patrimonio","novo","dados","config"].forEach(x=>$(x).classList.toggle("hidden",x!==id));let titles={geral:["Visão geral","Controle integrado de receitas, despesas, parcelas e patrimônio."],gastos:["Despesas","Análise dos gastos por categoria e comportamento recente."],receitas:["Receitas","Acompanhe entradas de Igor e Vitória ao longo do tempo."],parcelas:["Parcelas","Veja compromissos atuais e projeções dos próximos meses."],patrimonio:["Patrimônio","Acompanhe os componentes do patrimônio e simule cenários com premissas personalizadas."],novo:["Novo lançamento","Cadastre uma movimentação financeira com poucos campos."],dados:["Base de dados","Backup, importação e conferência do arquivo financeiro."],config:["Configuração","Conexão segura do dashboard com o OneDrive."]};let t=titles[id]||titles.geral;document.querySelector(".workspace-head h2").textContent=t[0];document.querySelector(".workspace-head p").textContent=t[1];if(id==="novo")updateForm();setTimeout(render,35)}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));$("fab").onclick=()=>showTab("novo");
 function openQuick(type){$("nTipo").value=type;updateForm();showTab("novo");setTimeout(()=>{if(type!=="investimentos")$("nDescricao").focus()},80)}
@@ -525,12 +782,12 @@ async function saveNew(){
  try{
    if(["fixos","variaveis"].includes(t)){
      let categoria=$("nCategoria").value;
-     data[t].push({id:uid(),data:br,ano:y,mes:m,descricao,categoria,valor:v,tipo:t==="fixos"?"fixo":"variavel",origem:"app"})
+     data[t].push({id:uid(),data:br,ano:y,mes:m,descricao,categoria,valor:v,tipo:t==="fixos"?"fixo":"variavel",origem:"app",createdAt:new Date().toISOString()})
    }else if(t==="entradas"){
-     data.entradas.push({id:uid(),data:br,ano:y,mes:m,descricao,pessoa:$("nNome").value,valor:v,tipo:"entrada",origem:"app"})
+     data.entradas.push({id:uid(),data:br,ano:y,mes:m,descricao,pessoa:$("nNome").value,valor:v,tipo:"entrada",origem:"app",createdAt:new Date().toISOString()})
    }else if(t==="parcelas"){
      let categoria=$("nCategoria").value,n=Math.max(1,+$("nNumParc").value||1),c=Math.round(v*100),b=Math.floor(c/n),rest=c-b*n,grupo=br+"-"+Date.now();
-     for(let k=0;k<n;k++){let z=futureMonth(iso,k);data.parcelas.push({id:uid(),data:z.br,ano:z.y,mes:z.m,descricao,categoria,valor:(b+(k===n-1?rest:0))/100,tipo:"parcela",origem:"app",grupoParcelas:grupo,parcela:k+1,totalParcelas:n})}
+     for(let k=0;k<n;k++){let z=futureMonth(iso,k);data.parcelas.push({id:uid(),data:z.br,ano:z.y,mes:z.m,descricao,categoria,valor:(b+(k===n-1?rest:0))/100,tipo:"parcela",origem:"app",grupoParcelas:grupo,parcela:k+1,totalParcelas:n,createdAt:new Date().toISOString()})}
    }else{
      clonePreviousSnapshot(y,m);let owner=$("nOwner").value,conta=$("nConta").value,desc=owner==="Dinheiro"?"Dinheiro":`${owner}: ${conta}`;
      data.investimentos=data.investimentos.filter(x=>!(x.natureza==="Componente"&&x.ano===y&&x.mes===m&&x.descricao===desc));
@@ -592,7 +849,10 @@ $("btnUploadCurrent").onclick=async()=>{try{if(!account)throw new Error("Conecte
 $("btnDownloadJson").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="dados.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
 $("jsonImport").onchange=async()=>{let f=$("jsonImport").files[0];if(!f)return;try{let obj=JSON.parse(await f.text());if(!Array.isArray(obj.fixos)||!Array.isArray(obj.entradas))throw new Error("Formato incompatível.");data=obj;fillFilters(false);refreshCategories();render();toast("JSON privado importado em memória. Agora confirme o envio ao OneDrive.")}catch(e){handleError(e)}}
 
-$("btnLatest").onclick=latest;$("mesSel").onchange=render;$("anoSel").onchange=render;window.addEventListener("resize",()=>setTimeout(render,60));
+$("btnLatest").onclick=latest;$("mesSel").onchange=render;$("anoSel").onchange=render;
+$("chartPeriodPreset").onchange=()=>{if($("chartPeriodPreset").value==="custom"){let a=allAvailableMonths();if(a.length){setMonthInput("chartStart",a[0].y,a[0].m);setMonthInput("chartEnd",a.at(-1).y,a.at(-1).m)}}render()};
+$("chartStart").onchange=render;$("chartEnd").onchange=render;$("recentTypeFilter").onchange=renderRecentEntries;
+window.addEventListener("resize",()=>setTimeout(render,60));
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkRemoteChange()});
 
 fillFilters(false);
