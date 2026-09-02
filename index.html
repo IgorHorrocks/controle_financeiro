@@ -1,8 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Controle de Gastos</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
@@ -512,7 +513,7 @@ td.num,th.num{
 }
 
 
-/* v8.13 — ajustes finais de identidade e legibilidade */
+/* v8.14 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -533,333 +534,325 @@ td.num,th.num{
 .top-title b{font-size:12px}
 .top-title small{margin-top:2px}
 
+
+/* v8.14 — filtros de coluna estilo Excel */
+.excel-th{display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%}
+.excel-filter-btn{width:19px;height:19px;padding:0;border:0;border-radius:5px;background:transparent;color:#8C7F83;font-size:10px;line-height:19px;flex:0 0 19px}
+.excel-filter-btn:hover{background:#EEE6E3;color:#42363A}
+.excel-filter-btn.active{background:#F5E7EB;color:#A51437}
+.excel-filter-menu{position:fixed;z-index:9999;width:270px;max-width:calc(100vw - 24px);padding:8px;background:#fff;border:1px solid #DCCFCD;border-radius:10px;box-shadow:0 18px 48px rgba(69,35,41,.18)}
+.excel-filter-menu.hidden{display:none!important}
+.excel-filter-sort{display:grid;gap:2px}
+.excel-filter-sort button{border:0;background:transparent;color:#4D4246;text-align:left;padding:8px 9px;border-radius:7px;font-size:10px}
+.excel-filter-sort button:hover,.excel-filter-sort button.active{background:#F8F1F2;color:#99152F}
+.excel-filter-sep{height:1px;background:#EEE5E3;margin:6px 0 8px}
+.excel-filter-search{width:100%;margin-bottom:7px;font-size:10px;padding:8px 9px}
+.excel-filter-all,.excel-filter-value{display:flex;align-items:center;gap:7px;min-height:28px;padding:4px 6px;border-radius:6px;color:#4F4448;font-size:10px}
+.excel-filter-all{border-bottom:1px solid #F0E9E7;border-radius:0;font-weight:650}
+.excel-filter-value:hover{background:#FAF6F5}
+.excel-filter-values{max-height:220px;overflow:auto;margin:3px 0 8px}
+.excel-filter-value span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.excel-filter-menu input[type="checkbox"]{width:13px;height:13px;accent-color:#CC092F;flex:0 0 auto}
+.excel-filter-actions{display:flex;justify-content:space-between;gap:7px;padding-top:7px;border-top:1px solid #EEE5E3}
+.excel-filter-actions .btn{flex:1;min-height:30px;padding:6px 8px}
+.table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div><b>Controle de Gastos</b></div></div>
-  <div class="navlabel">Navegação</div>
-  <div class="tabs">
-    <button class="tab active" data-tab="geral">Visão Geral</button>
-    <button class="tab" data-tab="despesas">Despesas</button>
-    <button class="tab" data-tab="receitas">Receitas</button>
-    <button class="tab" data-tab="parcelas">Parcelas</button>
-    <button class="tab" data-tab="investimentos">Investimentos</button>
-    <button class="tab" data-tab="config">Configuração / Importação</button>
-  </div>
-  
+<div class="brand"><div><b>Controle de Gastos</b></div></div>
+<div class="navlabel">Navegação</div>
+<div class="tabs">
+<button class="tab active" data-tab="geral">Visão Geral</button>
+<button class="tab" data-tab="despesas">Despesas</button>
+<button class="tab" data-tab="receitas">Receitas</button>
+<button class="tab" data-tab="parcelas">Parcelas</button>
+<button class="tab" data-tab="investimentos">Investimentos</button>
+<button class="tab" data-tab="config">Configuração / Importação</button>
+</div>
 </aside>
 <div class="content-shell">
 <header class="topbar"><div class="topbar-inner">
-  <div class="top-title"><b>Controle de Gastos</b><small id="dataStatus">Nenhum dado carregado</small></div>
-  <div class="top-actions"><span id="dirtyState" class="period-summary"></span><span id="syncPill" class="syncpill">Sem dados</span><button id="btnTopSync" class="btn secondary">Sincronizar</button></div>
+<div class="top-title"><b>Controle de Gastos</b><small id="dataStatus">Nenhum dado carregado</small></div>
+<div class="top-actions"><span class="period-summary" id="dirtyState"></span><span class="syncpill" id="syncPill">Sem dados</span><button class="btn secondary" id="btnTopSync">Sincronizar</button></div>
 </div></header>
 <main>
-<div id="noDataNotice" class="notice warn"><b>Primeiro acesso:</b> vá em “Configuração / Importação” para carregar seus dados.</div>
+<div class="notice warn" id="noDataNotice"><b>Primeiro acesso:</b> vá em “Configuração / Importação” para carregar seus dados.</div>
 <div class="workspace-head">
- <div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle">Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”.</p></div>
- <div><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option value="12" selected>Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input id="periodStart" type="month" min="2022-05" class="hidden"><input id="periodEnd" type="month" min="2022-05" class="hidden"></div><div id="periodSummary" class="period-summary" style="margin-top:4px;text-align:right">—</div></div>
+<div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle">Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”.</p></div>
+<div><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
-
 <section id="geral">
- <div class="grid7">
-  <div class="card kpi"><label>Receitas</label><strong id="gReceita">—</strong><small id="gReceitaSub">—</small></div>
-  <div class="card kpi"><label>Despesas</label><strong id="gDespesa">—</strong><small>Fixas + variáveis + parcelas</small></div>
-  <div class="card kpi"><label>Saldo mensal</label><strong id="gSaldo">—</strong><small id="gSaldoPct">—</small></div>
-  <div class="card kpi"><label>Parcelas</label><strong id="gParcelas">—</strong><small>Mês de referência</small></div>
-  <div class="card kpi"><label>Patrimônio</label><strong id="gPat">—</strong><small id="gPatData">—</small></div>
-  <div class="card kpi"><label>Sem FGTS</label><strong id="gSemFgts">—</strong><small>Último fechamento disponível</small></div>
-  <div class="card kpi"><label>Meta sem FGTS</label><strong id="gMeta">—</strong><small id="gGap">—</small></div>
- </div>
-
- <div class="card chart-card section">
-  <div class="chart-head">
-   <div><h3>Consolida resultados</h3><p>Receitas e despesas consolidadas em linhas; a sobra mensal aparece como coluna translúcida ao fundo.</p></div>
-   <span class="pill">Resumo - Gráficos</span>
-  </div>
-  <div class="chart-wrap tall"><canvas id="chartConsolidado"></canvas></div>
- </div>
-
- <div class="grid3 section">
-  <div class="card chart-card"><div class="chart-head"><div><h3>Gastos fixos</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartFixosOverview"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Gastos variáveis</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisOverview"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas</h3><p>Comprometimento mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartParcelasOverview"></canvas></div></div>
- </div>
-
- <div class="card chart-card section">
-  <div class="chart-head">
-   <div><h3>Alocação de capital</h3><p>Evolução dos componentes do patrimônio e do total.</p></div>
-   <span class="pill">Resumo - Gráficos</span>
-  </div>
-  <div class="chart-wrap tall"><canvas id="chartCapital"></canvas></div>
- </div>
+<div class="grid7">
+<div class="card kpi"><label>Receitas</label><strong id="gReceita">—</strong><small id="gReceitaSub">—</small></div>
+<div class="card kpi"><label>Despesas</label><strong id="gDespesa">—</strong><small>Fixas + variáveis + parcelas</small></div>
+<div class="card kpi"><label>Saldo mensal</label><strong id="gSaldo">—</strong><small id="gSaldoPct">—</small></div>
+<div class="card kpi"><label>Parcelas</label><strong id="gParcelas">—</strong><small>Mês de referência</small></div>
+<div class="card kpi"><label>Patrimônio</label><strong id="gPat">—</strong><small id="gPatData">—</small></div>
+<div class="card kpi"><label>Sem FGTS</label><strong id="gSemFgts">—</strong><small>Último fechamento disponível</small></div>
+<div class="card kpi"><label>Meta sem FGTS</label><strong id="gMeta">—</strong><small id="gGap">—</small></div>
+</div>
+<div class="card chart-card section">
+<div class="chart-head">
+<div><h3>Consolida resultados</h3><p>Receitas e despesas consolidadas em linhas; a sobra mensal aparece como coluna translúcida ao fundo.</p></div>
+<span class="pill">Resumo - Gráficos</span>
+</div>
+<div class="chart-wrap tall"><canvas id="chartConsolidado"></canvas></div>
+</div>
+<div class="grid3 section">
+<div class="card chart-card"><div class="chart-head"><div><h3>Gastos fixos</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartFixosOverview"></canvas></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Gastos variáveis</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisOverview"></canvas></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Parcelas</h3><p>Comprometimento mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartParcelasOverview"></canvas></div></div>
+</div>
+<div class="card chart-card section">
+<div class="chart-head">
+<div><h3>Alocação de capital</h3><p>Evolução dos componentes do patrimônio e do total.</p></div>
+<span class="pill">Resumo - Gráficos</span>
+</div>
+<div class="chart-wrap tall"><canvas id="chartCapital"></canvas></div>
+</div>
 </section>
+<section class="hidden" id="despesas">
+<div class="filterbar"><div class="filter-group"><select id="expenseTypeFilter"><option value="all">Fixas + variáveis</option><option value="fixas">Somente fixas</option><option value="variaveis">Somente variáveis</option></select><select id="expenseCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
+<div class="grid4">
+<div class="card kpi"><label>Fixas • mês</label><strong id="dFixas">—</strong></div>
+<div class="card kpi"><label>Variáveis • mês</label><strong id="dVariaveis">—</strong></div>
+<div class="card kpi"><label>Total • mês</label><strong id="dTotal">—</strong></div>
+<div class="card kpi"><label>Média no período</label><strong id="dMedia">—</strong></div>
+</div>
+<div class="grid2 section">
+<div class="card chart-card"><div class="chart-head"><div><h3>Evolução das despesas</h3><p>Fixas e variáveis por mês.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasEvolucao"></canvas></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="fxTableCount"></span></div>
 
-<section id="despesas" class="hidden">
- <div class="filterbar"><div class="filter-group"><select id="expenseTypeFilter"><option value="all">Fixas + variáveis</option><option value="fixas">Somente fixas</option><option value="variaveis">Somente variáveis</option></select><select id="expenseCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
- <div class="grid4">
-  <div class="card kpi"><label>Fixas • mês</label><strong id="dFixas">—</strong></div>
-  <div class="card kpi"><label>Variáveis • mês</label><strong id="dVariaveis">—</strong></div>
-  <div class="card kpi"><label>Total • mês</label><strong id="dTotal">—</strong></div>
-  <div class="card kpi"><label>Média no período</label><strong id="dMedia">—</strong></div>
- </div>
+<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="fixas" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="fixas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="fixas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
+<div class="context-toolbar">
+<div class="field"><label>Mês de destino</label><input id="fxReplicateTarget" min="2022-05" type="month"/></div>
+<button class="btn secondary" id="btnReplicateFixed">Replicar mês anterior</button>
+<button class="btn green" id="btnOpenFixed">Adicionar nova despesa fixa</button>
+</div>
+<div class="inline-editor hidden" id="fxForm">
+<div class="context-title" id="fxFormTitle">Adicionar nova despesa fixa</div>
+<div class="formgrid">
+<div class="field"><label>Data</label><input id="cFxDate" type="date"/></div>
+<div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"/></div>
+<div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
+<div class="field"><label>Valor (R$)</label><input class="money-input" id="cFxValue" inputmode="decimal" placeholder="0,00"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
+</div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
 
- <div class="grid2 section">
-  <div class="card chart-card"><div class="chart-head"><div><h3>Evolução das despesas</h3><p>Fixas e variáveis por mês.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasEvolucao"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div>
- </div>
-
- <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
-  <div class="table-filters">
-   <div class="field"><label>Data inicial</label><input id="fxTableStart" type="date" min="2022-05-01"></div>
-   <div class="field"><label>Data final</label><input id="fxTableEnd" type="date" min="2022-05-01"></div>
-   <div class="field search"><label>Descrição</label><input id="fxTableSearch" placeholder="Buscar descrição..."></div>
-   <div class="field"><label>Categoria</label><select id="fxTableCategory"><option value="all">Todas</option></select></div>
-   <button id="btnClearFxTable" class="btn secondary">Limpar filtros</button>
-   <span id="fxTableCount" class="table-filter-count"></span>
-  </div>
-  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
-
-  <div class="context-toolbar">
-   <div class="field"><label>Mês de destino</label><input id="fxReplicateTarget" type="month" min="2022-05"></div>
-   <button id="btnReplicateFixed" class="btn secondary">Replicar mês anterior</button>
-   <button id="btnOpenFixed" class="btn green">Adicionar nova despesa fixa</button>
-  </div>
-
-  <div id="fxForm" class="inline-editor hidden">
-   <div class="context-title" id="fxFormTitle">Adicionar nova despesa fixa</div>
-   <div class="formgrid">
-    <div class="field"><label>Data</label><input id="cFxDate" type="date"></div>
-    <div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"></div>
-    <div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
-    <div class="field"><label>Valor (R$)</label><input id="cFxValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
-   </div>
-   <div class="form-actions"><button id="btnSaveFixed" class="btn green">Salvar</button><button id="btnCancelFixed" class="btn secondary">Cancelar</button></div>
-  </div>
- </div>
-
- <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
-  <div class="table-filters">
-   <div class="field"><label>Data inicial</label><input id="varTableStart" type="date" min="2022-05-01"></div>
-   <div class="field"><label>Data final</label><input id="varTableEnd" type="date" min="2022-05-01"></div>
-   <div class="field search"><label>Descrição</label><input id="varTableSearch" placeholder="Buscar descrição..."></div>
-   <div class="field"><label>Categoria</label><select id="varTableCategory"><option value="all">Todas</option></select></div>
-   <button id="btnClearVarTable" class="btn secondary">Limpar filtros</button>
-   <span id="varTableCount" class="table-filter-count"></span>
-  </div>
-  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
-  <div class="context-toolbar"><button id="btnOpenVariable" class="btn green">Adicionar nova despesa variável</button></div>
-
-  <div id="varForm" class="inline-editor hidden">
-   <div class="context-title" id="varFormTitle">Adicionar nova despesa variável</div>
-   <div class="formgrid">
-    <div class="field"><label>Data</label><input id="cVarDate" type="date"></div>
-    <div class="field"><label>Descrição</label><input id="cVarDesc" maxlength="160" placeholder="Ex.: Supermercado"></div>
-    <div class="field"><label>Categoria</label><select id="cVarCat"></select></div>
-    <div class="field"><label>Valor (R$)</label><input id="cVarValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
-   </div>
-   <div class="form-actions"><button id="btnSaveVariable" class="btn green">Salvar</button><button id="btnCancelVariable" class="btn secondary">Cancelar</button></div>
-  </div>
- </div>
-
- <div class="card section">
-  <div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado pelos controles gerais da aba, sem remover registros do JSON.</p></div></div>
-  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
- </div>
+<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
+<div class="context-toolbar"><button class="btn green" id="btnOpenVariable">Adicionar nova despesa variável</button></div>
+<div class="inline-editor hidden" id="varForm">
+<div class="context-title" id="varFormTitle">Adicionar nova despesa variável</div>
+<div class="formgrid">
+<div class="field"><label>Data</label><input id="cVarDate" type="date"/></div>
+<div class="field"><label>Descrição</label><input id="cVarDesc" maxlength="160" placeholder="Ex.: Supermercado"/></div>
+<div class="field"><label>Categoria</label><select id="cVarCat"></select></div>
+<div class="field"><label>Valor (R$)</label><input class="money-input" id="cVarValue" inputmode="decimal" placeholder="0,00"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveVariable">Salvar</button><button class="btn secondary" id="btnCancelVariable">Cancelar</button></div>
+</div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado pelos controles gerais da aba, sem remover registros do JSON.</p></div></div>
+<div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
+</div>
 </section>
+<section class="hidden" id="receitas">
+<div class="filterbar"><div class="filter-group"><select id="incomePersonFilter"><option value="all">Todas as pessoas</option></select></div></div>
+<div class="grid4">
+<div class="card kpi"><label>Igor • mês</label><strong class="soft-blue" id="rIgor">—</strong></div>
+<div class="card kpi"><label>Vitória • mês</label><strong class="soft-pink" id="rVitoria">—</strong></div>
+<div class="card kpi"><label>Total • mês</label><strong id="rTotal">—</strong></div>
+<div class="card kpi"><label>Média no período</label><strong id="rMedia">—</strong></div>
+</div>
+<div class="grid2 section">
+<div class="card chart-card"><div class="chart-head"><div><h3>Receitas mensais</h3><p>Igor em azul e Vitória em rosa pastel.</p></div></div><div class="chart-wrap"><canvas id="chartReceitas"></canvas></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="revTableCount"></span></div>
 
-<section id="receitas" class="hidden">
- <div class="filterbar"><div class="filter-group"><select id="incomePersonFilter"><option value="all">Todas as pessoas</option></select></div></div>
- <div class="grid4">
-  <div class="card kpi"><label>Igor • mês</label><strong id="rIgor" class="soft-blue">—</strong></div>
-  <div class="card kpi"><label>Vitória • mês</label><strong id="rVitoria" class="soft-pink">—</strong></div>
-  <div class="card kpi"><label>Total • mês</label><strong id="rTotal">—</strong></div>
-  <div class="card kpi"><label>Média no período</label><strong id="rMedia">—</strong></div>
- </div>
- <div class="grid2 section">
-  <div class="card chart-card"><div class="chart-head"><div><h3>Receitas mensais</h3><p>Igor em azul e Vitória em rosa pastel.</p></div></div><div class="chart-wrap"><canvas id="chartReceitas"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
- </div>
- <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
-  <div class="table-filters">
-   <div class="field"><label>Data inicial</label><input id="revTableStart" type="date" min="2022-05-01"></div>
-   <div class="field"><label>Data final</label><input id="revTableEnd" type="date" min="2022-05-01"></div>
-   <div class="field search"><label>Descrição</label><input id="revTableSearch" placeholder="Buscar descrição..."></div>
-   <div class="field"><label>Pessoa</label><select id="revTablePerson"><option value="all">Todas</option></select></div>
-   <button id="btnClearRevTable" class="btn secondary">Limpar filtros</button>
-   <span id="revTableCount" class="table-filter-count"></span>
-  </div>
-  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
-  <div class="context-toolbar"><button id="btnOpenRevenue" class="btn green">Adicionar nova receita</button></div>
-  <div id="revForm" class="inline-editor hidden">
-   <div class="context-title" id="revFormTitle">Adicionar nova receita</div>
-   <div class="formgrid">
-    <div class="field"><label>Data</label><input id="cRevDate" type="date"></div>
-    <div class="field"><label>Pessoa</label><select id="cRevPerson"></select></div>
-    <div class="field"><label>Descrição</label><input id="cRevDesc" maxlength="160" placeholder="Ex.: Salário"></div>
-    <div class="field"><label>Valor (R$)</label><input id="cRevValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
-   </div>
-   <div class="form-actions"><button id="btnSaveRevenue" class="btn green">Salvar</button><button id="btnCancelRevenue" class="btn secondary">Cancelar</button></div>
-  </div>
- </div>
+<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Pessoa</span><button aria-label="Filtrar Pessoa" class="excel-filter-btn" data-field="pessoa" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="receitas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="receitas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
+<div class="context-toolbar"><button class="btn green" id="btnOpenRevenue">Adicionar nova receita</button></div>
+<div class="inline-editor hidden" id="revForm">
+<div class="context-title" id="revFormTitle">Adicionar nova receita</div>
+<div class="formgrid">
+<div class="field"><label>Data</label><input id="cRevDate" type="date"/></div>
+<div class="field"><label>Pessoa</label><select id="cRevPerson"></select></div>
+<div class="field"><label>Descrição</label><input id="cRevDesc" maxlength="160" placeholder="Ex.: Salário"/></div>
+<div class="field"><label>Valor (R$)</label><input class="money-input" id="cRevValue" inputmode="decimal" placeholder="0,00"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveRevenue">Salvar</button><button class="btn secondary" id="btnCancelRevenue">Cancelar</button></div>
+</div>
+</div>
 </section>
+<section class="hidden" id="parcelas">
+<div class="filterbar"><div class="filter-group"><select id="installmentCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
+<div class="grid4">
+<div class="card kpi"><label>Parcelas • mês</label><strong id="pMes">—</strong></div>
+<div class="card kpi"><label>Próximos 3 meses</label><strong id="p3">—</strong></div>
+<div class="card kpi"><label>Próximos 6 meses</label><strong id="p6">—</strong></div>
+<div class="card kpi"><label>Total futuro</label><strong id="pFuture">—</strong></div>
+</div>
+<div class="grid2 section">
+<div class="card chart-card"><div class="chart-head"><div><h3>Histórico e projeção das parcelas</h3><p>Histórico no período selecionado e comprometimento futuro dos próximos 12 meses.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasFuturo"></canvas></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="parTableCount"></span></div>
 
-<section id="parcelas" class="hidden">
- <div class="filterbar"><div class="filter-group"><select id="installmentCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
- <div class="grid4">
-  <div class="card kpi"><label>Parcelas • mês</label><strong id="pMes">—</strong></div>
-  <div class="card kpi"><label>Próximos 3 meses</label><strong id="p3">—</strong></div>
-  <div class="card kpi"><label>Próximos 6 meses</label><strong id="p6">—</strong></div>
-  <div class="card kpi"><label>Total futuro</label><strong id="pFuture">—</strong></div>
- </div>
- <div class="grid2 section">
-  <div class="card chart-card"><div class="chart-head"><div><h3>Histórico e projeção das parcelas</h3><p>Histórico no período selecionado e comprometimento futuro dos próximos 12 meses.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasFuturo"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div>
- </div>
- <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
-  <div class="table-filters">
-   <div class="field"><label>Data inicial</label><input id="parTableStart" type="date" min="2022-05-01"></div>
-   <div class="field"><label>Data final</label><input id="parTableEnd" type="date" min="2022-05-01"></div>
-   <div class="field search"><label>Descrição</label><input id="parTableSearch" placeholder="Buscar descrição..."></div>
-   <div class="field"><label>Categoria</label><select id="parTableCategory"><option value="all">Todas</option></select></div>
-   <button id="btnClearParTable" class="btn secondary">Limpar filtros</button>
-   <span id="parTableCount" class="table-filter-count"></span>
-  </div>
-  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
-  <div class="context-toolbar"><button id="btnOpenInstallment" class="btn green">Adicionar nova parcela</button></div>
-  <div id="parForm" class="inline-editor hidden">
-   <div class="context-title" id="parFormTitle">Adicionar nova compra parcelada</div>
-   <div class="formgrid">
-    <div class="field"><label>Data da primeira parcela</label><input id="cParDate" type="date"></div>
-    <div class="field"><label>Descrição</label><input id="cParDesc" maxlength="160" placeholder="Ex.: Passagem aérea"></div>
-    <div class="field"><label>Categoria</label><select id="cParCat"></select></div>
-    <div class="field"><label id="cParValueLabel">Valor total da compra (R$)</label><input id="cParValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
-    <div class="field"><label>Número de parcelas</label><input id="cParNum" type="number" min="1" max="120" value="1"></div>
-   </div>
-   <div class="form-actions"><button id="btnSaveInstallment" class="btn green">Salvar</button><button id="btnCancelInstallment" class="btn secondary">Cancelar</button></div>
-  </div>
- </div>
+<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Parcela</span><button aria-label="Filtrar Parcela" class="excel-filter-btn" data-field="parcela" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
+<div class="context-toolbar"><button class="btn green" id="btnOpenInstallment">Adicionar nova parcela</button></div>
+<div class="inline-editor hidden" id="parForm">
+<div class="context-title" id="parFormTitle">Adicionar nova compra parcelada</div>
+<div class="formgrid">
+<div class="field"><label>Data da primeira parcela</label><input id="cParDate" type="date"/></div>
+<div class="field"><label>Descrição</label><input id="cParDesc" maxlength="160" placeholder="Ex.: Passagem aérea"/></div>
+<div class="field"><label>Categoria</label><select id="cParCat"></select></div>
+<div class="field"><label id="cParValueLabel">Valor total da compra (R$)</label><input class="money-input" id="cParValue" inputmode="decimal" placeholder="0,00"/></div>
+<div class="field"><label>Número de parcelas</label><input id="cParNum" max="120" min="1" type="number" value="1"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveInstallment">Salvar</button><button class="btn secondary" id="btnCancelInstallment">Cancelar</button></div>
+</div>
+</div>
 </section>
+<section class="hidden" id="investimentos">
+<div class="grid5">
+<div class="card kpi"><label>Igor • aplicações</label><strong id="iIgorApl">—</strong></div>
+<div class="card kpi"><label>Vitória • aplicações</label><strong id="iVitApl">—</strong></div>
+<div class="card kpi"><label>Previdência</label><strong id="iPrev">—</strong></div>
+<div class="card kpi"><label>FGTS total</label><strong id="iFgts">—</strong></div>
+<div class="card kpi"><label>Patrimônio total</label><strong id="iTotal">—</strong></div>
+</div>
+<div class="grid3 section">
+<div class="card kpi"><label>Patrimônio sem FGTS</label><strong id="iSemFgts">—</strong></div>
+<div class="card kpi"><label>Meta sem FGTS</label><strong id="iMeta">—</strong></div>
+<div class="card kpi"><label>Diferença para meta</label><strong id="iGap">—</strong></div>
+</div>
+<div class="card chart-card section">
+<div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Evolução histórica da composição patrimonial.</p></div><span class="pill">Histórico</span></div>
+<div class="chart-wrap tall"><canvas id="chartInvestAllocation"></canvas></div>
+</div>
+<div class="grid4 section">
+<div class="card kpi"><label>Total no fim</label><strong id="projEndTotal">—</strong></div>
+<div class="card kpi"><label>Sem FGTS no fim</label><strong id="projEndSem">—</strong></div>
+<div class="card kpi"><label>Meta no fim</label><strong id="projEndMeta">—</strong></div>
+<div class="card kpi"><label>Diferença p/ meta</label><strong id="projEndGap">—</strong></div>
+</div>
+<div class="card chart-card section">
+<div class="chart-head"><div><h3>Projeção patrimonial</h3><p>Histórico real desde mai/2022, continuação projetada e Meta sem FGTS mensal.</p></div><span class="pill">Real + projeção + meta</span></div>
+<div class="chart-wrap tall"><canvas id="chartProjectionDetail"></canvas></div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Premissas da projeção</h3><p>Ajuste os parâmetros utilizados na projeção.</p></div><span class="pill">Premissas</span></div>
+<div class="projection-form">
+<div class="field"><label>Rentabilidade aplicações (% a.m.)</label><input class="money-input" id="projRentApl" inputmode="decimal"/></div>
+<div class="field"><label>Rentabilidade Previdência/FGTS (% a.m.)</label><input class="money-input" id="projRentPrev" inputmode="decimal"/></div>
+<div class="field"><label>Aporte Previdência Igor</label><input class="money-input" id="projPrevIgor" inputmode="decimal"/></div>
+<div class="field"><label>Aporte FGTS Igor</label><input class="money-input" id="projFgtsIgor" inputmode="decimal"/></div>
+<div class="field"><label>Aporte FGTS Vitória</label><input class="money-input" id="projFgtsVit" inputmode="decimal"/></div>
+<div class="field"><label>Aporte Aplicações Igor</label><input class="money-input" id="projAplIgor" inputmode="decimal"/></div>
+<div class="field"><label>Aporte Aplicações Vitória</label><input class="money-input" id="projAplVit" inputmode="decimal"/></div>
+<div class="field"><label>Horizonte da projeção (meses)</label><input id="projHorizon" max="240" min="1" type="number"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveProjection">Salvar premissas</button><button class="btn secondary" id="btnResetProjection">Restaurar premissas do Excel</button></div>
+</div>
+<div class="card section">
+<div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Use os filtros nos cabeçalhos das colunas para refinar os registros do período selecionado.</p></div><span class="table-filter-count" id="invTableCount"></span></div>
 
-<section id="investimentos" class="hidden">
- <div class="grid5">
-  <div class="card kpi"><label>Igor • aplicações</label><strong id="iIgorApl">—</strong></div>
-  <div class="card kpi"><label>Vitória • aplicações</label><strong id="iVitApl">—</strong></div>
-  <div class="card kpi"><label>Previdência</label><strong id="iPrev">—</strong></div>
-  <div class="card kpi"><label>FGTS total</label><strong id="iFgts">—</strong></div>
-  <div class="card kpi"><label>Patrimônio total</label><strong id="iTotal">—</strong></div>
- </div>
- <div class="grid3 section">
-  <div class="card kpi"><label>Patrimônio sem FGTS</label><strong id="iSemFgts">—</strong></div>
-  <div class="card kpi"><label>Meta sem FGTS</label><strong id="iMeta">—</strong></div>
-  <div class="card kpi"><label>Diferença para meta</label><strong id="iGap">—</strong></div>
- </div>
-
- <div class="card chart-card section">
-  <div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Evolução histórica da composição patrimonial.</p></div><span class="pill">Histórico</span></div>
-  <div class="chart-wrap tall"><canvas id="chartInvestAllocation"></canvas></div>
- </div>
-
- <div class="grid4 section">
-  <div class="card kpi"><label>Total no fim</label><strong id="projEndTotal">—</strong></div>
-  <div class="card kpi"><label>Sem FGTS no fim</label><strong id="projEndSem">—</strong></div>
-  <div class="card kpi"><label>Meta no fim</label><strong id="projEndMeta">—</strong></div>
-  <div class="card kpi"><label>Diferença p/ meta</label><strong id="projEndGap">—</strong></div>
- </div>
-
- <div class="card chart-card section">
-  <div class="chart-head"><div><h3>Projeção patrimonial</h3><p>Histórico real desde mai/2022, continuação projetada e Meta sem FGTS mensal.</p></div><span class="pill">Real + projeção + meta</span></div>
-  <div class="chart-wrap tall"><canvas id="chartProjectionDetail"></canvas></div>
- </div>
-
- <div class="card section">
-  <div class="chart-head"><div><h3>Premissas da projeção</h3><p>Ajuste os parâmetros utilizados na projeção.</p></div><span class="pill">Premissas</span></div>
-  <div class="projection-form">
-   <div class="field"><label>Rentabilidade aplicações (% a.m.)</label><input id="projRentApl" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Rentabilidade Previdência/FGTS (% a.m.)</label><input id="projRentPrev" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Aporte Previdência Igor</label><input id="projPrevIgor" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Aporte FGTS Igor</label><input id="projFgtsIgor" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Aporte FGTS Vitória</label><input id="projFgtsVit" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Aporte Aplicações Igor</label><input id="projAplIgor" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Aporte Aplicações Vitória</label><input id="projAplVit" class="money-input" inputmode="decimal"></div>
-   <div class="field"><label>Horizonte da projeção (meses)</label><input id="projHorizon" type="number" min="1" max="240"></div>
-  </div>
-  <div class="form-actions"><button id="btnSaveProjection" class="btn green">Salvar premissas</button><button id="btnResetProjection" class="btn secondary">Restaurar premissas do Excel</button></div>
- </div>
-
- <div class="card section">
-  <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar por mês ou componente.</p></div></div>
-  <div class="table-filters">
-   <div class="field"><label>Mês inicial</label><input id="invTableStart" type="month" min="2022-05"></div>
-   <div class="field"><label>Mês final</label><input id="invTableEnd" type="month" min="2022-05"></div>
-   <div class="field search"><label>Descrição / componente</label><input id="invTableSearch" placeholder="Buscar componente..."></div>
-   <div class="field"><label>Componente</label><select id="invTableComponent"><option value="all">Todos</option></select></div>
-   <button id="btnClearInvTable" class="btn secondary">Limpar filtros</button>
-   <span id="invTableCount" class="table-filter-count"></span>
-  </div>
-  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th>Origem</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
-  <div class="context-toolbar"><button id="btnOpenInvestment" class="btn green">Adicionar novo registro de investimento</button></div>
-  <div id="invForm" class="inline-editor hidden">
-   <div class="context-title" id="invFormTitle">Adicionar novo registro de investimento</div>
-   <div class="formgrid">
-    <div class="field"><label>Mês</label><input id="cInvDate" type="month" min="2022-05"></div>
-    <div class="field"><label>Componente patrimonial</label><select id="cInvComp"></select></div>
-    <div class="field"><label>Saldo (R$)</label><input id="cInvValue" class="money-input" inputmode="decimal" placeholder="0,00"></div>
-   </div>
-   <div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e altera apenas o componente informado.</div>
-   <div class="form-actions"><button id="btnSaveInvestment" class="btn green">Salvar</button><button id="btnCancelInvestment" class="btn secondary">Cancelar</button></div>
-  </div>
- </div>
+<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Origem</span><button aria-label="Filtrar Origem" class="excel-filter-btn" data-field="origem" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
+<div class="context-toolbar"><button class="btn green" id="btnOpenInvestment">Adicionar novo registro de investimento</button></div>
+<div class="inline-editor hidden" id="invForm">
+<div class="context-title" id="invFormTitle">Adicionar novo registro de investimento</div>
+<div class="formgrid">
+<div class="field"><label>Mês</label><input id="cInvDate" min="2022-05" type="month"/></div>
+<div class="field"><label>Componente patrimonial</label><select id="cInvComp"></select></div>
+<div class="field"><label>Saldo (R$)</label><input class="money-input" id="cInvValue" inputmode="decimal" placeholder="0,00"/></div>
+</div>
+<div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e altera apenas o componente informado.</div>
+<div class="form-actions"><button class="btn green" id="btnSaveInvestment">Salvar</button><button class="btn secondary" id="btnCancelInvestment">Cancelar</button></div>
+</div>
+</div>
 </section>
-
-<section id="patrimonio" class="hidden"></section>
-
-<section id="projecao" class="hidden"></section>
-
-<section id="novo" class="hidden">
- <div class="card form-card"><div id="editBanner" class="edit-banner hidden"></div><div class="chart-head"><div><h3>Novo lançamento</h3><p>Inclua ou edite registros. Categoria e descrição são armazenadas separadamente.</p></div></div>
-  <div class="formgrid">
-   <div class="field"><label>Tipo</label><select id="nTipo"><option value="fixas">Despesa fixa</option><option value="variaveis">Despesa variável</option><option value="parcelas">Compra parcelada</option><option value="receitas">Receita</option><option value="investimento">Atualização de investimento / patrimônio</option></select></div>
-   <div class="field"><label>Data</label><input id="nData" type="date"></div>
-   <div class="field" id="fDescricao"><label>Descrição</label><input id="nDescricao" maxlength="160" placeholder="Ex.: Supermercado, seguro do carro, salário"></div>
-   <div class="field" id="fCategoria"><label>Categoria</label><select id="nCategoria"></select></div>
-   <div class="field hidden" id="fPessoa"><label>Pessoa</label><select id="nPessoa"><option>Igor</option><option>Vitória</option><option>Outro</option></select></div>
-   <div class="field hidden" id="fComponente"><label>Componente patrimonial</label><select id="nComponente"></select><div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e atualiza apenas este componente.</div></div>
-   <div class="field"><label id="nValorLabel">Valor (R$)</label><input id="nValor" class="money-input" inputmode="decimal" placeholder="0,00"></div>
-   <div class="field hidden" id="fNumParcelas"><label>Número de parcelas</label><input id="nNumParcelas" type="number" min="1" max="120" value="1"></div>
-  </div>
-  <div class="form-actions"><button id="btnSaveLaunch" class="btn green">Salvar lançamento</button><button id="btnCancelEdit" class="btn secondary hidden">Cancelar edição</button></div>
- </div>
- <div class="card section"><div class="filterbar"><div><div class="title">Gerenciar lançamentos</div><div class="subtitle">Editar ou excluir individualmente. Toda exclusão pede confirmação.</div></div><div class="filter-group"><select id="manageType"><option value="all">Todos</option><option value="fixas">Fixas</option><option value="variaveis">Variáveis</option><option value="parcelas">Parcelas</option><option value="receitas">Receitas</option><option value="investimento">Investimentos / patrimônio</option></select><input id="manageSearch" placeholder="Buscar descrição..."></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria / pessoa</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="manageBody"></tbody></table></div></div>
+<section class="hidden" id="patrimonio"></section>
+<section class="hidden" id="projecao"></section>
+<section class="hidden" id="novo">
+<div class="card form-card"><div class="edit-banner hidden" id="editBanner"></div><div class="chart-head"><div><h3>Novo lançamento</h3><p>Inclua ou edite registros. Categoria e descrição são armazenadas separadamente.</p></div></div>
+<div class="formgrid">
+<div class="field"><label>Tipo</label><select id="nTipo"><option value="fixas">Despesa fixa</option><option value="variaveis">Despesa variável</option><option value="parcelas">Compra parcelada</option><option value="receitas">Receita</option><option value="investimento">Atualização de investimento / patrimônio</option></select></div>
+<div class="field"><label>Data</label><input id="nData" type="date"/></div>
+<div class="field" id="fDescricao"><label>Descrição</label><input id="nDescricao" maxlength="160" placeholder="Ex.: Supermercado, seguro do carro, salário"/></div>
+<div class="field" id="fCategoria"><label>Categoria</label><select id="nCategoria"></select></div>
+<div class="field hidden" id="fPessoa"><label>Pessoa</label><select id="nPessoa"><option>Igor</option><option>Vitória</option><option>Outro</option></select></div>
+<div class="field hidden" id="fComponente"><label>Componente patrimonial</label><select id="nComponente"></select><div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e atualiza apenas este componente.</div></div>
+<div class="field"><label id="nValorLabel">Valor (R$)</label><input class="money-input" id="nValor" inputmode="decimal" placeholder="0,00"/></div>
+<div class="field hidden" id="fNumParcelas"><label>Número de parcelas</label><input id="nNumParcelas" max="120" min="1" type="number" value="1"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveLaunch">Salvar lançamento</button><button class="btn secondary hidden" id="btnCancelEdit">Cancelar edição</button></div>
+</div>
+<div class="card section"><div class="filterbar"><div><div class="title">Gerenciar lançamentos</div><div class="subtitle">Editar ou excluir individualmente. Toda exclusão pede confirmação.</div></div><div class="filter-group"><select id="manageType"><option value="all">Todos</option><option value="fixas">Fixas</option><option value="variaveis">Variáveis</option><option value="parcelas">Parcelas</option><option value="receitas">Receitas</option><option value="investimento">Investimentos / patrimônio</option></select><input id="manageSearch" placeholder="Buscar descrição..."/></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria / pessoa</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="manageBody"></tbody></table></div></div>
 </section>
-
-<section id="config" class="hidden">
- <div class="grid2">
-  <div class="card"><div class="title">Importação e exportação</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados<input id="jsonImport" type="file" accept=".json,application/json" hidden></label><button id="btnExportJson" class="btn secondary">Exportar dados</button><button id="btnUploadCurrent" class="btn secondary">Enviar versão atual ao OneDrive</button></div><div id="jsonInfo" class="small">Nenhum dado importado.</div></div>
-  <div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft.</div><div class="field section"><label>Application (client) ID</label><input id="clientIdInput" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div><div class="form-actions"><button id="btnSaveClient" class="btn secondary">Salvar Client ID</button><button id="btnLogin" class="btn green">Entrar com Microsoft</button><button id="btnLogout" class="btn secondary">Sair</button><button id="btnSync" class="btn secondary">Sincronizar OneDrive</button></div><div id="accountInfo" class="small section">Nenhuma conta conectada.</div><pre id="remoteInfo" class="mono">Ainda não sincronizado.</pre></div>
- </div>
- <div class="setupgrid section"><div class="step"><b>Redirect URI da SPA</b><div id="redirectUriBox" class="mono"></div></div><div class="step"><b>Permissão Microsoft Graph</b>Delegated permission: <b>Files.ReadWrite.AppFolder</b>. Não use Client Secret no HTML.</div></div>
+<section class="hidden" id="config">
+<div class="grid2">
+<div class="card"><div class="title">Importação e exportação</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados<input accept=".json,application/json" hidden="" id="jsonImport" type="file"/></label><button class="btn secondary" id="btnExportJson">Exportar dados</button><button class="btn secondary" id="btnUploadCurrent">Enviar versão atual ao OneDrive</button></div><div class="small" id="jsonInfo">Nenhum dado importado.</div></div>
+<div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft.</div><div class="field section"><label>Application (client) ID</label><input id="clientIdInput" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/></div><div class="form-actions"><button class="btn secondary" id="btnSaveClient">Salvar Client ID</button><button class="btn green" id="btnLogin">Entrar com Microsoft</button><button class="btn secondary" id="btnLogout">Sair</button><button class="btn secondary" id="btnSync">Sincronizar OneDrive</button></div><div class="small section" id="accountInfo">Nenhuma conta conectada.</div><pre class="mono" id="remoteInfo">Ainda não sincronizado.</pre></div>
+</div>
+<div class="setupgrid section"><div class="step"><b>Redirect URI da SPA</b><div class="mono" id="redirectUriBox"></div></div><div class="step"><b>Permissão Microsoft Graph</b>Delegated permission: <b>Files.ReadWrite.AppFolder</b>. Não use Client Secret no HTML.</div></div>
 </section>
-
 </main>
 </div></div>
-<div id="toast" class="toast"></div>
+<div aria-label="Filtro da coluna" class="excel-filter-menu hidden" id="excelFilterMenu" role="dialog">
+<div class="excel-filter-sort"><button id="excelSortAsc" type="button"></button><button id="excelSortDesc" type="button"></button></div>
+<div class="excel-filter-sep"></div>
+<input class="excel-filter-search" id="excelFilterSearch" placeholder="Pesquisar..."/>
+<label class="excel-filter-all"><input id="excelFilterSelectAll" type="checkbox"/><span>Selecionar tudo</span></label>
+<div class="excel-filter-values" id="excelFilterValues"></div>
+<div class="excel-filter-actions"><button class="btn secondary" id="excelFilterClear" type="button">Limpar filtro</button><button class="btn green" id="excelFilterApply" type="button">Aplicar</button></div>
+</div><div class="toast" id="toast"></div>
 <script type="module">
 import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
 
 const $=id=>document.getElementById(id);
 const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI=location.origin+location.pathname;
-const COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5661A6","#8A5B78","#B66D80","#68575D","#A98A91","#7B6A70","#C8A8AE"];
-const EXPENSE_COLORS=["#900F15","#A61729","#B62439","#C5364A","#D24E60","#DC6978","#B81570","#9B355A","#7D2A3B","#E0949F"];
-const INSTALLMENT_COLORS=["#6E2D50","#83355F","#98416F","#AD4E7F","#B81570","#C85F91","#D47AA5","#9A6687","#76536D"];
-const INVESTMENT_COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5661A6","#7A4E78","#A96A79","#66585D"];
+const COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5B6EB4","#7D4D7B","#6F8E7B","#C58A2B","#654E57","#D66A7D","#41596C"];
+const CATEGORY_COLORS={
+ "Alimentação":"#CC092F",
+ "Aplicação":"#333B8F",
+ "Assinatura":"#B81570",
+ "Casa / Bens Pessoais":"#900F15",
+ "Educação":"#5B6EB4",
+ "Lazer":"#D66A7D",
+ "Saúde":"#7D4D7B",
+ "Trabalho":"#41596C",
+ "Transporte":"#C58A2B",
+ "Vestuário / Maquiagem":"#6F8E7B",
+ "Viagem":"#A64A60",
+ "Outros":"#786B70"
+};
+const INVESTMENT_COMPONENT_COLORS={
+ "Igor: Conta Corrente":"#333B8F",
+ "Igor: Previdência":"#5B6EB4",
+ "Igor: FGTS":"#900F15",
+ "Igor: Aplicações":"#CC092F",
+ "Vitória: Conta Corrente":"#7D4D7B",
+ "Vitória: Aplicações":"#B81570",
+ "Vitória: FGTS":"#D66A7D",
+ "Dinheiro":"#6F8E7B"
+};
 const INCOME_COLORS={"Igor":"#46649D","Vitória":"#D789A2"};
 const CHART_INCOME="#46649D",CHART_EXPENSE="#CC092F",CHART_BALANCE="#6F8E7B",CHART_META="#B81570",CHART_TOTAL="#333B8F";
+function categoryColor(name){return CATEGORY_COLORS[name]||CATEGORY_COLORS["Outros"]}
+function investmentColor(name){return INVESTMENT_COMPONENT_COLORS[name]||"#786B70"}
 const fmtMoney=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtNumber=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:2});
 const fmtPct=new Intl.NumberFormat("pt-BR",{style:"percent",minimumFractionDigits:1,maximumFractionDigits:2});
@@ -918,10 +911,9 @@ function projectPatrimony(horizon=null){let base=actualSnapshot("9999-12");if(!b
 function chartOpts({stacked=false,indexMode=true}={}){return{responsive:true,maintainAspectRatio:false,interaction:{mode:indexMode?"index":"nearest",intersect:false},plugins:{legend:{position:"bottom",labels:{color:"#6F6367",boxWidth:9,boxHeight:9,usePointStyle:true,padding:14,font:{size:9}}},tooltip:{backgroundColor:"#392F33",titleColor:"#FFFFFF",bodyColor:"#F7F1F2",borderColor:"rgba(255,255,255,.10)",borderWidth:1,padding:10,cornerRadius:8,callbacks:{title:items=>items?.[0]?.label||"",label:ctx=>`${ctx.dataset.label||"Valor"}: ${brl(ctx.raw)}`}}},scales:{x:{stacked,grid:{display:false},ticks:{color:"#7C7074",font:{size:8},maxRotation:0,autoSkip:true,maxTicksLimit:12}},y:{stacked,grid:{color:"#EEE6E3"},ticks:{color:"#7C7074",font:{size:8},callback:v=>axisMoney(v)}}}}}
 function makeChart(id,config){if(charts[id])charts[id].destroy();let el=$(id);if(!el||typeof Chart==="undefined")return;charts[id]=new Chart(el,config)}
 function lineDataset(label,data,color,extra={}){return{type:"line",label,data,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:1.5,pointHoverRadius:4,tension:.2,fill:false,stack:`line:${label}`,...extra}}
-function stackedByCategory(id,records,range,palette=COLORS){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map((c,i)=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:palette[i%palette.length],stack:"total",borderWidth:0}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#4A3C41",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
+function stackedByCategory(id,records,range){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map(c=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:categoryColor(c),borderColor:categoryColor(c),borderWidth:0,stack:"total"}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#42363A",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
 function donut(id,obj,colorMap=null){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#FCFAF9"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
-function horizontalBar(id,obj,palette=COLORS){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map((x,i)=>palette[i%palette.length])}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#EEE6E3"},ticks:{color:"#7D7175",font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{color:"#675C60",font:{size:8}}}}}})}
-
+function horizontalBar(id,obj){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map(x=>categoryColor(x[0])),borderColor:e.map(x=>categoryColor(x[0])),borderWidth:0}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#EEE6E3"},ticks:{color:"#7D7175",font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{color:"#675C60",font:{size:8}}}}}})}
 
 function investmentChartComponents(){
  return componentDefs().map(x=>x.descricao).filter(x=>x!=="Dinheiro")
@@ -964,7 +956,7 @@ function renderCapitalAllocationChart(id,range){
      datasets=compNames.map((c,i)=>({
       type:"bar",label:c,
       data:months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):0}),
-      backgroundColor:INVESTMENT_COLORS[i%INVESTMENT_COLORS.length],stack:"capital"
+      backgroundColor:investmentColor(c),borderColor:investmentColor(c),borderWidth:0,stack:"capital"
      }));
  datasets.push(lineDataset("Total Geral",months.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#3D3337",{spanGaps:true,borderWidth:2.5}));
  makeChart(id,{type:"bar",data:{labels:months.map(monthLabel),datasets},options:chartOpts({stacked:true})})
@@ -992,7 +984,7 @@ function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=income
  ];
  makeChart("chartConsolidado",{type:"bar",data:{labels,datasets:ds},options:chartOpts()});
  renderCapitalAllocationChart("chartCapital",r);
- stackedByCategory("chartFixosOverview",data.despesas.fixas,r,EXPENSE_COLORS);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r,EXPENSE_COLORS);stackedByCategory("chartParcelasOverview",data.parcelas,r,INSTALLMENT_COLORS);}
+ stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);}
 
 function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
 function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
@@ -1019,6 +1011,166 @@ function tableSlice(rows,filterIds){return rows}
 function setTableCount(id,shown,total,filtered){if($(id))$(id).textContent=`${shown} ${shown===1?"registro":"registros"} no período selecionado${filtered?" após os filtros da tabela":""}`}
 function clearTableFilters(ids,renderFn){ids.forEach(id=>{let e=$(id);if(!e)return;e.value=e.tagName==="SELECT"?"all":""});renderFn()}
 
+const excelTableFilters={
+ fixas:{},variaveis:{},receitas:{},parcelas:{},investimentos:{}
+};
+let excelMenuContext=null,excelMenuSort=null;
+
+const EXCEL_TABLE_CONFIG={
+ fixas:{
+  render:()=>renderExpenses(),
+  rows:()=>data.despesas.fixas.filter(x=>inRange(x,periodRange())),
+  columns:{
+   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
+   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
+  }
+ },
+ variaveis:{
+  render:()=>renderExpenses(),
+  rows:()=>data.despesas.variaveis.filter(x=>inRange(x,periodRange())),
+  columns:{
+   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
+   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
+  }
+ },
+ receitas:{
+  render:()=>renderIncome(),
+  rows:()=>data.receitas.filter(x=>inRange(x,periodRange())),
+  columns:{
+   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+   pessoa:{label:"Pessoa",value:x=>x.pessoa||"—",type:"text"},
+   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
+  }
+ },
+ parcelas:{
+  render:()=>renderInstallments(),
+  rows:()=>data.parcelas.filter(x=>inRange(x,periodRange())),
+  columns:{
+   data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
+   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
+   parcela:{label:"Parcela",value:x=>`${x.parcela||"—"}/${x.totalParcelas||"—"}`,type:"text"},
+   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
+  }
+ },
+ investimentos:{
+  render:()=>renderInvestments(),
+  rows:()=>data.investimentos.historico.filter(x=>inRange(x,periodRange())),
+  columns:{
+   data:{label:"Data",value:x=>x.data,display:v=>monthLabel(monthKey(v)),type:"date"},
+   descricao:{label:"Componente",value:x=>x.descricao||"",type:"text"},
+   classe:{label:"Classe",value:x=>x.classe||investmentClass(x.descricao),type:"text"},
+   origem:{label:"Origem",value:x=>x.origem||"—",type:"text"},
+   valor:{label:"Saldo",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}
+  }
+ }
+};
+
+function excelRawKey(v){return typeof v==="number"?`n:${v}`:`s:${String(v)}`}
+function excelCompare(a,b,type){
+ if(type==="number")return Number(a)-Number(b);
+ if(type==="date")return String(a).localeCompare(String(b));
+ return String(a).localeCompare(String(b),"pt-BR",{sensitivity:"base",numeric:true})
+}
+function excelTableHasFilters(key){
+ return Object.values(excelTableFilters[key]||{}).some(s=>s&&(s.sort||s.selected instanceof Set))
+}
+function excelFilteredRows(key,rows){
+ let cfg=EXCEL_TABLE_CONFIG[key],states=excelTableFilters[key]||{},out=[...rows];
+ for(let [field,state] of Object.entries(states)){
+  let col=cfg.columns[field];
+  if(!col||!state)continue;
+  if(state.selected instanceof Set)out=out.filter(x=>state.selected.has(excelRawKey(col.value(x))))
+ }
+ let sortField=Object.keys(states).find(f=>states[f]?.sort);
+ if(sortField){
+  let state=states[sortField],col=cfg.columns[sortField],dir=state.sort==="asc"?1:-1;
+  out.sort((a,b)=>excelCompare(col.value(a),col.value(b),col.type)*dir)
+ }else out=sortTableRows(out);
+ return out
+}
+function excelUniqueValues(key,field){
+ let cfg=EXCEL_TABLE_CONFIG[key],col=cfg.columns[field],map=new Map();
+ cfg.rows().forEach(x=>{
+  let raw=col.value(x),k=excelRawKey(raw);
+  if(!map.has(k))map.set(k,{key:k,raw,display:col.display?col.display(raw):String(raw||"—")})
+ });
+ return [...map.values()].sort((a,b)=>excelCompare(a.raw,b.raw,col.type))
+}
+function excelSortLabels(type){
+ if(type==="number")return["Ordenar do menor para o maior","Ordenar do maior para o menor"];
+ if(type==="date")return["Ordenar do mais antigo para o mais recente","Ordenar do mais recente para o mais antigo"];
+ return["Ordenar de A a Z","Ordenar de Z a A"]
+}
+function closeExcelFilterMenu(){
+ let m=$("excelFilterMenu");if(m)m.classList.add("hidden");
+ excelMenuContext=null
+}
+function excelRefreshValueSearch(){
+ let q=normSearch($("excelFilterSearch").value);
+ $("excelFilterValues").querySelectorAll(".excel-filter-value").forEach(el=>{
+  el.classList.toggle("hidden",q&&!normSearch(el.dataset.display).includes(q))
+ })
+}
+function excelSyncSelectAll(){
+ let visible=[...$("excelFilterValues").querySelectorAll(".excel-filter-value:not(.hidden) input")];
+ $("excelFilterSelectAll").checked=visible.length>0&&visible.every(x=>x.checked);
+ $("excelFilterSelectAll").indeterminate=visible.some(x=>x.checked)&&!$("excelFilterSelectAll").checked
+}
+function openExcelFilterMenu(button){
+ let key=button.dataset.tableFilter,field=button.dataset.field,cfg=EXCEL_TABLE_CONFIG[key],col=cfg?.columns?.[field];
+ if(!cfg||!col)return;
+ excelMenuContext={key,field,button};
+ let state=excelTableFilters[key][field]||{},values=excelUniqueValues(key,field);
+ excelMenuSort=state.sort||null;
+ let labels=excelSortLabels(col.type);
+ $("excelSortAsc").textContent="↕  "+labels[0];
+ $("excelSortDesc").textContent="↕  "+labels[1];
+ $("excelSortAsc").classList.toggle("active",excelMenuSort==="asc");
+ $("excelSortDesc").classList.toggle("active",excelMenuSort==="desc");
+ $("excelFilterSearch").value="";
+ $("excelFilterValues").innerHTML=values.map(v=>{
+  let checked=!(state.selected instanceof Set)||state.selected.has(v.key);
+  return `<label class="excel-filter-value" data-display="${esc(v.display)}"><input type="checkbox" data-filter-value="${esc(v.key)}" ${checked?"checked":""}><span title="${esc(v.display)}">${esc(v.display)}</span></label>`
+ }).join("");
+ $("excelFilterValues").querySelectorAll('input[type="checkbox"]').forEach(x=>x.onchange=excelSyncSelectAll);
+ excelSyncSelectAll();
+ let r=button.getBoundingClientRect(),menu=$("excelFilterMenu");
+ menu.classList.remove("hidden");
+ let left=Math.min(r.left,window.innerWidth-282),top=Math.min(r.bottom+4,window.innerHeight-430);
+ menu.style.left=Math.max(8,left)+"px";
+ menu.style.top=Math.max(8,top)+"px";
+ setTimeout(()=>$("excelFilterSearch").focus(),20)
+}
+function excelApplyCurrent(){
+ if(!excelMenuContext)return;
+ let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key],values=excelUniqueValues(key,field),
+     checked=[...$("excelFilterValues").querySelectorAll('input[data-filter-value]:checked')].map(x=>x.dataset.filterValue),
+     selected=checked.length===values.length?null:new Set(checked);
+ if(!selected&&!excelMenuSort)delete excelTableFilters[key][field];
+ else excelTableFilters[key][field]={selected,sort:excelMenuSort};
+ if(excelMenuSort)Object.keys(excelTableFilters[key]).forEach(f=>{if(f!==field&&excelTableFilters[key][f])excelTableFilters[key][f].sort=null});
+ closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()
+}
+function excelClearCurrent(){
+ if(!excelMenuContext)return;
+ let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key];
+ delete excelTableFilters[key][field];
+ closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()
+}
+function updateExcelFilterHeaders(){
+ document.querySelectorAll(".excel-filter-btn").forEach(btn=>{
+  let state=excelTableFilters[btn.dataset.tableFilter]?.[btn.dataset.field];
+  btn.classList.toggle("active",!!(state&&(state.sort||state.selected instanceof Set)));
+  btn.textContent=state&&(state.selected instanceof Set)?"◆":"▾"
+ })
+}
+
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
 
@@ -1026,437 +1178,26 @@ function syncTableFilterBounds(range){
  let startDate=range.start+"-01",
      endObj=new Date(Date.UTC(Number(range.end.slice(0,4)),Number(range.end.slice(5,7)),0)),
      endDate=endObj.toISOString().slice(0,10);
- ["fxTableStart","fxTableEnd","varTableStart","varTableEnd","revTableStart","revTableEnd","parTableStart","parTableEnd"].forEach(id=>{
-   let e=$(id);if(!e)return;
-   e.min=startDate;e.max=endDate;
-   if(e.value&&(e.value<startDate||e.value>endDate))e.value=""
- });
- ["invTableStart","invTableEnd"].forEach(id=>{
-   let e=$(id);if(!e)return;
-   e.min=range.start;e.max=range.end;
-   if(e.value&&(e.value<range.start||e.value>range.end))e.value=""
- })
-}
-function renderExpenses(){
- if(!data)return;
- let r=periodRange();syncTableFilterBounds(r);
- let ref=r.ref,cat=$("expenseCategoryFilter").value,type=$("expenseTypeFilter").value,
-     filter=x=>cat==="all"||x.categoria===cat,
-     fix=sumMonth(data.despesas.fixas,ref,filter),
-     vr=sumMonth(data.despesas.variaveis,ref,filter),
-     tot=(type==="fixas"?fix:type==="variaveis"?vr:fix+vr),
-     monthly=r.months.map(m=>(type==="fixas"?sumMonth(data.despesas.fixas,m,filter):type==="variaveis"?sumMonth(data.despesas.variaveis,m,filter):sumMonth(data.despesas.fixas,m,filter)+sumMonth(data.despesas.variaveis,m,filter)));
+ 
 
- $("dFixas").textContent=brl(fix);$("dVariaveis").textContent=brl(vr);$("dTotal").textContent=brl(tot);$("dMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
-
- makeChart("chartDespesasEvolucao",{type:"bar",data:{labels:r.months.map(monthLabel),datasets:[
-  {label:"Fixas",data:r.months.map(m=>sumMonth(data.despesas.fixas,m,filter)),backgroundColor:"#A61729"},
-  {label:"Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m,filter)),backgroundColor:"#D65B6D"}
- ]},options:chartOpts({stacked:true})});
-
- let recs=[];if(type==="all"||type==="fixas")recs.push(...data.despesas.fixas);if(type==="all"||type==="variaveis")recs.push(...data.despesas.variaveis);
- horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter),EXPENSE_COLORS);
-
- let rows=expenseRows(true);
-
- let fxIds=["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory"],
-     fxAll=sortTableRows(filterTableRows(data.despesas.fixas.filter(x=>inRange(x,r)),{startId:"fxTableStart",endId:"fxTableEnd",searchId:"fxTableSearch",selectId:"fxTableCategory",selectField:"categoria"})),
-     fxShown=tableSlice(fxAll,fxIds).map(x=>({...x,_kind:"fixas",_label:"Fixa"}));
-
- let varIds=["varTableStart","varTableEnd","varTableSearch","varTableCategory"],
-     varAll=sortTableRows(filterTableRows(data.despesas.variaveis.filter(x=>inRange(x,r)),{startId:"varTableStart",endId:"varTableEnd",searchId:"varTableSearch",selectId:"varTableCategory",selectField:"categoria"})),
-     varShown=tableSlice(varAll,varIds).map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
-
- $("recentFixas").innerHTML=fxShown.length?expenseTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa fixa encontrada.</div></td></tr>`;
- $("recentVariaveis").innerHTML=varShown.length?expenseTableHtml(varShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
- setTableCount("fxTableCount",fxShown.length,fxAll.length,tableFilterIsActive(fxIds));
- setTableCount("varTableCount",varShown.length,varAll.length,tableFilterIsActive(varIds));
-
- $("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
- if(!$("fxReplicateTarget").value)$("fxReplicateTarget").value=ref;
- bindActions($("despesas"))
-}
-function renderIncome(){
- if(!data)return;
- let r=periodRange();syncTableFilterBounds(r);
- let ref=r.ref,person=$("incomePersonFilter").value,
-     filter=x=>(person==="all"||x.pessoa===person),
-     rows=data.receitas.filter(filter),
-     ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),
-     total=rows.filter(x=>monthKey(x.data)===ref).reduce((s,x)=>s+Number(x.valor),0),
-     monthly=r.months.map(m=>rows.filter(x=>monthKey(x.data)===m).reduce((s,x)=>s+Number(x.valor),0));
-
- $("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rTotal").textContent=brl(total);$("rMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
-
- let people=[...new Set(data.receitas.map(x=>x.pessoa).filter(Boolean))].sort(),
-     incomeColors=INCOME_COLORS;
-
- makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),incomeColors[p]||COLORS[i%COLORS.length]))},options:chartOpts()});
- let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp,incomeColors);
-
- let ids=["revTableStart","revTableEnd","revTableSearch","revTablePerson"],
-     all=sortTableRows(filterTableRows(data.receitas.filter(x=>inRange(x,r)),{startId:"revTableStart",endId:"revTableEnd",searchId:"revTableSearch",selectId:"revTablePerson",selectField:"pessoa"})),
-     shown=tableSlice(all,ids);
-
- $("recentReceitas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Nenhuma receita encontrada.</div></td></tr>`;
- setTableCount("revTableCount",shown.length,all.length,tableFilterIsActive(ids));
- bindActions($("receitas"))
-}
-function renderInstallments(){
- if(!data)return;
- let r=periodRange();syncTableFilterBounds(r);
- let ref=r.ref,cat=$("installmentCategoryFilter").value,
-     filter=x=>cat==="all"||x.categoria===cat,
-     arr=data.parcelas.filter(filter),
-     sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),
-     future=arr.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor),0);
-
- $("pMes").textContent=brl(sumMonth(arr,ref));$("p3").textContent=brl(sumFuture(3));$("p6").textContent=brl(sumFuture(6));$("pFuture").textContent=brl(future);
-
- let historicalMonths=r.months.filter(m=>m<=ref),futureMonths=monthsBetween(addMonths(ref,1),addMonths(ref,12)),
-     labels=[...historicalMonths,...futureMonths],hLen=historicalMonths.length,fLen=futureMonths.length,
-     histValues=historicalMonths.map(m=>sumMonth(arr,m)).concat(Array(fLen).fill(null)),
-     futureValues=Array(hLen).fill(null).concat(futureMonths.map(m=>sumMonth(arr,m)));
-
- let installmentOpts=chartOpts();
- installmentOpts.plugins.tooltip.callbacks.label=ctx=>`${ctx.dataset.label}: ${brl(ctx.raw)}`;
-
- makeChart("chartParcelasFuturo",{type:"bar",data:{labels:labels.map(monthLabel),datasets:[
-  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(184,21,112,.78)",borderColor:"#9D145F",borderWidth:1},
-  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(184,21,112,.22)",borderColor:"rgba(144,15,21,.55)",borderWidth:1}
- ]},options:installmentOpts});
- horizontalBar("chartParcelasCategoria",categoryTotals(arr,r),INSTALLMENT_COLORS);
-
- let ids=["parTableStart","parTableEnd","parTableSearch","parTableCategory"],
-     all=sortTableRows(filterTableRows(data.parcelas.filter(x=>inRange(x,r)),{startId:"parTableStart",endId:"parTableEnd",searchId:"parTableSearch",selectId:"parTableCategory",selectField:"categoria"})),
-     shown=tableSlice(all,ids);
-
- $("recentParcelas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhuma parcela encontrada.</div></td></tr>`;
- setTableCount("parTableCount",shown.length,all.length,tableFilterIsActive(ids));
- bindActions($("parcelas"))
-}
-function renderInvestments(){
- if(!data)return;
- let r=periodRange();syncTableFilterBounds(r);
- let snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),
-     meta=snap?metaForMonth(snap.month):null,
-     gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;
-
- $("iIgorApl").textContent=snap?brl(snap.map["Igor: Aplicações"]||0):"—";
- $("iVitApl").textContent=snap?brl(snap.map["Vitória: Aplicações"]||0):"—";
- $("iPrev").textContent=snap?brl(snap.map["Igor: Previdência"]||0):"—";
- $("iFgts").textContent=snap?brl((snap.map["Igor: FGTS"]||0)+(snap.map["Vitória: FGTS"]||0)):"—";
- $("iTotal").textContent=snap?brl(snap.total):"—";
- $("iSemFgts").textContent=snap?brl(snap.semFGTS):"—";
- $("iMeta").textContent=Number.isFinite(meta)?brl(meta):"—";
- $("iGap").textContent=Number.isFinite(gap)?brl(gap):"—";
- $("iGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
-
- renderCapitalAllocationChart("chartInvestAllocation",r);
-
- let ids=["invTableStart","invTableEnd","invTableSearch","invTableComponent"],
-     all=sortTableRows(filterTableRows(data.investimentos.historico.filter(x=>inRange(x,r)),{startId:"invTableStart",endId:"invTableEnd",searchId:"invTableSearch",selectId:"invTableComponent",selectField:"descricao"})),
-     shown=tableSlice(all,ids);
-
- $("recentInvestimentos").innerHTML=shown.length
-  ?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
-  :`<tr><td colspan="6"><div class="empty">Nenhum registro de investimento encontrado.</div></td></tr>`;
-
- setTableCount("invTableCount",shown.length,all.length,tableFilterIsActive(ids));
- bindActions($("investimentos"))
-}
-function projectionHistory(){
- if(!data)return[];
- return [...(data.patrimonio?.historico||[])]
-  .filter(x=>monthKey(x.data)>=HISTORY_START)
-  .sort((a,b)=>monthKey(a.data).localeCompare(monthKey(b.data)))
-  .map(x=>({month:monthKey(x.data),total:Number(x.total)||0,semFGTS:Number(x.semFGTS)||0,fgts:Number(x.fgts)||0}))
-}
-function xMonth(x){return monthKey(x.data||x.month)}
-function renderProjectionChart(id,horizon){
- let hist=projectionHistory(),base=hist.at(-1),proj=projectPatrimony(horizon);
- if(!base){makeChart(id,{type:"line",data:{labels:[],datasets:[]},options:chartOpts()});return}
- let labels=[...hist.map(x=>x.month),...proj.map(x=>x.month)];
- let total=[...hist.map(x=>x.total),...proj.map(x=>x.total)];
- let sem=[...hist.map(x=>x.semFGTS),...proj.map(x=>x.semFGTS)];
- let meta=labels.map(metaForMonth);
- let lastActualIndex=hist.length-1;
- let segmentDash=ctx=>ctx.p0DataIndex>=lastActualIndex?[7,4]:undefined;
- let totalDs=lineDataset("Patrimônio total",total,CHART_TOTAL,{
-   borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
-   segment:{borderDash:segmentDash}
- });
- let semDs=lineDataset("Patrimônio sem FGTS",sem,CHART_META,{
-   borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
-   segment:{borderDash:segmentDash}
- });
- let metaDs=lineDataset("Meta sem FGTS",meta,CHART_EXPENSE,{
-   borderDash:[3,4],spanGaps:false,borderWidth:1.8,pointRadius:0,pointHoverRadius:4
- });
- let opts=chartOpts();
- opts.plugins.tooltip.callbacks.label=ctx=>{
-   let suffix=ctx.dataIndex<=lastActualIndex?"real":"projetado";
-   if(ctx.dataset.label==="Meta sem FGTS")suffix="meta";
-   return `${ctx.dataset.label} (${suffix}): ${brl(ctx.raw)}`
- };
- makeChart(id,{type:"line",data:{labels:labels.map(monthLabel),datasets:[totalDs,semDs,metaDs]},options:opts})
-}
-function renderPatrimony(){if(!data)return;let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),meta=metaForMonth(r.ref),gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;$("patTotal").textContent=snap?brl(snap.total):"—";$("patSemFgts").textContent=snap?brl(snap.semFGTS):"—";$("patFgts").textContent=snap?brl(snap.fgts):"—";$("patMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("patGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("patGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";$("patDate").textContent=snap?`Fechamento ${monthLabel(snap.month)}`:"—";renderProjectionChart("chartPatProjection",Math.min(24,Number(projectionSettings().horizonteMeses)||24));let comps=componentDefs().map(x=>x.descricao);makeChart("chartPatComponents",{type:"line",data:{labels:r.months.map(monthLabel),datasets:comps.map((c,i)=>lineDataset(c,r.months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):null}),COLORS[i%COLORS.length],{spanGaps:true}))},options:chartOpts()});if(snap)donut("chartPatDonut",snap.map);let recent=data.investimentos.historico.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentPatrimonio").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join(""):`<tr><td colspan="4"><div class="empty">Sem registros.</div></td></tr>`;bindActions($("patrimonio"))}
-
-function setProjectionInputs(){if(!data)return;let s=projectionSettings();$("projRentApl").value=moneyInput(Number(s.rentabilidadeAplicacoesMensal)*100);$("projRentPrev").value=moneyInput(Number(s.rentabilidadePrevidenciaFgtsMensal)*100);$("projPrevIgor").value=moneyInput(s.aportePrevidenciaIgor);$("projFgtsIgor").value=moneyInput(s.aporteFgtsIgor);$("projFgtsVit").value=moneyInput(s.aporteFgtsVitoria);$("projAplIgor").value=moneyInput(s.aporteAplicacoesIgor);$("projAplVit").value=moneyInput(s.aporteAplicacoesVitoria);$("projHorizon").value=s.horizonteMeses||24}
-function renderProjection(){if(!data)return;let n=Number(projectionSettings().horizonteMeses)||24,proj=projectPatrimony(n),end=proj.at(-1);renderProjectionChart("chartProjectionDetail",n);if(end){$("projEndTotal").textContent=brl(end.total);$("projEndSem").textContent=brl(end.semFGTS);$("projEndMeta").textContent=Number.isFinite(end.meta)?brl(end.meta):"—";let gap=Number.isFinite(end.meta)?end.semFGTS-end.meta:null;$("projEndGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("projEndGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):""}}
-
-function manageRecords(){if(!data)return[];let rows=[];data.despesas.fixas.forEach(x=>rows.push({...x,_kind:"fixas",_label:"Despesa fixa",_detail:x.categoria}));data.despesas.variaveis.forEach(x=>rows.push({...x,_kind:"variaveis",_label:"Despesa variável",_detail:x.categoria}));data.parcelas.forEach(x=>rows.push({...x,_kind:"parcelas",_label:"Parcela",_detail:x.categoria}));data.receitas.forEach(x=>rows.push({...x,_kind:"receitas",_label:"Receita",_detail:x.pessoa}));data.investimentos.historico.forEach(x=>rows.push({...x,_kind:"investimento",_label:"Investimento / patrimônio",_detail:x.classe||investmentClass(x.descricao)}));return rows.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")||b.data.localeCompare(a.data))}
-function renderManage(){if(!data)return;let type=$("manageType").value,q=normSearch($("manageSearch").value),rows=manageRecords().filter(x=>(type==="all"||x._kind===type)&&(!q||normSearch(x.descricao).includes(q))).slice(0,250);$("manageBody").innerHTML=rows.length?rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x._detail||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhum lançamento encontrado.</div></td></tr>`;bindActions($("novo"))}
-function normSearch(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()}
-function findRecord(kind,id){let arr=kind==="fixas"?data.despesas.fixas:kind==="variaveis"?data.despesas.variaveis:kind==="parcelas"?data.parcelas:kind==="receitas"?data.receitas:data.investimentos.historico;return{arr,rec:arr.find(x=>String(x.id)===String(id))}}
-async function deleteRecord(kind,id){if(!data)return;let{arr,rec}=findRecord(kind,id);if(!rec)return;let extra=kind==="parcelas"?` Parcela ${rec.parcela||"?"}/${rec.totalParcelas||"?"}.`:"";if(!confirm(`Excluir somente este lançamento?\n\n${rec.descricao}\n${dateLabel(rec.data)}\n${brl(rec.valor)}${extra}\n\nOs gráficos e totais serão recalculados automaticamente.`))return;let i=arr.indexOf(rec);arr.splice(i,1);touch();await afterMutation("Lançamento excluído.")}
-function contextConfig(kind){
- return {
-  fixas:{tab:"despesas",form:"fxForm",title:"fxFormTitle",date:"cFxDate",desc:"cFxDesc",cat:"cFxCat",value:"cFxValue"},
-  variaveis:{tab:"despesas",form:"varForm",title:"varFormTitle",date:"cVarDate",desc:"cVarDesc",cat:"cVarCat",value:"cVarValue"},
-  receitas:{tab:"receitas",form:"revForm",title:"revFormTitle",date:"cRevDate",desc:"cRevDesc",person:"cRevPerson",value:"cRevValue"},
-  parcelas:{tab:"parcelas",form:"parForm",title:"parFormTitle",date:"cParDate",desc:"cParDesc",cat:"cParCat",value:"cParValue",num:"cParNum",valueLabel:"cParValueLabel"},
-  investimento:{tab:"investimentos",form:"invForm",title:"invFormTitle",date:"cInvDate",comp:"cInvComp",value:"cInvValue"}
- }[kind]
-}
-function defaultContextDate(){
- let ref=periodRange().ref,current=currentCalendarMonth();
- return ref===current?new Date().toISOString().slice(0,10):ref+"-01"
-}
-function contextTitle(kind,editingMode=false){
- let base={fixas:"despesa fixa",variaveis:"despesa variável",receitas:"receita",parcelas:"parcela",investimento:"registro de investimento"}[kind];
- return `${editingMode?"Editar":"Adicionar novo"} ${base}`
-}
-function openContextForm(kind,rec=null){
- let c=contextConfig(kind);if(!c)return;
- contextEditing=rec?{kind,id:rec.id}:null;
- showTab(c.tab);
- $(c.form).classList.remove("hidden");
- $(c.title).textContent=contextTitle(kind,!!rec);
-
- if(kind==="investimento"){
-  $(c.date).value=rec?monthKey(rec.data):periodRange().ref;
-  $(c.comp).value=rec?.descricao||componentDefs()[0]?.descricao||"";
-  $(c.value).value=rec?moneyInput(rec.valor):"";
- }else{
-  $(c.date).value=rec?.data||defaultContextDate();
-  if(c.desc)$(c.desc).value=rec?.descricao||"";
-  if(c.cat)$(c.cat).value=rec?.categoria||categories()[0]||"";
-  if(c.person)$(c.person).value=rec?.pessoa||"Igor";
-  $(c.value).value=rec?moneyInput(rec.valor):"";
-  if(kind==="parcelas"){
-   $(c.num).value=rec?.totalParcelas||1;
-   $(c.num).disabled=!!rec;
-   $(c.valueLabel).textContent=rec?"Valor desta parcela (R$)":"Valor total da compra (R$)";
-  }
- }
- setTimeout(()=>$(c.form).scrollIntoView({behavior:"smooth",block:"nearest"}),120)
-}
-function closeContextForm(kind){
- let c=contextConfig(kind);if(!c)return;
- $(c.form).classList.add("hidden");
- contextEditing=null;
- if(c.desc)$(c.desc).value="";
- if(c.value)$(c.value).value="";
- if(kind==="parcelas"){$(c.num).disabled=false;$(c.num).value=1;$(c.valueLabel).textContent="Valor total da compra (R$)"}
-}
-function beginEdit(kind,id){
- let{rec}=findRecord(kind,id);if(!rec)return;
- openContextForm(kind,rec)
-}
-async function saveContextRecord(kind){
- if(!data){toast("Importe dados_financeiros.json primeiro.");return}
- let c=contextConfig(kind),val=parseMoney($(c.value).value),isEdit=contextEditing?.kind===kind&&contextEditing?.id;
- if(!$(c.value).value.trim()||!Number.isFinite(val)){toast("Informe um valor válido.");return}
-
- let createdAt=new Date().toISOString();
-
- if(isEdit){
-  let{rec}=findRecord(kind,contextEditing.id);if(!rec)return;
-  if(kind==="investimento"){
-   let ym=$(c.date).value,comp=$(c.comp).value;
-   if(!ym||!comp){toast("Informe mês e componente.");return}
-   let collision=data.investimentos.historico.find(x=>x.id!==rec.id&&monthKey(x.data)===ym&&x.descricao===comp);
-   if(collision){toast("Já existe um registro desse componente nesse mês.");return}
-   rec.data=ym+"-01";rec.descricao=comp;rec.valor=val;
-   let def=componentDefs().find(x=>x.descricao===comp);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||"";
-  }else{
-   let date=$(c.date).value,desc=$(c.desc).value.trim();
-   if(!date||!desc){toast("Preencha data e descrição.");return}
-   rec.data=date;rec.descricao=desc;rec.valor=val;
-   if(kind==="receitas")rec.pessoa=$(c.person).value;
-   else rec.categoria=$(c.cat).value;
-  }
-  rec.origem="app";rec.updatedAt=createdAt;
-  touch();closeContextForm(kind);await afterMutation("Lançamento editado.");return
- }
-
- if(kind==="fixas"||kind==="variaveis"){
-  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value;
-  if(!date||!desc){toast("Preencha data e descrição.");return}
-  data.despesas[kind].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})
- }else if(kind==="receitas"){
-  let date=$(c.date).value,desc=$(c.desc).value.trim();
-  if(!date||!desc){toast("Preencha data e descrição.");return}
-  data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$(c.person).value,valor:val,origem:"app",createdAt})
- }else if(kind==="parcelas"){
-  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value,n=Math.max(1,Number($(c.num).value)||1);
-  if(!date||!desc){toast("Preencha data e descrição.");return}
-  let cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();
-  for(let i=0;i<n;i++)data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})
- }else if(kind==="investimento"){
-  let ym=$(c.date).value,comp=$(c.comp).value;
-  if(!ym||!comp){toast("Informe mês e componente.");return}
-  let existedBefore=data.investimentos.historico.some(x=>monthKey(x.data)===ym&&x.descricao===comp);
-  ensureInvestmentMonth(ym);
-  let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);
-  if(rec){
-   if(existedBefore&&!confirm(`Já existe saldo para ${comp} em ${monthLabel(ym)}.\n\nDeseja atualizar esse registro para ${brl(val)}?`))return;
-   rec.valor=val;rec.origem="app";rec.updatedAt=createdAt
-  }else{
-   let def=componentDefs().find(x=>x.descricao===comp);
-   data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})
-  }
- }
- touch();closeContextForm(kind);await afterMutation("Lançamento adicionado.")
-}
-async function replicateFixedPrevious(){
- if(!data)return;
- let target=$("fxReplicateTarget").value||periodRange().ref;
- if(target<HISTORY_START){toast("O histórico começa em mai/2022.");return}
- let source=addMonths(target,-1),
-     sourceRows=data.despesas.fixas.filter(x=>monthKey(x.data)===source),
-     targetRows=data.despesas.fixas.filter(x=>monthKey(x.data)===target);
-
- if(!sourceRows.length){toast(`Não há despesas fixas em ${monthLabel(source)} para replicar.`);return}
-
- let key=x=>`${normSearch(x.descricao)}|${normSearch(x.categoria)}`,
-     existing=new Set(targetRows.map(key)),
-     seen=new Set(existing),toCopy=[];
- sourceRows.forEach(x=>{let k=key(x);if(!seen.has(k)){toCopy.push(x);seen.add(k)}});
-
- if(!toCopy.length){toast(`Todos os lançamentos equivalentes de ${monthLabel(source)} já existem em ${monthLabel(target)}.`);return}
-
- let skipped=sourceRows.length-toCopy.length;
- let msg=`Replicar despesas fixas de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} lançamentos.${skipped?`\n${skipped} equivalentes já existentes serão ignorados.`:""}\n\nDepois você poderá editar cada lançamento individualmente.`;
- if(!confirm(msg))return;
-
- let now=new Date().toISOString();
- toCopy.forEach(x=>{
-  let newDate=addMonthsDate(x.data,1);
-  data.despesas.fixas.push({id:uid(),data:newDate,descricao:x.descricao,categoria:x.categoria,valor:Number(x.valor),origem:"app",createdAt:now,replicadoDe:x.id,replicadoDeMes:source})
- });
- touch();await afterMutation(`${toCopy.length} despesas fixas replicadas para ${monthLabel(target)}.`)
-}
-function cancelEdit(){editing=null;$("editBanner").classList.add("hidden");$("btnCancelEdit").classList.add("hidden");$("nTipo").disabled=false;$("nDescricao").value="";$("nValor").value="";updateLaunchForm()}
-function updateLaunchForm(){let t=$("nTipo").value;$("fCategoria").classList.toggle("hidden",!['fixas','variaveis','parcelas'].includes(t));$("fPessoa").classList.toggle("hidden",t!=="receitas");$("fComponente").classList.toggle("hidden",t!=="investimento");$("fNumParcelas").classList.toggle("hidden",t!=="parcelas"||!!editing);$("fDescricao").classList.toggle("hidden",t==="investimento");$("nValorLabel").textContent=t==="parcelas"&&!editing?"Valor total da compra (R$)":t==="investimento"?"Saldo do componente (R$)":"Valor (R$)"}
-function prevSnapshotBefore(ym){let months=[...new Set(data.investimentos.historico.map(x=>monthKey(x.data)))].filter(m=>m<ym).sort(),m=months.at(-1);if(!m)return{};let o={};data.investimentos.historico.filter(x=>monthKey(x.data)===m).forEach(x=>o[x.descricao]=Number(x.valor)||0);return o}
-function ensureInvestmentMonth(ym){let existing=data.investimentos.historico.filter(x=>monthKey(x.data)===ym);if(existing.length)return;let prev=prevSnapshotBefore(ym);componentDefs().forEach(c=>data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:c.descricao,classe:c.classe,pessoa:c.pessoa,valor:Number(prev[c.descricao]||0),origem:"app",tipoRegistro:"saldoMensal",createdAt:new Date().toISOString()}))}
-async function saveLaunch(){if(!data){toast("Importe dados_financeiros.json primeiro.");return}let t=$("nTipo").value,date=$("nData").value,val=parseMoney($("nValor").value);if(!date||!$("nValor").value.trim()||!Number.isFinite(val)){toast("Preencha data e valor.");return}if(editing){let{rec}=findRecord(editing.kind,editing.id);if(!rec)return;rec.data=editing.kind==="investimento"?monthKey(date)+"-01":date;rec.valor=val;if(editing.kind==="receitas"){rec.descricao=$("nDescricao").value.trim()||"Entrada";rec.pessoa=$("nPessoa").value}else if(editing.kind==="investimento"){rec.descricao=$("nComponente").value;let def=componentDefs().find(x=>x.descricao===rec.descricao);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||""}else{rec.descricao=$("nDescricao").value.trim()||$("nCategoria").value;rec.categoria=$("nCategoria").value}rec.updatedAt=new Date().toISOString();touch();cancelEdit();await afterMutation("Lançamento editado.");return}
- let desc=$("nDescricao").value.trim(),cat=$("nCategoria").value,createdAt=new Date().toISOString();if(t==="fixas"||t==="variaveis"){if(!desc){toast("Informe a descrição do gasto.");return}data.despesas[t].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})}else if(t==="receitas"){if(!desc){toast("Informe a descrição da receita.");return}data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$("nPessoa").value,valor:val,origem:"app",createdAt,legado:false})}else if(t==="parcelas"){if(!desc){toast("Informe a descrição da compra.");return}let n=Math.max(1,Number($("nNumParcelas").value)||1),cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();for(let i=0;i<n;i++){data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})}}else{let ym=monthKey(date),comp=$("nComponente").value;ensureInvestmentMonth(ym);let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);if(rec){rec.valor=val;rec.origem="app";rec.updatedAt=createdAt}else{let def=componentDefs().find(x=>x.descricao===comp);data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})}}
- touch();$("nDescricao").value="";$("nValor").value="";await afterMutation("Lançamento adicionado.")}
-async function afterMutation(msg){rebuildPatrimonyHistory();renderAll();if(account&&remoteMeta){try{await saveRemoteWithConflictCheck();dirty=false;updateStatus();toast(msg+" Salvo no OneDrive.")}catch(e){handleError(e);toast(msg+" Alteração mantida localmente; exporte o JSON.")}}else toast(msg+" Exporte o JSON para guardar a alteração.")}
-
-function refreshSelects(){
- if(!data)return;
- let opts=categories().map(c=>`<option>${esc(c)}</option>`).join("");
- $("nCategoria").innerHTML=opts;
- ["cFxCat","cVarCat","cParCat"].forEach(id=>{if($(id))$(id).innerHTML=opts});
- $("expenseCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
- $("installmentCategoryFilter").innerHTML='<option value="all">Todas as categorias</option>'+opts;
- ["fxTableCategory","varTableCategory","parTableCategory"].forEach(id=>{if($(id))$(id).innerHTML='<option value="all">Todas</option>'+opts});
-
- let people=[...new Set(["Igor","Vitória","Outro",...data.receitas.map(x=>x.pessoa).filter(Boolean)])];
- $("incomePersonFilter").innerHTML='<option value="all">Todas as pessoas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
- if($("cRevPerson"))$("cRevPerson").innerHTML=people.map(x=>`<option>${esc(x)}</option>`).join("");
- if($("revTablePerson"))$("revTablePerson").innerHTML='<option value="all">Todas</option>'+people.map(x=>`<option>${esc(x)}</option>`).join("");
-
- let comps=componentDefs().map(x=>x.descricao);
- $("nComponente").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
- if($("cInvComp"))$("cInvComp").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
- if($("invTableComponent"))$("invTableComponent").innerHTML='<option value="all">Todos</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")
-}
-function renderJsonInfo(){if(!data)return;$("jsonInfo").textContent="Dados carregados com sucesso."}
-function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
-
-const titles={
- geral:["Visão Geral","Resumo do período selecionado."],
- despesas:["Despesas","Acompanhamento de despesas fixas e variáveis."],
- receitas:["Receitas","Entradas e histórico por pessoa."],
- parcelas:["Parcelas","Histórico e compromissos parcelados."],
- investimentos:["Investimentos","Patrimônio, alocação e projeção."],
- config:["Configuração / Importação","Importação, exportação e sincronização."]
+document.addEventListener("click",e=>{
+ let btn=e.target.closest(".excel-filter-btn");
+ if(btn){e.stopPropagation();openExcelFilterMenu(btn);return}
+ if(!e.target.closest("#excelFilterMenu"))closeExcelFilterMenu()
+});
+$("excelFilterMenu").onclick=e=>e.stopPropagation();
+$("excelFilterSearch").oninput=()=>{excelRefreshValueSearch();excelSyncSelectAll()};
+$("excelFilterSelectAll").onchange=()=>{
+ $("excelFilterValues").querySelectorAll(".excel-filter-value:not(.hidden) input").forEach(x=>x.checked=$("excelFilterSelectAll").checked);
+ excelSyncSelectAll()
 };
-function renderVisibleTab(id){
- if(!data)return;
- if(id==="geral")renderGeneral();
- else if(id==="despesas")renderExpenses();
- else if(id==="receitas")renderIncome();
- else if(id==="parcelas")renderInstallments();
- else if(id==="investimentos"){renderInvestments();setProjectionInputs();renderProjection()}
- else if(id==="config")renderJsonInfo()
-}
-function showTab(id){
- if(!titles[id])id="geral";
- document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
- Object.keys(titles).forEach(x=>$(x).classList.toggle("hidden",x!==id));
- ["patrimonio","projecao","novo"].forEach(x=>{if($(x))$(x).classList.add("hidden")});
- $("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];
- setTimeout(()=>{renderVisibleTab(id);Object.values(charts).forEach(c=>c.resize())},80)
-}
+$("excelSortAsc").onclick=()=>{excelMenuSort=excelMenuSort==="asc"?null:"asc";$("excelSortAsc").classList.toggle("active",excelMenuSort==="asc");$("excelSortDesc").classList.remove("active")};
+$("excelSortDesc").onclick=()=>{excelMenuSort=excelMenuSort==="desc"?null:"desc";$("excelSortDesc").classList.toggle("active",excelMenuSort==="desc");$("excelSortAsc").classList.remove("active")};
+$("excelFilterApply").onclick=excelApplyCurrent;
+$("excelFilterClear").onclick=excelClearCurrent;
+window.addEventListener("resize",closeExcelFilterMenu);
+window.addEventListener("scroll",closeExcelFilterMenu,true);
 
-async function saveProjectionSettings(){if(!data)return;let s=data.configuracoes.projecaoPatrimonial;s.rentabilidadeAplicacoesMensal=parseMoney($("projRentApl").value)/100;s.rentabilidadePrevidenciaFgtsMensal=parseMoney($("projRentPrev").value)/100;s.aportePrevidenciaIgor=parseMoney($("projPrevIgor").value);s.aporteFgtsIgor=parseMoney($("projFgtsIgor").value);s.aporteFgtsVitoria=parseMoney($("projFgtsVit").value);s.aporteAplicacoesIgor=parseMoney($("projAplIgor").value);s.aporteAplicacoesVitoria=parseMoney($("projAplVit").value);s.horizonteMeses=Math.max(1,Math.min(240,Number($("projHorizon").value)||24));touch();await afterMutation("Premissas atualizadas.")}
-async function resetProjection(){if(!data)return;Object.assign(data.configuracoes.projecaoPatrimonial,{rentabilidadeAplicacoesMensal:.01,rentabilidadePrevidenciaFgtsMensal:.005,aportePrevidenciaIgor:1100,aporteFgtsIgor:1100,aporteFgtsVitoria:590,aporteAplicacoesIgor:5000,aporteAplicacoesVitoria:3000,horizonteMeses:24});touch();setProjectionInputs();await afterMutation("Premissas do Excel restauradas.")}
-
-function exportJson(){if(!data){toast("Nenhuma base carregada.");return}let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=FILE_NAME;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);dirty=false;updateStatus();toast("Dados exportados.")}
-async function importJson(file){try{let obj=JSON.parse(await file.text());if(!validateData(obj))throw new Error("O arquivo selecionado não é compatível.");data=obj;dirty=false;refreshSelects();let latest=latestOperationalMonth();$("periodEnd").value=latest;$("nData").value=new Date().toISOString().slice(0,10);renderAll();toast("Dados importados com sucesso.")}catch(e){handleError(e)}finally{$("jsonImport").value=""}}
-
-function setSyncStatus(t,state=""){$("syncPill").textContent=t;$("syncPill").className="syncpill "+state}
-function updateCloudUi(){$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?"Dados sincronizados com o OneDrive.":"Ainda não sincronizado.";if(account&&remoteMeta&&!dirty)setSyncStatus("OneDrive sincronizado","online");else if(account)setSyncStatus(dirty?"Alterado localmente":"Conectado","warn");else if(data)setSyncStatus("Dados carregados");else setSyncStatus("Sem dados")}
-function clientId(){return localStorage.getItem(CLIENT_KEY)||""}
-async function initPca(){let id=clientId();$("clientIdInput").value=id;if(!id){pca=null;return}pca=new PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let resp=await pca.handleRedirectPromise();account=resp?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);updateCloudUi()}
-async function token(){if(!pca||!account)throw new Error("Entre com a conta Microsoft primeiro.");try{let r=await pca.acquireTokenSilent({scopes:SCOPES,account});accessToken=r.accessToken;return accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});return null}throw e}}
-async function graph(path,opts={}){let t=await token();return fetch("https://graph.microsoft.com/v1.0"+path,{...opts,headers:{Authorization:`Bearer ${t}`,...(opts.headers||{})}})}
-async function ensureAppRoot(){let r=await graph("/me/drive/special/approot");if(!r.ok)throw new Error(`Não foi possível acessar a pasta do aplicativo (${r.status}).`);appRoot=await r.json();return appRoot}
-async function getMeta(){await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}`);if(r.status===404)return null;if(!r.ok)throw new Error(`Erro ao ler metadados de ${FILE_NAME} (${r.status}).`);return r.json()}
-async function uploadJson(){if(!data)throw new Error("Importe o JSON consolidado primeiro.");await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}:/content`,{method:"PUT",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify(data,null,2)});if(!r.ok)throw new Error(`Falha ao gravar ${FILE_NAME} no OneDrive (${r.status}).`);remoteMeta=await r.json();dirty=false;updateCloudUi();return remoteMeta}
-async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus(`${FILE_NAME} não existe`,"warn");toast("Primeiro uso: importe dados_financeiros.json e envie ao OneDrive.");updateCloudUi();return}let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error(`Falha ao baixar ${FILE_NAME} (${r.status}).`);let obj=JSON.parse(await r.text());if(!validateData(obj))throw new Error("Os dados remotos têm formato incompatível.");data=obj;remoteMeta=meta;dirty=false;refreshSelects();renderAll();toast("Base sincronizada do OneDrive.")}
-async function saveRemoteWithConflictCheck(){let current=await getMeta();if(current&&remoteMeta?.eTag&&current.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson()}
-function handleError(e){console.error(e);if(String(e?.message||e)==="CONFLICT_REMOTE"){toast("Conflito: existe uma versão mais nova no OneDrive. Sincronize antes de salvar.");return}toast(e?.message||String(e))}
-
-$("redirectUriBox").textContent=REDIRECT_URI;
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-$("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").onchange=renderAll;$("periodEnd").onchange=renderAll;
-["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;
-
-$("btnOpenFixed").onclick=()=>openContextForm("fixas");
-$("btnOpenVariable").onclick=()=>openContextForm("variaveis");
-$("btnOpenRevenue").onclick=()=>openContextForm("receitas");
-$("btnOpenInstallment").onclick=()=>openContextForm("parcelas");
-$("btnOpenInvestment").onclick=()=>openContextForm("investimento");
-$("btnSaveFixed").onclick=()=>saveContextRecord("fixas");
-$("btnSaveVariable").onclick=()=>saveContextRecord("variaveis");
-$("btnSaveRevenue").onclick=()=>saveContextRecord("receitas");
-$("btnSaveInstallment").onclick=()=>saveContextRecord("parcelas");
-$("btnSaveInvestment").onclick=()=>saveContextRecord("investimento");
-$("btnCancelFixed").onclick=()=>closeContextForm("fixas");
-$("btnCancelVariable").onclick=()=>closeContextForm("variaveis");
-$("btnCancelRevenue").onclick=()=>closeContextForm("receitas");
-$("btnCancelInstallment").onclick=()=>closeContextForm("parcelas");
-$("btnCancelInvestment").onclick=()=>closeContextForm("investimento");
-$("btnReplicateFixed").onclick=replicateFixedPrevious;
-
-["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory","varTableStart","varTableEnd","varTableSearch","varTableCategory"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderExpenses));
-["revTableStart","revTableEnd","revTableSearch","revTablePerson"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderIncome));
-["parTableStart","parTableEnd","parTableSearch","parTableCategory"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderInstallments));
-["invTableStart","invTableEnd","invTableSearch","invTableComponent"].forEach(id=>$(id).addEventListener(id.includes("Search")?"input":"change",renderInvestments));
-
-$("btnClearFxTable").onclick=()=>clearTableFilters(["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory"],renderExpenses);
-$("btnClearVarTable").onclick=()=>clearTableFilters(["varTableStart","varTableEnd","varTableSearch","varTableCategory"],renderExpenses);
-$("btnClearRevTable").onclick=()=>clearTableFilters(["revTableStart","revTableEnd","revTableSearch","revTablePerson"],renderIncome);
-$("btnClearParTable").onclick=()=>clearTableFilters(["parTableStart","parTableEnd","parTableSearch","parTableCategory"],renderInstallments);
-$("btnClearInvTable").onclick=()=>clearTableFilters(["invTableStart","invTableEnd","invTableSearch","invTableComponent"],renderInvestments);
 $("manageType").onchange=renderManage;$("manageSearch").oninput=renderManage;$("nTipo").onchange=updateLaunchForm;$("btnSaveLaunch").onclick=saveLaunch;$("btnCancelEdit").onclick=cancelEdit;$("btnSaveProjection").onclick=saveProjectionSettings;$("btnResetProjection").onclick=resetProjection;
 document.querySelectorAll(".money-input").forEach(el=>el.addEventListener("blur",()=>{if(el.value.trim()!=="")el.value=moneyInput(parseMoney(el.value))}));
 $("jsonImport").onchange=()=>{let f=$("jsonImport").files?.[0];if(f)importJson(f)};$("btnExportJson").onclick=exportJson;
