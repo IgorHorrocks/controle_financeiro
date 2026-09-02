@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.12</title>
+<title>Controle de Gastos</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -511,12 +511,34 @@ td.num,th.num{
   .table-filters{padding:9px}
 }
 
+
+/* v8.13 — ajustes finais de identidade e legibilidade */
+.brand{
+  display:block;
+  padding:10px 10px 20px;
+}
+.brand b{
+  font-size:15px;
+  color:#fff;
+  font-weight:720;
+  letter-spacing:-.025em;
+}
+.navlabel{
+  color:rgba(255,255,255,.60)!important;
+  margin-top:18px;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.14em;
+}
+.top-title b{font-size:12px}
+.top-title small{margin-top:2px}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.12</small></div></div>
+  <div class="brand"><div><b>Controle de Gastos</b></div></div>
   <div class="navlabel">Navegação</div>
   <div class="tabs">
     <button class="tab active" data-tab="geral">Visão Geral</button>
@@ -526,17 +548,17 @@ td.num,th.num{
     <button class="tab" data-tab="investimentos">Investimentos</button>
     <button class="tab" data-tab="config">Configuração / Importação</button>
   </div>
-  <div class="sidebar-foot">GitHub Pages: somente o HTML.<br>Dados privados: <b>dados_financeiros.json</b> no OneDrive.</div>
+  
 </aside>
 <div class="content-shell">
 <header class="topbar"><div class="topbar-inner">
-  <div class="top-title"><b>Painel financeiro</b><small id="dataStatus">Nenhuma base carregada</small></div>
+  <div class="top-title"><b>Controle de Gastos</b><small id="dataStatus">Nenhum dado carregado</small></div>
   <div class="top-actions"><span id="dirtyState" class="period-summary"></span><span id="syncPill" class="syncpill">Sem dados</span><button id="btnTopSync" class="btn secondary">Sincronizar</button></div>
 </div></header>
 <main>
-<div id="noDataNotice" class="notice warn"><b>Primeiro acesso:</b> vá em “Configuração / Importação” e carregue apenas o arquivo <b>dados_financeiros.json</b>. O HTML público não contém seus dados financeiros.</div>
+<div id="noDataNotice" class="notice warn"><b>Primeiro acesso:</b> vá em “Configuração / Importação” para carregar seus dados.</div>
 <div class="workspace-head">
- <div><div class="eyebrow">Financeiro</div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle">Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”.</p></div>
+ <div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle">Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”.</p></div>
  <div><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option value="12" selected>Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input id="periodStart" type="month" min="2022-05" class="hidden"><input id="periodEnd" type="month" min="2022-05" class="hidden"></div><div id="periodSummary" class="period-summary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
 
@@ -739,7 +761,7 @@ td.num,th.num{
  </div>
 
  <div class="card chart-card section">
-  <div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Evolução histórica da composição patrimonial usando a mesma fonte da Visão Geral.</p></div><span class="pill">Histórico</span></div>
+  <div class="chart-head"><div><h3>Alocação de capital ao longo do tempo</h3><p>Evolução histórica da composição patrimonial.</p></div><span class="pill">Histórico</span></div>
   <div class="chart-wrap tall"><canvas id="chartInvestAllocation"></canvas></div>
  </div>
 
@@ -756,7 +778,7 @@ td.num,th.num{
  </div>
 
  <div class="card section">
-  <div class="chart-head"><div><h3>Premissas da projeção</h3><p>As premissas continuam armazenadas dentro do mesmo dados_financeiros.json.</p></div><span class="pill">Base Excel</span></div>
+  <div class="chart-head"><div><h3>Premissas da projeção</h3><p>Ajuste os parâmetros utilizados na projeção.</p></div><span class="pill">Premissas</span></div>
   <div class="projection-form">
    <div class="field"><label>Rentabilidade aplicações (% a.m.)</label><input id="projRentApl" class="money-input" inputmode="decimal"></div>
    <div class="field"><label>Rentabilidade Previdência/FGTS (% a.m.)</label><input id="projRentPrev" class="money-input" inputmode="decimal"></div>
@@ -818,12 +840,12 @@ td.num,th.num{
 
 <section id="config" class="hidden">
  <div class="grid2">
-  <div class="card"><div class="title">Importação e exportação</div><div class="subtitle">O dashboard utiliza apenas um arquivo privado.</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados_financeiros.json<input id="jsonImport" type="file" accept=".json,application/json" hidden></label><button id="btnExportJson" class="btn secondary">Exportar dados_financeiros.json</button><button id="btnUploadCurrent" class="btn secondary">Enviar versão atual ao OneDrive</button></div><div class="notice info section"><b>Fluxo:</b> Excel/CSVs → dados_financeiros.json → dashboard. Depois, alterações feitas aqui são mantidas no mesmo JSON e podem ser exportadas novamente.</div><div id="jsonInfo" class="small">Nenhum JSON importado.</div></div>
-  <div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização privada usando App Folder.</div><div class="field section"><label>Application (client) ID</label><input id="clientIdInput" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div><div class="form-actions"><button id="btnSaveClient" class="btn secondary">Salvar Client ID</button><button id="btnLogin" class="btn green">Entrar com Microsoft</button><button id="btnLogout" class="btn secondary">Sair</button><button id="btnSync" class="btn secondary">Sincronizar OneDrive</button></div><div id="accountInfo" class="small section">Nenhuma conta conectada.</div><pre id="remoteInfo" class="mono">Arquivo remoto: dados_financeiros.json</pre></div>
+  <div class="card"><div class="title">Importação e exportação</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados<input id="jsonImport" type="file" accept=".json,application/json" hidden></label><button id="btnExportJson" class="btn secondary">Exportar dados</button><button id="btnUploadCurrent" class="btn secondary">Enviar versão atual ao OneDrive</button></div><div id="jsonInfo" class="small">Nenhum dado importado.</div></div>
+  <div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft.</div><div class="field section"><label>Application (client) ID</label><input id="clientIdInput" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div><div class="form-actions"><button id="btnSaveClient" class="btn secondary">Salvar Client ID</button><button id="btnLogin" class="btn green">Entrar com Microsoft</button><button id="btnLogout" class="btn secondary">Sair</button><button id="btnSync" class="btn secondary">Sincronizar OneDrive</button></div><div id="accountInfo" class="small section">Nenhuma conta conectada.</div><pre id="remoteInfo" class="mono">Ainda não sincronizado.</pre></div>
  </div>
  <div class="setupgrid section"><div class="step"><b>Redirect URI da SPA</b><div id="redirectUriBox" class="mono"></div></div><div class="step"><b>Permissão Microsoft Graph</b>Delegated permission: <b>Files.ReadWrite.AppFolder</b>. Não use Client Secret no HTML.</div></div>
 </section>
-<footer>Dashboard v8.6 • HTML público sem dados financeiros • Base privada única: dados_financeiros.json</footer>
+
 </main>
 </div></div>
 <div id="toast" class="toast"></div>
@@ -832,7 +854,12 @@ import { PublicClientApplication, InteractionRequiredAuthError } from "https://c
 
 const $=id=>document.getElementById(id);
 const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI=location.origin+location.pathname;
-const COLORS=["#2563eb","#f59e0b","#8b5cf6","#059669","#0891b2","#db2777","#64748b","#ef4444","#14b8a6","#a855f7","#84cc16"];
+const COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5661A6","#8A5B78","#B66D80","#68575D","#A98A91","#7B6A70","#C8A8AE"];
+const EXPENSE_COLORS=["#900F15","#A61729","#B62439","#C5364A","#D24E60","#DC6978","#B81570","#9B355A","#7D2A3B","#E0949F"];
+const INSTALLMENT_COLORS=["#6E2D50","#83355F","#98416F","#AD4E7F","#B81570","#C85F91","#D47AA5","#9A6687","#76536D"];
+const INVESTMENT_COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5661A6","#7A4E78","#A96A79","#66585D"];
+const INCOME_COLORS={"Igor":"#46649D","Vitória":"#D789A2"};
+const CHART_INCOME="#46649D",CHART_EXPENSE="#CC092F",CHART_BALANCE="#6F8E7B",CHART_META="#B81570",CHART_TOTAL="#333B8F";
 const fmtMoney=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtNumber=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:2});
 const fmtPct=new Intl.NumberFormat("pt-BR",{style:"percent",minimumFractionDigits:1,maximumFractionDigits:2});
@@ -858,7 +885,7 @@ function uid(){return crypto.randomUUID?crypto.randomUUID():"id-"+Date.now()+"-"
 function toast(msg){let e=$("toast");e.textContent=msg;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2700)}
 function validateData(o){return !!(o&&Number(o.schemaVersion)>=8&&o.despesas&&Array.isArray(o.despesas.fixas)&&Array.isArray(o.despesas.variaveis)&&Array.isArray(o.parcelas)&&Array.isArray(o.receitas)&&o.investimentos&&Array.isArray(o.investimentos.historico)&&o.patrimonio&&Array.isArray(o.patrimonio.historico)&&o.metas&&Array.isArray(o.metas.semFGTS))}
 function touch(){if(!data)return;data.revision=(Number(data.revision)||0)+1;data.updatedAt=new Date().toISOString();dirty=true;updateStatus()}
-function updateStatus(){if(!data){$("dataStatus").textContent="Nenhuma base carregada";$("syncPill").textContent=account?"OneDrive conectado":"Sem dados";$("dirtyState").textContent="";$("noDataNotice").classList.remove("hidden");return}$("noDataNotice").classList.add("hidden");$("dataStatus").textContent=`Base v${data.schemaVersion} • revisão ${data.revision||0} • ${data.metadata?.fontePrincipal||"JSON"}`;$("dirtyState").textContent=dirty?"Alterações não exportadas":"";$("dirtyState").className="period-summary "+(dirty?"dirty":"");if(account&&remoteMeta){$("syncPill").textContent=dirty?"Alterado localmente":"OneDrive sincronizado";$("syncPill").className="syncpill "+(dirty?"warn":"online")}else{$("syncPill").textContent=data?"Base local carregada":"Sem dados";$("syncPill").className="syncpill"}}
+function updateStatus(){if(!data){$("dataStatus").textContent="Nenhum dado carregado";$("syncPill").textContent=account?"OneDrive conectado":"Sem dados";$("dirtyState").textContent="";$("noDataNotice").classList.remove("hidden");return}$("noDataNotice").classList.add("hidden");$("dataStatus").textContent=`Dados até ${monthLabel(latestOperationalMonth())}`;$("dirtyState").textContent=dirty?"Alterações pendentes":"";$("dirtyState").className="period-summary "+(dirty?"dirty":"");if(account&&remoteMeta){$("syncPill").textContent=dirty?"Alterado localmente":"OneDrive sincronizado";$("syncPill").className="syncpill "+(dirty?"warn":"online")}else{$("syncPill").textContent=data?"Dados carregados":"Sem dados";$("syncPill").className="syncpill"}}
 
 function currentCalendarMonth(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`}
 function latestOperationalMonth(){if(!data)return currentCalendarMonth();let arr=[...data.despesas.fixas,...data.despesas.variaveis,...data.receitas];let ms=arr.map(x=>monthKey(x.data)).filter(Boolean).sort();return ms.at(-1)||currentCalendarMonth()}
@@ -888,12 +915,12 @@ function investmentClass(desc){return componentDefs().find(x=>x.descricao===desc
 function projectionSettings(){return data.configuracoes.projecaoPatrimonial}
 function projectPatrimony(horizon=null){let base=actualSnapshot("9999-12");if(!base)return[];let s=projectionSettings(),n=horizon||Number(s.horizonteMeses)||24,state={...base.map},out=[];for(let i=1;i<=n;i++){let ym=addMonths(base.month,i);state["Igor: Previdência"]=(state["Igor: Previdência"]||0)*(1+Number(s.rentabilidadePrevidenciaFgtsMensal||0))+Number(s.aportePrevidenciaIgor||0);state["Igor: FGTS"]=(state["Igor: FGTS"]||0)*(1+Number(s.rentabilidadePrevidenciaFgtsMensal||0))+Number(s.aporteFgtsIgor||0);state["Vitória: FGTS"]=(state["Vitória: FGTS"]||0)*(1+Number(s.rentabilidadePrevidenciaFgtsMensal||0))+Number(s.aporteFgtsVitoria||0);state["Igor: Aplicações"]=((state["Igor: Aplicações"]||0)+Number(s.aporteAplicacoesIgor||0))*(1+Number(s.rentabilidadeAplicacoesMensal||0));state["Vitória: Aplicações"]=((state["Vitória: Aplicações"]||0)+Number(s.aporteAplicacoesVitoria||0))*(1+Number(s.rentabilidadeAplicacoesMensal||0));let total=Object.values(state).reduce((a,b)=>a+b,0),fgts=(state["Igor: FGTS"]||0)+(state["Vitória: FGTS"]||0);out.push({month:ym,componentes:{...state},total,semFGTS:total-fgts,meta:metaForMonth(ym)})}return out}
 
-function chartOpts({stacked=false,indexMode=true}={}){return{responsive:true,maintainAspectRatio:false,interaction:{mode:indexMode?"index":"nearest",intersect:false},plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{title:items=>items?.[0]?.label||"",label:ctx=>`${ctx.dataset.label||"Valor"}: ${brl(ctx.raw)}`}}},scales:{x:{stacked,grid:{display:false},ticks:{font:{size:8},maxRotation:0,autoSkip:true,maxTicksLimit:12}},y:{stacked,grid:{color:"#edf0f4"},ticks:{font:{size:8},callback:v=>axisMoney(v)}}}}}
+function chartOpts({stacked=false,indexMode=true}={}){return{responsive:true,maintainAspectRatio:false,interaction:{mode:indexMode?"index":"nearest",intersect:false},plugins:{legend:{position:"bottom",labels:{color:"#6F6367",boxWidth:9,boxHeight:9,usePointStyle:true,padding:14,font:{size:9}}},tooltip:{backgroundColor:"#392F33",titleColor:"#FFFFFF",bodyColor:"#F7F1F2",borderColor:"rgba(255,255,255,.10)",borderWidth:1,padding:10,cornerRadius:8,callbacks:{title:items=>items?.[0]?.label||"",label:ctx=>`${ctx.dataset.label||"Valor"}: ${brl(ctx.raw)}`}}},scales:{x:{stacked,grid:{display:false},ticks:{color:"#7C7074",font:{size:8},maxRotation:0,autoSkip:true,maxTicksLimit:12}},y:{stacked,grid:{color:"#EEE6E3"},ticks:{color:"#7C7074",font:{size:8},callback:v=>axisMoney(v)}}}}}
 function makeChart(id,config){if(charts[id])charts[id].destroy();let el=$(id);if(!el||typeof Chart==="undefined")return;charts[id]=new Chart(el,config)}
 function lineDataset(label,data,color,extra={}){return{type:"line",label,data,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:1.5,pointHoverRadius:4,tension:.2,fill:false,stack:`line:${label}`,...extra}}
-function stackedByCategory(id,records,range){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map((c,i)=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:COLORS[i%COLORS.length],stack:"total",borderWidth:0}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#172033",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
-function donut(id,obj,colorMap=null){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
-function horizontalBar(id,obj){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map((x,i)=>COLORS[i%COLORS.length])}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#edf0f4"},ticks:{font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{font:{size:8}}}}}})}
+function stackedByCategory(id,records,range,palette=COLORS){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map((c,i)=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:palette[i%palette.length],stack:"total",borderWidth:0}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#4A3C41",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
+function donut(id,obj,colorMap=null){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#FCFAF9"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
+function horizontalBar(id,obj,palette=COLORS){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map((x,i)=>palette[i%palette.length])}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#EEE6E3"},ticks:{color:"#7D7175",font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{color:"#675C60",font:{size:8}}}}}})}
 
 
 function investmentChartComponents(){
@@ -937,9 +964,9 @@ function renderCapitalAllocationChart(id,range){
      datasets=compNames.map((c,i)=>({
       type:"bar",label:c,
       data:months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):0}),
-      backgroundColor:COLORS[i%COLORS.length],stack:"capital"
+      backgroundColor:INVESTMENT_COLORS[i%INVESTMENT_COLORS.length],stack:"capital"
      }));
- datasets.push(lineDataset("Total Geral",months.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#172033",{spanGaps:true,borderWidth:2.5}));
+ datasets.push(lineDataset("Total Geral",months.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#3D3337",{spanGaps:true,borderWidth:2.5}));
  makeChart(id,{type:"bar",data:{labels:months.map(monthLabel),datasets},options:chartOpts({stacked:true})})
 }
 
@@ -953,19 +980,19 @@ function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=income
    type:"bar",
    label:"Sobra",
    data:sobra,
-   backgroundColor:"rgba(5,150,105,.18)",
-   borderColor:"rgba(5,150,105,.38)",
+   backgroundColor:"rgba(111,142,123,.20)",
+   borderColor:"rgba(111,142,123,.46)",
    borderWidth:1,
    order:3,
    barPercentage:.72,
    categoryPercentage:.86
   },
-  lineDataset("Gastos",gastos,"#dc2626",{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1}),
-  lineDataset("Receitas",receitas,"#2563eb",{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1})
+  lineDataset("Gastos",gastos,CHART_EXPENSE,{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1}),
+  lineDataset("Receitas",receitas,CHART_INCOME,{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1})
  ];
  makeChart("chartConsolidado",{type:"bar",data:{labels,datasets:ds},options:chartOpts()});
  renderCapitalAllocationChart("chartCapital",r);
- stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);}
+ stackedByCategory("chartFixosOverview",data.despesas.fixas,r,EXPENSE_COLORS);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r,EXPENSE_COLORS);stackedByCategory("chartParcelasOverview",data.parcelas,r,INSTALLMENT_COLORS);}
 
 function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
 function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
@@ -1023,12 +1050,12 @@ function renderExpenses(){
  $("dFixas").textContent=brl(fix);$("dVariaveis").textContent=brl(vr);$("dTotal").textContent=brl(tot);$("dMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
 
  makeChart("chartDespesasEvolucao",{type:"bar",data:{labels:r.months.map(monthLabel),datasets:[
-  {label:"Fixas",data:r.months.map(m=>sumMonth(data.despesas.fixas,m,filter)),backgroundColor:"#2563eb"},
-  {label:"Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m,filter)),backgroundColor:"#f59e0b"}
+  {label:"Fixas",data:r.months.map(m=>sumMonth(data.despesas.fixas,m,filter)),backgroundColor:"#A61729"},
+  {label:"Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m,filter)),backgroundColor:"#D65B6D"}
  ]},options:chartOpts({stacked:true})});
 
  let recs=[];if(type==="all"||type==="fixas")recs.push(...data.despesas.fixas);if(type==="all"||type==="variaveis")recs.push(...data.despesas.variaveis);
- horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter));
+ horizontalBar("chartDespesasCategoria",categoryTotals(recs,r,filter),EXPENSE_COLORS);
 
  let rows=expenseRows(true);
 
@@ -1062,7 +1089,7 @@ function renderIncome(){
  $("rIgor").textContent=brl(ig);$("rVitoria").textContent=brl(vi);$("rTotal").textContent=brl(total);$("rMedia").textContent=brl(monthly.reduce((a,b)=>a+b,0)/(monthly.length||1));
 
  let people=[...new Set(data.receitas.map(x=>x.pessoa).filter(Boolean))].sort(),
-     incomeColors={"Igor":"#2563eb","Vitória":"#e89aae"};
+     incomeColors=INCOME_COLORS;
 
  makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),incomeColors[p]||COLORS[i%COLORS.length]))},options:chartOpts()});
  let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp,incomeColors);
@@ -1095,10 +1122,10 @@ function renderInstallments(){
  installmentOpts.plugins.tooltip.callbacks.label=ctx=>`${ctx.dataset.label}: ${brl(ctx.raw)}`;
 
  makeChart("chartParcelasFuturo",{type:"bar",data:{labels:labels.map(monthLabel),datasets:[
-  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(139,92,246,.82)",borderColor:"#7c3aed",borderWidth:1},
-  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(139,92,246,.28)",borderColor:"rgba(124,58,237,.65)",borderWidth:1}
+  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(184,21,112,.78)",borderColor:"#9D145F",borderWidth:1},
+  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(184,21,112,.22)",borderColor:"rgba(144,15,21,.55)",borderWidth:1}
  ]},options:installmentOpts});
- horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));
+ horizontalBar("chartParcelasCategoria",categoryTotals(arr,r),INSTALLMENT_COLORS);
 
  let ids=["parTableStart","parTableEnd","parTableSearch","parTableCategory"],
      all=sortTableRows(filterTableRows(data.parcelas.filter(x=>inRange(x,r)),{startId:"parTableStart",endId:"parTableEnd",searchId:"parTableSearch",selectId:"parTableCategory",selectField:"categoria"})),
@@ -1155,15 +1182,15 @@ function renderProjectionChart(id,horizon){
  let meta=labels.map(metaForMonth);
  let lastActualIndex=hist.length-1;
  let segmentDash=ctx=>ctx.p0DataIndex>=lastActualIndex?[7,4]:undefined;
- let totalDs=lineDataset("Patrimônio total",total,"#2563eb",{
+ let totalDs=lineDataset("Patrimônio total",total,CHART_TOTAL,{
    borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
    segment:{borderDash:segmentDash}
  });
- let semDs=lineDataset("Patrimônio sem FGTS",sem,"#059669",{
+ let semDs=lineDataset("Patrimônio sem FGTS",sem,CHART_META,{
    borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
    segment:{borderDash:segmentDash}
  });
- let metaDs=lineDataset("Meta sem FGTS",meta,"#dc2626",{
+ let metaDs=lineDataset("Meta sem FGTS",meta,CHART_EXPENSE,{
    borderDash:[3,4],spanGaps:false,borderWidth:1.8,pointRadius:0,pointHoverRadius:4
  });
  let opts=chartOpts();
@@ -1350,16 +1377,16 @@ function refreshSelects(){
  if($("cInvComp"))$("cInvComp").innerHTML=comps.map(x=>`<option>${esc(x)}</option>`).join("");
  if($("invTableComponent"))$("invTableComponent").innerHTML='<option value="all">Todos</option>'+comps.map(x=>`<option>${esc(x)}</option>`).join("")
 }
-function renderJsonInfo(){if(!data)return;$("jsonInfo").innerHTML=`<b>Base carregada:</b> ${num(data.despesas.fixas.length)} fixas • ${num(data.despesas.variaveis.length)} variáveis • ${num(data.parcelas.length)} parcelas • ${num(data.receitas.length)} receitas • ${num(data.investimentos.historico.length)} registros históricos de investimento • ${num(data.metas.semFGTS.length)} pontos de meta.`}
+function renderJsonInfo(){if(!data)return;$("jsonInfo").textContent="Dados carregados com sucesso."}
 function renderAll(){updateStatus();if(!data)return;refreshPeriodUi();renderGeneral();renderExpenses();renderIncome();renderInstallments();renderInvestments();setProjectionInputs();renderProjection();renderManage();renderJsonInfo();updateCloudUi()}
 
 const titles={
- geral:["Visão Geral","Indicadores e gráficos principais baseados na lógica da aba “Resumo - Gráficos”."],
- despesas:["Despesas","Despesas fixas e variáveis com gestão e inclusão contextual."],
- receitas:["Receitas","Entradas por pessoa, histórico e inclusão direta."],
- parcelas:["Parcelas","Histórico, projeção e inclusão direta de compras parceladas."],
- investimentos:["Investimentos","Investimentos, patrimônio, metas e projeções reunidos em uma única área."],
- config:["Configuração / Importação","Um único JSON consolidado e sincronização privada com OneDrive."]
+ geral:["Visão Geral","Resumo do período selecionado."],
+ despesas:["Despesas","Acompanhamento de despesas fixas e variáveis."],
+ receitas:["Receitas","Entradas e histórico por pessoa."],
+ parcelas:["Parcelas","Histórico e compromissos parcelados."],
+ investimentos:["Investimentos","Patrimônio, alocação e projeção."],
+ config:["Configuração / Importação","Importação, exportação e sincronização."]
 };
 function renderVisibleTab(id){
  if(!data)return;
@@ -1382,11 +1409,11 @@ function showTab(id){
 async function saveProjectionSettings(){if(!data)return;let s=data.configuracoes.projecaoPatrimonial;s.rentabilidadeAplicacoesMensal=parseMoney($("projRentApl").value)/100;s.rentabilidadePrevidenciaFgtsMensal=parseMoney($("projRentPrev").value)/100;s.aportePrevidenciaIgor=parseMoney($("projPrevIgor").value);s.aporteFgtsIgor=parseMoney($("projFgtsIgor").value);s.aporteFgtsVitoria=parseMoney($("projFgtsVit").value);s.aporteAplicacoesIgor=parseMoney($("projAplIgor").value);s.aporteAplicacoesVitoria=parseMoney($("projAplVit").value);s.horizonteMeses=Math.max(1,Math.min(240,Number($("projHorizon").value)||24));touch();await afterMutation("Premissas atualizadas.")}
 async function resetProjection(){if(!data)return;Object.assign(data.configuracoes.projecaoPatrimonial,{rentabilidadeAplicacoesMensal:.01,rentabilidadePrevidenciaFgtsMensal:.005,aportePrevidenciaIgor:1100,aporteFgtsIgor:1100,aporteFgtsVitoria:590,aporteAplicacoesIgor:5000,aporteAplicacoesVitoria:3000,horizonteMeses:24});touch();setProjectionInputs();await afterMutation("Premissas do Excel restauradas.")}
 
-function exportJson(){if(!data){toast("Nenhuma base carregada.");return}let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=FILE_NAME;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);dirty=false;updateStatus();toast("dados_financeiros.json exportado.")}
-async function importJson(file){try{let obj=JSON.parse(await file.text());if(!validateData(obj))throw new Error("O arquivo não é um dados_financeiros.json compatível com a versão 8.");data=obj;dirty=false;refreshSelects();let latest=latestOperationalMonth();$("periodEnd").value=latest;$("nData").value=new Date().toISOString().slice(0,10);renderAll();toast("dados_financeiros.json carregado com sucesso.")}catch(e){handleError(e)}finally{$("jsonImport").value=""}}
+function exportJson(){if(!data){toast("Nenhuma base carregada.");return}let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=FILE_NAME;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);dirty=false;updateStatus();toast("Dados exportados.")}
+async function importJson(file){try{let obj=JSON.parse(await file.text());if(!validateData(obj))throw new Error("O arquivo selecionado não é compatível.");data=obj;dirty=false;refreshSelects();let latest=latestOperationalMonth();$("periodEnd").value=latest;$("nData").value=new Date().toISOString().slice(0,10);renderAll();toast("Dados importados com sucesso.")}catch(e){handleError(e)}finally{$("jsonImport").value=""}}
 
 function setSyncStatus(t,state=""){$("syncPill").textContent=t;$("syncPill").className="syncpill "+state}
-function updateCloudUi(){$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?`Arquivo: ${FILE_NAME}\nID: ${remoteMeta.id||"—"}\neTag: ${remoteMeta.eTag||"—"}\nÚltima modificação: ${remoteMeta.lastModifiedDateTime||"—"}\nPasta: ${appRoot?.webUrl||"Apps / aplicativo"}`:`Arquivo remoto: ${FILE_NAME}\nAinda não sincronizado.`;if(account&&remoteMeta&&!dirty)setSyncStatus("OneDrive sincronizado","online");else if(account)setSyncStatus(dirty?"Alterado localmente":"Conectado","warn");else if(data)setSyncStatus("Base local carregada");else setSyncStatus("Sem dados")}
+function updateCloudUi(){$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?"Dados sincronizados com o OneDrive.":"Ainda não sincronizado.";if(account&&remoteMeta&&!dirty)setSyncStatus("OneDrive sincronizado","online");else if(account)setSyncStatus(dirty?"Alterado localmente":"Conectado","warn");else if(data)setSyncStatus("Dados carregados");else setSyncStatus("Sem dados")}
 function clientId(){return localStorage.getItem(CLIENT_KEY)||""}
 async function initPca(){let id=clientId();$("clientIdInput").value=id;if(!id){pca=null;return}pca=new PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let resp=await pca.handleRedirectPromise();account=resp?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);updateCloudUi()}
 async function token(){if(!pca||!account)throw new Error("Entre com a conta Microsoft primeiro.");try{let r=await pca.acquireTokenSilent({scopes:SCOPES,account});accessToken=r.accessToken;return accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});return null}throw e}}
@@ -1394,7 +1421,7 @@ async function graph(path,opts={}){let t=await token();return fetch("https://gra
 async function ensureAppRoot(){let r=await graph("/me/drive/special/approot");if(!r.ok)throw new Error(`Não foi possível acessar a pasta do aplicativo (${r.status}).`);appRoot=await r.json();return appRoot}
 async function getMeta(){await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}`);if(r.status===404)return null;if(!r.ok)throw new Error(`Erro ao ler metadados de ${FILE_NAME} (${r.status}).`);return r.json()}
 async function uploadJson(){if(!data)throw new Error("Importe o JSON consolidado primeiro.");await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}:/content`,{method:"PUT",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify(data,null,2)});if(!r.ok)throw new Error(`Falha ao gravar ${FILE_NAME} no OneDrive (${r.status}).`);remoteMeta=await r.json();dirty=false;updateCloudUi();return remoteMeta}
-async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus(`${FILE_NAME} não existe`,"warn");toast("Primeiro uso: importe dados_financeiros.json e envie ao OneDrive.");updateCloudUi();return}let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error(`Falha ao baixar ${FILE_NAME} (${r.status}).`);let obj=JSON.parse(await r.text());if(!validateData(obj))throw new Error("O JSON remoto tem formato incompatível.");data=obj;remoteMeta=meta;dirty=false;refreshSelects();renderAll();toast("Base sincronizada do OneDrive.")}
+async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus(`${FILE_NAME} não existe`,"warn");toast("Primeiro uso: importe dados_financeiros.json e envie ao OneDrive.");updateCloudUi();return}let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error(`Falha ao baixar ${FILE_NAME} (${r.status}).`);let obj=JSON.parse(await r.text());if(!validateData(obj))throw new Error("Os dados remotos têm formato incompatível.");data=obj;remoteMeta=meta;dirty=false;refreshSelects();renderAll();toast("Base sincronizada do OneDrive.")}
 async function saveRemoteWithConflictCheck(){let current=await getMeta();if(current&&remoteMeta?.eTag&&current.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson()}
 function handleError(e){console.error(e);if(String(e?.message||e)==="CONFLICT_REMOTE"){toast("Conflito: existe uma versão mais nova no OneDrive. Sincronize antes de salvar.");return}toast(e?.message||String(e))}
 
