@@ -482,6 +482,7 @@ td.num,th.num{
   opacity:.9;
 }
 .workspace-head{position:relative}
+.workspace-head::before{display:none!important;content:none!important}
 
 /* Receitas: preserva a identificação solicitada */
 .soft-pink{color:#D97E9B!important}
@@ -513,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.15 — ajustes finais de identidade e legibilidade */
+/* v8.16 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -580,14 +581,28 @@ td.num,th.num{
 <div><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
 <section id="geral">
-<div class="grid7">
-<div class="card kpi"><label>Receitas</label><strong id="gReceita">—</strong><small id="gReceitaSub">—</small></div>
-<div class="card kpi"><label>Despesas</label><strong id="gDespesa">—</strong><small>Fixas + variáveis + parcelas</small></div>
-<div class="card kpi"><label>Saldo mensal</label><strong id="gSaldo">—</strong><small id="gSaldoPct">—</small></div>
-<div class="card kpi"><label>Parcelas</label><strong id="gParcelas">—</strong><small>Mês de referência</small></div>
-<div class="card kpi"><label>Patrimônio</label><strong id="gPat">—</strong><small id="gPatData">—</small></div>
-<div class="card kpi"><label>Sem FGTS</label><strong id="gSemFgts">—</strong><small>Último fechamento disponível</small></div>
-<div class="card kpi"><label>Meta sem FGTS</label><strong id="gMeta">—</strong><small id="gGap">—</small></div>
+<div class="grid4">
+ <div class="card kpi">
+  <label>Média de receitas • últimos 3 meses</label>
+  <strong id="gMediaReceita3">—</strong>
+  <small id="gMediaReceita3Sub">—</small>
+ </div>
+ <div class="card kpi">
+  <label>Média de despesas • últimos 3 meses</label>
+  <strong id="gMediaDespesa3">—</strong>
+  <small>Fixas + variáveis + parcelas</small>
+ </div>
+ <div class="card kpi">
+  <label>Parcelas a pagar no futuro</label>
+  <strong id="gParcelasFuturo">—</strong>
+  <small>A partir do próximo mês</small>
+ </div>
+ <div class="card kpi">
+  <label>Patrimônio</label>
+  <strong id="gPat">—</strong>
+  <small id="gPatData">—</small>
+  <small id="gPatMetaStatus">—</small>
+ </div>
 </div>
 <div class="card chart-card section">
 <div class="chart-head">
@@ -670,7 +685,7 @@ td.num,th.num{
 </div>
 <div class="grid2 section">
 <div class="card chart-card"><div class="chart-head"><div><h3>Receitas mensais</h3><p>Igor em azul e Vitória em rosa pastel.</p></div></div><div class="chart-wrap"><canvas id="chartReceitas"></canvas></div></div>
-<div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Composição da receita</h3><p>Participação percentual pela média do período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
 </div>
 <div class="card section">
 <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="revTableCount"></span></div>
@@ -756,7 +771,15 @@ td.num,th.num{
 <div class="field"><label>Aporte FGTS Vitória</label><input class="money-input" id="projFgtsVit" inputmode="decimal"/></div>
 <div class="field"><label>Aporte Aplicações Igor</label><input class="money-input" id="projAplIgor" inputmode="decimal"/></div>
 <div class="field"><label>Aporte Aplicações Vitória</label><input class="money-input" id="projAplVit" inputmode="decimal"/></div>
-<div class="field"><label>Horizonte da projeção (meses)</label><input id="projHorizon" max="240" min="1" type="number"/></div>
+<div class="field"><label>Horizonte da projeção</label>
+<select id="projHorizon">
+ <option value="24">2 anos</option>
+ <option value="60">5 anos</option>
+ <option value="120">10 anos</option>
+ <option value="180">15 anos</option>
+ <option value="240">20 anos</option>
+</select>
+</div>
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveProjection">Salvar premissas</button><button class="btn secondary" id="btnResetProjection">Restaurar premissas padrão</button></div>
 </div>
@@ -906,6 +929,31 @@ function makeChart(id,config){if(charts[id])charts[id].destroy();let el=$(id);if
 function lineDataset(label,data,color,extra={}){return{type:"line",label,data,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:1.5,pointHoverRadius:4,tension:.2,fill:false,stack:`line:${label}`,...extra}}
 function stackedByCategory(id,records,range){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map(c=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:categoryColor(c),borderColor:categoryColor(c),borderWidth:0,stack:"total"}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#42363A",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
 function donut(id,obj,colorMap=null){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#FCFAF9"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
+function donutPercent(id,obj,colorMap=null){
+ let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);
+ makeChart(id,{
+  type:"doughnut",
+  data:{
+   labels:entries.map(x=>x[0]),
+   datasets:[{
+    data:entries.map(x=>x[1]),
+    backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),
+    borderWidth:2,
+    borderColor:"#FCFAF9"
+   }]
+  },
+  options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   cutout:"58%",
+   plugins:{
+    legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},
+    tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${Number(ctx.raw).toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1})}%`}}
+   }
+  }
+ })
+}
+
 function horizontalBar(id,obj){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map(x=>categoryColor(x[0])),borderColor:e.map(x=>categoryColor(x[0])),borderWidth:0}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#EEE6E3"},ticks:{color:"#7D7175",font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{color:"#675C60",font:{size:8}}}}}})}
 
 function investmentChartComponents(){
@@ -955,7 +1003,29 @@ function renderCapitalAllocationChart(id,range){
  makeChart(id,{type:"bar",data:{labels:months.map(monthLabel),datasets},options:chartOpts({stacked:true})})
 }
 
-function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),rec=incomeMonth(ref),fix=sumMonth(data.despesas.fixas,ref),vr=sumMonth(data.despesas.variaveis,ref),pa=sumMonth(data.parcelas,ref),desp=fix+vr+pa,saldo=rec-desp,pat=actualSnapshot(ref),meta=metaForMonth(ref),gap=pat&&Number.isFinite(meta)?pat.semFGTS-meta:null;$("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSaldo").textContent=brl(saldo);$("gSaldo").className=saldo>=0?"good":"bad";$("gSaldoPct").textContent=rec?pct(saldo/rec)+" da receita":"—";$("gParcelas").textContent=brl(pa);$("gPat").textContent=pat?brl(pat.total):"—";$("gPatData").textContent=pat?`Fechamento ${monthLabel(pat.month)}`:"—";$("gSemFgts").textContent=pat?brl(pat.semFGTS):"—";$("gMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("gGap").textContent=Number.isFinite(gap)?`${gap>=0?"Acima":"Abaixo"} por ${brl(Math.abs(gap))}`:"Meta não disponível";$("gGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
+function renderGeneral(){
+ if(!data)return;
+ let r=periodRange(),ref=r.ref,
+     avgStart=addMonths(ref,-2);
+ if(avgStart<HISTORY_START)avgStart=HISTORY_START;
+ let avgMonths=monthsBetween(avgStart,ref),
+     mediaReceita=avgMonths.reduce((s,m)=>s+incomeMonth(m),0)/(avgMonths.length||1),
+     mediaDespesa=avgMonths.reduce((s,m)=>s+expenseMonth(m),0)/(avgMonths.length||1),
+     parcelasFuturo=data.parcelas.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor||0),0),
+     pat=actualSnapshot(ref)||actualSnapshot("9999-12"),
+     meta=pat?metaForMonth(pat.month):null,
+     gap=pat&&Number.isFinite(meta)?pat.semFGTS-meta:null;
+
+ $("gMediaReceita3").textContent=brl(mediaReceita);
+ $("gMediaReceita3Sub").textContent=`${monthLabel(avgMonths[0])} → ${monthLabel(avgMonths.at(-1))}`;
+ $("gMediaDespesa3").textContent=brl(mediaDespesa);
+ $("gParcelasFuturo").textContent=brl(parcelasFuturo);
+ $("gPat").textContent=pat?brl(pat.total):"—";
+ $("gPatData").textContent=pat?`Fechamento ${monthLabel(pat.month)}`:"—";
+ $("gPatMetaStatus").textContent=Number.isFinite(gap)
+  ?(gap<0?`Abaixo da meta por ${brl(Math.abs(gap))}`:`Meta atingida • ${brl(gap)} acima`)
+  :"Meta não disponível";
+ $("gPatMetaStatus").className=Number.isFinite(gap)?(gap<0?"bad":"good"):"";
  let labels=r.months.map(monthLabel),
  gastos=r.months.map(m=>expenseMonth(m)),
  receitas=r.months.map(m=>incomeMonth(m)),
@@ -1144,7 +1214,11 @@ function renderIncome(){
      incomeColors=INCOME_COLORS;
 
  makeChart("chartReceitas",{type:"line",data:{labels:r.months.map(monthLabel),datasets:people.filter(p=>person==="all"||p===person).map((p,i)=>lineDataset(p,r.months.map(m=>incomeMonth(m,p)),incomeColors[p]||COLORS[i%COLORS.length]))},options:chartOpts()});
- let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp,incomeColors);
+ let avgByPerson={};
+ people.forEach(p=>avgByPerson[p]=r.months.reduce((s,m)=>s+incomeMonth(m,p),0)/(r.months.length||1));
+ let avgTotal=Object.values(avgByPerson).reduce((a,b)=>a+b,0),comp={};
+ people.forEach(p=>comp[p]=avgTotal?avgByPerson[p]/avgTotal*100:0);
+ donutPercent("chartReceitasDonut",comp,incomeColors);
 
  let all=excelFilteredRows("receitas",data.receitas.filter(x=>inRange(x,r))),
      shown=all;
@@ -1171,11 +1245,24 @@ function renderInstallments(){
      futureValues=Array(hLen).fill(null).concat(futureMonths.map(m=>sumMonth(arr,m)));
 
  let installmentOpts=chartOpts();
- installmentOpts.plugins.tooltip.callbacks.label=ctx=>`${ctx.dataset.label}: ${brl(ctx.raw)}`;
+ installmentOpts.plugins.tooltip.callbacks.label=ctx=>ctx.raw==null?"":`Total: ${brl(ctx.raw)}`;
+ installmentOpts.plugins.tooltip.callbacks.afterBody=items=>{
+  let idx=items?.[0]?.dataIndex;
+  if(idx==null)return[];
+  let m=labels[idx],totals={};
+  arr.filter(x=>monthKey(x.data)===m).forEach(x=>{
+   let c=x.categoria||"Outros";
+   totals[c]=(totals[c]||0)+Number(x.valor||0)
+  });
+  return Object.entries(totals)
+   .filter(([,v])=>v>0)
+   .sort((a,b)=>b[1]-a[1])
+   .map(([c,v])=>`${c}: ${brl(v)}`)
+ };
 
  makeChart("chartParcelasFuturo",{type:"bar",data:{labels:labels.map(monthLabel),datasets:[
-  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(184,21,112,.78)",borderColor:"#9D145F",borderWidth:1},
-  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(184,21,112,.22)",borderColor:"rgba(144,15,21,.55)",borderWidth:1}
+  {label:"Parcelas — histórico",data:histValues,backgroundColor:"rgba(184,21,112,.78)",borderColor:"#9D145F",borderWidth:1,barPercentage:.96,categoryPercentage:.92,maxBarThickness:46},
+  {label:"Parcelas — futuro",data:futureValues,backgroundColor:"rgba(184,21,112,.22)",borderColor:"rgba(144,15,21,.55)",borderWidth:1,barPercentage:.96,categoryPercentage:.92,maxBarThickness:46}
  ]},options:installmentOpts});
  horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));
 
@@ -1242,7 +1329,7 @@ function renderProjectionChart(id,horizon){
    borderWidth:2.6,pointRadius:1.8,pointHoverRadius:5,spanGaps:false,
    segment:{borderDash:segmentDash}
  });
- let metaDs=lineDataset("Meta sem FGTS",meta,CHART_EXPENSE,{
+ let metaDs=lineDataset("Meta sem FGTS",meta,"#111111",{
    borderDash:[3,4],spanGaps:false,borderWidth:1.8,pointRadius:0,pointHoverRadius:4
  });
  let opts=chartOpts();
@@ -1255,7 +1342,7 @@ function renderProjectionChart(id,horizon){
 }
 function renderPatrimony(){if(!data)return;let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),meta=metaForMonth(r.ref),gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;$("patTotal").textContent=snap?brl(snap.total):"—";$("patSemFgts").textContent=snap?brl(snap.semFGTS):"—";$("patFgts").textContent=snap?brl(snap.fgts):"—";$("patMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("patGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("patGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";$("patDate").textContent=snap?`Fechamento ${monthLabel(snap.month)}`:"—";renderProjectionChart("chartPatProjection",Math.min(24,Number(projectionSettings().horizonteMeses)||24));let comps=componentDefs().map(x=>x.descricao);makeChart("chartPatComponents",{type:"line",data:{labels:r.months.map(monthLabel),datasets:comps.map((c,i)=>lineDataset(c,r.months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):null}),COLORS[i%COLORS.length],{spanGaps:true}))},options:chartOpts()});if(snap)donut("chartPatDonut",snap.map);let recent=data.investimentos.historico.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentPatrimonio").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join(""):`<tr><td colspan="4"><div class="empty">Sem registros.</div></td></tr>`;bindActions($("patrimonio"))}
 
-function setProjectionInputs(){if(!data)return;let s=projectionSettings();$("projRentApl").value=moneyInput(Number(s.rentabilidadeAplicacoesMensal)*100);$("projRentPrev").value=moneyInput(Number(s.rentabilidadePrevidenciaFgtsMensal)*100);$("projPrevIgor").value=moneyInput(s.aportePrevidenciaIgor);$("projFgtsIgor").value=moneyInput(s.aporteFgtsIgor);$("projFgtsVit").value=moneyInput(s.aporteFgtsVitoria);$("projAplIgor").value=moneyInput(s.aporteAplicacoesIgor);$("projAplVit").value=moneyInput(s.aporteAplicacoesVitoria);$("projHorizon").value=s.horizonteMeses||24}
+function setProjectionInputs(){if(!data)return;let s=projectionSettings();$("projRentApl").value=moneyInput(Number(s.rentabilidadeAplicacoesMensal)*100);$("projRentPrev").value=moneyInput(Number(s.rentabilidadePrevidenciaFgtsMensal)*100);$("projPrevIgor").value=moneyInput(s.aportePrevidenciaIgor);$("projFgtsIgor").value=moneyInput(s.aporteFgtsIgor);$("projFgtsVit").value=moneyInput(s.aporteFgtsVitoria);$("projAplIgor").value=moneyInput(s.aporteAplicacoesIgor);$("projAplVit").value=moneyInput(s.aporteAplicacoesVitoria);$("projHorizon").value=[24,60,120,180,240].includes(Number(s.horizonteMeses))?Number(s.horizonteMeses):24||24}
 function renderProjection(){if(!data)return;let n=Number(projectionSettings().horizonteMeses)||24,proj=projectPatrimony(n),end=proj.at(-1);renderProjectionChart("chartProjectionDetail",n);if(end){$("projEndTotal").textContent=brl(end.total);$("projEndSem").textContent=brl(end.semFGTS);$("projEndMeta").textContent=Number.isFinite(end.meta)?brl(end.meta):"—";let gap=Number.isFinite(end.meta)?end.semFGTS-end.meta:null;$("projEndGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("projEndGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):""}}
 
 function manageRecords(){if(!data)return[];let rows=[];data.despesas.fixas.forEach(x=>rows.push({...x,_kind:"fixas",_label:"Despesa fixa",_detail:x.categoria}));data.despesas.variaveis.forEach(x=>rows.push({...x,_kind:"variaveis",_label:"Despesa variável",_detail:x.categoria}));data.parcelas.forEach(x=>rows.push({...x,_kind:"parcelas",_label:"Parcela",_detail:x.categoria}));data.receitas.forEach(x=>rows.push({...x,_kind:"receitas",_label:"Receita",_detail:x.pessoa}));data.investimentos.historico.forEach(x=>rows.push({...x,_kind:"investimento",_label:"Investimento / patrimônio",_detail:x.classe||investmentClass(x.descricao)}));return rows.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")||b.data.localeCompare(a.data))}
