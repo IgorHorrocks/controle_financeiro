@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.2</title>
+<title>Controle Financeiro • v8.4</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -59,16 +59,33 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card kpi"><label>Sem FGTS</label><strong id="gSemFgts">—</strong><small>Último fechamento disponível</small></div>
   <div class="card kpi"><label>Meta sem FGTS</label><strong id="gMeta">—</strong><small id="gGap">—</small></div>
  </div>
- <div class="grid2 section">
-  <div class="card chart-card"><div class="chart-head"><div><h3>Consolida resultados</h3><p>Sobra, gastos fixos, variáveis, parcelas e receitas — mesma lógica do Excel.</p></div><span class="pill">Resumo - Gráficos</span></div><div class="chart-wrap tall"><canvas id="chartConsolidado"></canvas></div></div>
-  <div class="card chart-card"><div class="chart-head"><div><h3>Alocação de capital</h3><p>Evolução dos componentes do patrimônio e do total.</p></div><span class="pill">Resumo - Gráficos</span></div><div class="chart-wrap tall"><canvas id="chartCapital"></canvas></div></div>
+ <div class="card chart-card section">
+  <div class="chart-head">
+   <div><h3>Consolida resultados</h3><p>Receitas e despesas consolidadas em linhas; a sobra mensal aparece como coluna translúcida ao fundo.</p></div>
+   <span class="pill">Resumo - Gráficos</span>
+  </div>
+  <div class="chart-wrap tall"><canvas id="chartConsolidado"></canvas></div>
  </div>
+</div>
  <div class="grid3 section">
   <div class="card chart-card"><div class="chart-head"><div><h3>Gastos fixos</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartFixosOverview"></canvas></div></div>
   <div class="card chart-card"><div class="chart-head"><div><h3>Gastos variáveis</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisOverview"></canvas></div></div>
   <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas</h3><p>Comprometimento mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartParcelasOverview"></canvas></div></div>
  </div>
- <div class="card chart-card section"><div class="chart-head"><div><h3>Projeção do capital alocado</h3><p>Linha contínua: histórico real desde mai/2022. Linha tracejada: projeção futura. Inclui patrimônio total, sem FGTS e Meta sem FGTS.</p></div><span class="pill">Resumo - Gráficos</span></div><div class="chart-wrap tall"><canvas id="chartProjectionOverview"></canvas></div><div class="chart-note"><b>Histórico:</b> mai/2022 até o último fechamento real • <b>Projeção:</b> linha tracejada a partir do mês seguinte.</div></div>
+ <div class="card chart-card section">
+  <div class="chart-head">
+   <div><h3>Alocação de capital</h3><p>Evolução dos componentes do patrimônio e do total, ocupando a área inferior antes destinada à projeção na Visão Geral.</p></div>
+   <span class="pill">Resumo - Gráficos</span>
+  </div>
+  <div class="chart-wrap tall"><canvas id="chartCapital"></canvas></div>
+ </div>
+ <div class="card chart-card section">
+ <div class="chart-head">
+  <div><h3>Histórico de investimentos</h3><p>Evolução dos componentes patrimoniais no período selecionado. Dinheiro é incorporado à série Vitória: Conta Corrente.</p></div>
+  <span class="pill">Histórico real</span>
+ </div>
+ <div class="chart-wrap tall"><canvas id="chartInvestOverview"></canvas></div>
+</div></div>
 </section>
 
 <section id="despesas" class="hidden">
@@ -96,7 +113,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
 <section id="investimentos" class="hidden">
  <div class="filterbar"><div class="filter-group"><select id="investmentComponentFilter"><option value="all">Todos os componentes</option></select></div></div>
  <div class="grid5"><div class="card kpi"><label>Igor • aplicações</label><strong id="iIgorApl">—</strong></div><div class="card kpi"><label>Vitória • aplicações</label><strong id="iVitApl">—</strong></div><div class="card kpi"><label>Previdência</label><strong id="iPrev">—</strong></div><div class="card kpi"><label>FGTS total</label><strong id="iFgts">—</strong></div><div class="card kpi"><label>Patrimônio total</label><strong id="iTotal">—</strong></div></div>
- <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Histórico dos investimentos</h3><p>Todo o histórico disponível no Excel, com período selecionável.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestHistory"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Composição atual</h3><p>Último fechamento real disponível.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestDonut"></canvas></div></div></div>
+ <div class="grid2 section"><div class="card chart-card"><div class="chart-head"><div><h3>Histórico dos investimentos</h3><p>Todo o histórico disponível no Excel. Dinheiro é somado à série Vitória: Conta Corrente.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestHistory"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Composição atual</h3><p>Último fechamento real disponível.</p></div></div><div class="chart-wrap tall"><canvas id="chartInvestDonut"></canvas></div></div></div>
  <div class="card section"><div class="chart-head"><div><h3>Últimos registros / atualizações</h3><p>10 saldos patrimoniais mais recentes.</p></div></div><div class="wrap"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div></div>
 </section>
 
@@ -221,10 +238,65 @@ function stackedByCategory(id,records,range){let cats=[...new Set(records.filter
 function donut(id,obj){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
 function horizontalBar(id,obj){let e=Object.entries(obj).sort((a,b)=>b[1]-a[1]);makeChart(id,{type:"bar",data:{labels:e.map(x=>x[0]),datasets:[{label:"Valor",data:e.map(x=>x[1]),backgroundColor:e.map((x,i)=>COLORS[i%COLORS.length])}]},options:{...chartOpts({indexMode:false}),indexAxis:"y",plugins:{...chartOpts().plugins,legend:{display:false}},scales:{x:{grid:{color:"#edf0f4"},ticks:{font:{size:8},callback:v=>axisMoney(v)}},y:{grid:{display:false},ticks:{font:{size:8}}}}}})}
 
+
+function investmentChartComponents(){
+ return componentDefs().map(x=>x.descricao).filter(x=>x!=="Dinheiro")
+}
+function investmentValueForChart(month,component){
+ let value=data.investimentos.historico
+  .filter(x=>monthKey(x.data)===month&&x.descricao===component)
+  .reduce((s,x)=>s+Number(x.valor||0),0);
+ if(component==="Vitória: Conta Corrente"){
+  value+=data.investimentos.historico
+   .filter(x=>monthKey(x.data)===month&&x.descricao==="Dinheiro")
+   .reduce((s,x)=>s+Number(x.valor||0),0)
+ }
+ return value
+}
+function investmentHistoryDatasets(range,filter="all"){
+ let components=investmentChartComponents();
+ if(filter!=="all"){
+  if(filter==="Dinheiro")filter="Vitória: Conta Corrente";
+  components=components.filter(x=>x===filter)
+ }
+ return components.map((c,i)=>lineDataset(
+  c,
+  range.months.map(m=>investmentValueForChart(m,c)),
+  COLORS[i%COLORS.length],
+  {spanGaps:true}
+ ))
+}
+function renderInvestmentHistoryChart(id,range,filter="all"){
+ makeChart(id,{
+  type:"line",
+  data:{labels:range.months.map(monthLabel),datasets:investmentHistoryDatasets(range,filter)},
+  options:chartOpts()
+ })
+}
+
 function renderGeneral(){if(!data)return;let r=periodRange(),ref=r.ref,ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),rec=incomeMonth(ref),fix=sumMonth(data.despesas.fixas,ref),vr=sumMonth(data.despesas.variaveis,ref),pa=sumMonth(data.parcelas,ref),desp=fix+vr+pa,saldo=rec-desp,pat=actualSnapshot(ref),meta=metaForMonth(ref),gap=pat&&Number.isFinite(meta)?pat.semFGTS-meta:null;$("gReceita").textContent=brl(rec);$("gReceitaSub").textContent=`Igor ${brl(ig)} • Vitória ${brl(vi)}`;$("gDespesa").textContent=brl(desp);$("gSaldo").textContent=brl(saldo);$("gSaldo").className=saldo>=0?"good":"bad";$("gSaldoPct").textContent=rec?pct(saldo/rec)+" da receita":"—";$("gParcelas").textContent=brl(pa);$("gPat").textContent=pat?brl(pat.total):"—";$("gPatData").textContent=pat?`Fechamento ${monthLabel(pat.month)}`:"—";$("gSemFgts").textContent=pat?brl(pat.semFGTS):"—";$("gMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("gGap").textContent=Number.isFinite(gap)?`${gap>=0?"Acima":"Abaixo"} por ${brl(Math.abs(gap))}`:"Meta não disponível";$("gGap").className=Number.isFinite(gap)?(gap>=0?"good":"bad"):"";
- let labels=r.months.map(monthLabel),ds=[{type:"bar",label:"Gastos Fixos",data:r.months.map(m=>sumMonth(data.despesas.fixas,m)),backgroundColor:"#2563eb",stack:"despesas"},{type:"bar",label:"Gastos Variáveis",data:r.months.map(m=>sumMonth(data.despesas.variaveis,m)),backgroundColor:"#f59e0b",stack:"despesas"},{type:"bar",label:"Parcelas",data:r.months.map(m=>sumMonth(data.parcelas,m)),backgroundColor:"#8b5cf6",stack:"despesas"},lineDataset("Igor",r.months.map(m=>incomeMonth(m,"Igor")),"#059669"),lineDataset("Vitória",r.months.map(m=>incomeMonth(m,"Vitória")),"#db2777"),lineDataset("Sobra",r.months.map(m=>incomeMonth(m)-expenseMonth(m)),"#172033",{borderWidth:2.5})];makeChart("chartConsolidado",{type:"bar",data:{labels,datasets:ds},options:chartOpts({stacked:true})});
+ let labels=r.months.map(monthLabel),
+ gastos=r.months.map(m=>expenseMonth(m)),
+ receitas=r.months.map(m=>incomeMonth(m)),
+ sobra=r.months.map((m,i)=>receitas[i]-gastos[i]),
+ ds=[
+  {
+   type:"bar",
+   label:"Sobra",
+   data:sobra,
+   backgroundColor:"rgba(5,150,105,.18)",
+   borderColor:"rgba(5,150,105,.38)",
+   borderWidth:1,
+   order:3,
+   barPercentage:.72,
+   categoryPercentage:.86
+  },
+  lineDataset("Gastos",gastos,"#dc2626",{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1}),
+  lineDataset("Receitas",receitas,"#2563eb",{borderWidth:2.8,pointRadius:2,pointHoverRadius:5,order:1})
+ ];
+ makeChart("chartConsolidado",{type:"bar",data:{labels,datasets:ds},options:chartOpts()});
  let histMonths=r.months,compNames=componentDefs().map(x=>x.descricao),capitalDs=compNames.map((c,i)=>({type:"bar",label:c,data:histMonths.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):0}),backgroundColor:COLORS[i%COLORS.length],stack:"capital"}));capitalDs.push(lineDataset("Total Geral",histMonths.map(m=>{let p=actualSnapshot(m);return p&&p.month===m?p.total:null}),"#172033",{spanGaps:true,borderWidth:2.5}));makeChart("chartCapital",{type:"bar",data:{labels:labels,datasets:capitalDs},options:chartOpts({stacked:true})});
- stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);renderProjectionChart("chartProjectionOverview",Math.min(24,Number(projectionSettings().horizonteMeses)||24));}
+ stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);renderInvestmentHistoryChart("chartInvestOverview",r);}
 
 function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
 function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
@@ -236,14 +308,30 @@ function renderIncome(){if(!data)return;let r=periodRange(),ref=r.ref,person=$("
 
 function renderInstallments(){if(!data)return;let r=periodRange(),ref=r.ref,cat=$("installmentCategoryFilter").value,filter=x=>cat==="all"||x.categoria===cat,arr=data.parcelas.filter(filter),sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),future=arr.filter(x=>monthKey(x.data)>ref).reduce((s,x)=>s+Number(x.valor),0);$("pMes").textContent=brl(sumMonth(arr,ref));$("p3").textContent=brl(sumFuture(3));$("p6").textContent=brl(sumFuture(6));$("pFuture").textContent=brl(future);let fut=monthsBetween(ref,addMonths(ref,11));makeChart("chartParcelasFuturo",{type:"bar",data:{labels:fut.map(monthLabel),datasets:[{label:"Parcelas",data:fut.map(m=>sumMonth(arr,m)),backgroundColor:"#8b5cf6"}]},options:chartOpts()});horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));let recent=arr.filter(x=>monthKey(x.data)<=ref).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentParcelas").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Sem parcelas.</div></td></tr>`;bindActions($("parcelas"))}
 
-function renderInvestments(){if(!data)return;let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),filter=$("investmentComponentFilter").value,components=componentDefs().map(x=>x.descricao).filter(x=>filter==="all"||x===filter);$("iIgorApl").textContent=snap?brl(snap.map["Igor: Aplicações"]||0):"—";$("iVitApl").textContent=snap?brl(snap.map["Vitória: Aplicações"]||0):"—";$("iPrev").textContent=snap?brl(snap.map["Igor: Previdência"]||0):"—";$("iFgts").textContent=snap?brl((snap.map["Igor: FGTS"]||0)+(snap.map["Vitória: FGTS"]||0)):"—";$("iTotal").textContent=snap?brl(snap.total):"—";makeChart("chartInvestHistory",{type:"line",data:{labels:r.months.map(monthLabel),datasets:components.map((c,i)=>lineDataset(c,r.months.map(m=>{let x=data.investimentos.historico.find(x=>monthKey(x.data)===m&&x.descricao===c);return x?Number(x.valor):null}),COLORS[i%COLORS.length],{spanGaps:true}))},options:chartOpts()});if(snap){let obj={};components.forEach(c=>obj[c]=snap.map[c]||0);donut("chartInvestDonut",obj)}let recent=data.investimentos.historico.filter(x=>untilRef(x)).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data)).slice(0,10);$("recentInvestimentos").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Sem registros.</div></td></tr>`;bindActions($("investimentos"))}
-
-function projectionHistory(){
- if(!data)return[];
- return [...(data.patrimonio?.historico||[])]
-  .filter(x=>monthKey(x.data)>=HISTORY_START)
-  .sort((a,b)=>xMonth(a)-xMonth(b))
-  .map(x=>({month:monthKey(x.data),total:Number(x.total)||0,semFGTS:Number(x.semFGTS)||0,fgts:Number(x.fgts)||0}))
+function renderInvestments(){
+ if(!data)return;
+ let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),filter=$("investmentComponentFilter").value;
+ $("iIgorApl").textContent=snap?brl(snap.map["Igor: Aplicações"]||0):"—";
+ $("iVitApl").textContent=snap?brl(snap.map["Vitória: Aplicações"]||0):"—";
+ $("iPrev").textContent=snap?brl(snap.map["Igor: Previdência"]||0):"—";
+ $("iFgts").textContent=snap?brl((snap.map["Igor: FGTS"]||0)+(snap.map["Vitória: FGTS"]||0)):"—";
+ $("iTotal").textContent=snap?brl(snap.total):"—";
+ renderInvestmentHistoryChart("chartInvestHistory",r,filter);
+ if(snap){
+  let obj={};
+  investmentChartComponents()
+   .filter(c=>filter==="all"||c===filter||(filter==="Dinheiro"&&c==="Vitória: Conta Corrente"))
+   .forEach(c=>{
+    obj[c]=(snap.map[c]||0)+(c==="Vitória: Conta Corrente"?(snap.map["Dinheiro"]||0):0)
+   });
+  donut("chartInvestDonut",obj)
+ }
+ let recent=data.investimentos.historico
+  .filter(x=>untilRef(x))
+  .sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))
+  .slice(0,10);
+ $("recentInvestimentos").innerHTML=recent.length?recent.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Sem registros.</div></td></tr>`;
+ bindActions($("investimentos"))
 }
 function xMonth(x){return monthKey(x.data||x.month)}
 function renderProjectionChart(id,horizon){
