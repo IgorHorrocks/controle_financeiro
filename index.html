@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>Controle Financeiro • Produção v5</title>
+<title>Controle Financeiro • Produção v6</title>
 
 <style>
 :root{
@@ -123,6 +123,14 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 .recent-secondary{font-size:9px;color:#8492a6;margin-top:2px}
 @media(max-width:520px){.panel-recent-head{align-items:flex-start;flex-direction:column}.panel-recent-note{text-align:left}}
 
+
+.row-actions{display:flex;justify-content:flex-end;gap:6px}
+.delete-specific{border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:8px;padding:6px 9px;font-size:9px;font-weight:850;white-space:nowrap}
+.delete-specific:hover{background:#fef2f2}
+.delete-specific:disabled{opacity:.45;cursor:not-allowed}
+.meta-source-box{margin-top:9px;padding:10px 11px;border:1px solid #dbeafe;background:#f8fbff;border-radius:10px;font-size:10px;color:#53657d;line-height:1.5}
+.meta-source-box b{color:#263a56}
+.readonly-finance{background:#f8fafc!important;color:#475569!important}
 </style>
 </head>
 <body>
@@ -213,7 +221,7 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
   <div class="panel-recent-note">Até o mês selecionado • últimos 10</div>
  </div>
  <div class="wrap"><table>
-  <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th></tr></thead>
+  <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead>
   <tbody id="recentExpensesPanel"></tbody>
  </table></div>
 </div>
@@ -237,7 +245,7 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
   <div class="panel-recent-note">Até o mês selecionado • últimos 10</div>
  </div>
  <div class="wrap"><table>
-  <thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th></tr></thead>
+  <thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead>
   <tbody id="recentIncomePanel"></tbody>
  </table></div>
 </div>
@@ -258,7 +266,7 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
   <div class="panel-recent-note">Não inclui meses futuros • últimos 10</div>
  </div>
  <div class="wrap"><table>
-  <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th></tr></thead>
+  <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead>
   <tbody id="recentInstallmentsPanel"></tbody>
  </table></div>
 </div>
@@ -288,7 +296,7 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 
 <div class="card section">
   <div class="title">Evolução patrimonial por componente</div>
-  <div class="subtitle">Mostra a evolução das classes patrimoniais disponíveis nos fechamentos mensais.</div>
+  <div class="subtitle">Mostra as classes patrimoniais e a meta sem FGTS correta para cada mês quando a curva do Excel estiver carregada.</div>
   <canvas id="chartPatComponents"></canvas>
   <div id="patEvolutionLegend" class="legend"></div>
   <div class="chart-note">A série por componentes começa no primeiro mês em que o arquivo possui detalhamento por conta. O total histórico anterior continua preservado no JSON.</div>
@@ -306,12 +314,14 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
     <div class="field"><label>Aporte mensal • Aplicações Igor</label><input id="projApliIgor" inputmode="decimal" placeholder="5.000,00"></div>
     <div class="field"><label>Aporte mensal • Aplicações Vitória</label><input id="projApliVitoria" inputmode="decimal" placeholder="3.000,00"></div>
     <div class="field"><label>Horizonte da projeção (meses)</label><input id="projHorizonte" type="number" min="1" max="120" step="1" placeholder="18"></div>
-    <div class="field"><label>Meta patrimonial sem FGTS</label><input id="projMeta" inputmode="decimal" placeholder="0,00"></div>
+    <div class="field"><label>Meta sem FGTS do mês selecionado</label><input id="projMeta" class="readonly-finance" readonly placeholder="—"><div class="hint">Vem da curva mensal da aba Aposentadoria (cálculo), não de um valor fixo.</div></div>
   </div>
   <div class="form-actions">
     <button class="btn green" id="btnSaveProjection">Salvar premissas no OneDrive</button>
     <button class="btn secondary" id="btnResetProjection">Usar premissas originais do Excel</button>
+    <label class="btn secondary" style="display:inline-flex;align-items:center">Importar curva de meta do Excel<input id="metaPatchInput" type="file" accept=".json,application/json" hidden></label>
   </div>
+  <div id="metaCurveStatus" class="meta-source-box">Curva de meta ainda não carregada. O valor fixo antigo será usado somente como compatibilidade.</div>
   <div class="projection-summary">
     <div class="mini-kpi"><div class="mk-label">Total no fim da projeção</div><div class="mk-value" id="projEndTotal">—</div></div>
     <div class="mini-kpi"><div class="mk-label">Sem FGTS no fim</div><div class="mk-value" id="projEndSemFgts">—</div></div>
@@ -326,7 +336,7 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
   <div class="panel-recent-note">Até o mês selecionado • últimos 10</div>
  </div>
  <div class="wrap"><table>
-  <thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th class="num">Saldo</th></tr></thead>
+  <thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead>
   <tbody id="recentPatrimonyPanel"></tbody>
  </table></div>
 </div>
@@ -352,13 +362,14 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:20px}
 
 <div class="card section">
  <div class="recent-actions">
-   <div><div class="title">Lançamentos recentes feitos pelo dashboard</div><div class="subtitle">Se um lançamento foi incluído incorretamente, exclua aqui. A exclusão também é gravada no OneDrive.</div></div>
+   <div><div class="title">Gerenciar lançamentos</div><div class="subtitle">Exclua um registro específico. Registros históricos importados do Excel também podem ser removidos, sempre com confirmação.</div></div>
    <select id="recentTypeFilter" style="border:1px solid #d8e0ea;background:#fff;border-radius:9px;padding:7px 9px;font-size:10px">
      <option value="all">Todos</option>
      <option value="variaveis">Variáveis</option>
      <option value="fixos">Fixos</option>
      <option value="parcelas">Parcelas</option>
      <option value="entradas">Entradas</option>
+     <option value="investimentos">Patrimônio</option>
    </select>
  </div>
  <div class="wrap">
@@ -563,6 +574,26 @@ function classTotals(rows){
  Object.keys(o).forEach(k=>{if(Math.abs(o[k])<.0001)delete o[k]});
  return o;
 }
+
+function metaCurve(){
+ let s=data.settings?.metaPatrimonioSemFGTSSerie;
+ return Array.isArray(s)?[...s].filter(x=>Number.isFinite(Number(x.valor))&&x.ano&&x.mes).sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes)):[];
+}
+
+function metaForMonth(y,m){
+ let curve=metaCurve(),k=keyYM(y,m);
+ if(curve.length){
+   let hit=curve.find(x=>keyYM(x.ano,x.mes)===k);
+   return hit?Number(hit.valor):null;
+ }
+ let legacy=Number(data.settings?.metaPatrimonioSemFGTS);
+ return Number.isFinite(legacy)?legacy:null;
+}
+function metaCurveInfo(){
+ let c=metaCurve();if(!c.length)return null;
+ return{count:c.length,first:c[0],last:c.at(-1),model:data.settings?.metaPatrimonioModelo||null};
+}
+function metaText(y,m){let v=metaForMonth(y,m);return Number.isFinite(v)?brl(v):"—"}
 function latestPatSnapshot(){
  let c=data.investimentos.filter(x=>x.natureza==="Componente");
  if(!c.length)return{rows:[],y:null,m:null,total:0,sem:0};
@@ -587,8 +618,7 @@ function projectionDefaults(){
    fgtsVitoria:Number.isFinite(Number(pr.aporteFGTSVitoria))?Number(pr.aporteFGTSVitoria):590,
    apliIgor:Number.isFinite(Number(pr.aporteAplicacoesIgor))?Number(pr.aporteAplicacoesIgor):5000,
    apliVitoria:Number.isFinite(Number(pr.aporteAplicacoesVitoria))?Number(pr.aporteAplicacoesVitoria):3000,
-   horizonte:Math.max(1,Math.min(120,Number(pr.horizonteMeses)||18)),
-   meta:Number(data.settings?.metaPatrimonioSemFGTS)||0
+   horizonte:Math.max(1,Math.min(120,Number(pr.horizonteMeses)||18))
  };
 }
 function projectionFromSettings(){
@@ -623,7 +653,7 @@ function setProjectionInputs(pr=projectionDefaults()){
  set("projApliIgor",pr.apliIgor.toFixed(2).replace(".",","));
  set("projApliVitoria",pr.apliVitoria.toFixed(2).replace(".",","));
  set("projHorizonte",pr.horizonte);
- set("projMeta",pr.meta.toFixed(2).replace(".",","));
+ let s=selected();set("projMeta",metaText(s.y,s.m));
 }
 function projectionInputs(){
  return{
@@ -634,8 +664,7 @@ function projectionInputs(){
    fgtsVitoria:parseMoney($("projFgtsVitoria").value),
    apliIgor:parseMoney($("projApliIgor").value),
    apliVitoria:parseMoney($("projApliVitoria").value),
-   horizonte:Math.max(1,Math.min(120,parseInt($("projHorizonte").value)||18)),
-   meta:parseMoney($("projMeta").value)
+   horizonte:Math.max(1,Math.min(120,parseInt($("projHorizonte").value)||18))
  };
 }
 
@@ -644,7 +673,7 @@ function noData(ctx,w,h){ctx.fillStyle="#94a3b8";ctx.font="12px system-ui";ctx.t
 function drawBar(id,labels,vals,colors=COLORS){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z;if(!vals.length||Math.max(...vals.map(Math.abs),0)===0){noData(ctx,w,h);return}let max=Math.max(...vals,1),L=44,R=12,T=24,B=58,pw=w-L-R,ph=h-T-B,gap=pw/vals.length,bw=Math.min(54,gap*.62);ctx.font="10px system-ui";ctx.textAlign="center";vals.forEach((v,i)=>{let bh=ph*v/max,x=L+i*gap+gap/2-bw/2,y=T+ph-bh;ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x,y,bw,bh);ctx.fillStyle="#475569";ctx.fillText(brl(v).replace(",00",""),x+bw/2,Math.max(11,y-6));ctx.save();ctx.translate(x+bw/2,h-9);ctx.rotate(-.42);ctx.fillStyle="#64748b";ctx.fillText(labels[i],0,0);ctx.restore()})}
 function drawHBar(id,obj){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);if(!es.length){noData(ctx,w,h);return}let max=Math.max(...es.map(x=>x[1])),L=Math.min(145,w*.43),R=56,T=10,B=10,ph=(h-T-B)/es.length,bh=Math.min(20,ph*.58);ctx.font="10px system-ui";es.forEach(([k,v],i)=>{let y=T+i*ph+(ph-bh)/2;ctx.textAlign="right";ctx.fillStyle="#475569";ctx.fillText(k.length>23?k.slice(0,21)+"…":k,L-7,y+bh*.75);ctx.fillStyle=COLORS[i%COLORS.length];ctx.fillRect(L,y,(w-L-R)*v/max,bh);ctx.textAlign="left";ctx.fillStyle="#64748b";ctx.fillText(brl(v).replace(",00",""),L+(w-L-R)*v/max+4,y+bh*.75)})}
 function drawDonut(id,obj,legendId){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,es=Object.entries(obj).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),total=es.reduce((s,x)=>s+x[1],0);if(!total){noData(ctx,w,h);if(legendId)$(legendId).innerHTML="";return}let cx=w/2,cy=h/2,r=Math.min(w,h)*.32,a=-Math.PI/2;es.forEach(([k,v],i)=>{let b=a+Math.PI*2*v/total;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a,b);ctx.closePath();ctx.fillStyle=COLORS[i%COLORS.length];ctx.fill();a=b});ctx.globalCompositeOperation="destination-out";ctx.beginPath();ctx.arc(cx,cy,r*.56,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation="source-over";ctx.fillStyle="#111827";ctx.font="800 14px system-ui";ctx.textAlign="center";ctx.fillText(brl(total),cx,cy+5);if(legendId)$(legendId).innerHTML=es.map(([k,v],i)=>`<span><i class="dot" style="background:${COLORS[i%COLORS.length]}"></i>${esc(k)} (${(v/total*100).toFixed(0)}%)</span>`).join("")}
-function drawLines(id,labels,series){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,all=series.flatMap(s=>s.vals).filter(Number.isFinite);if(!all.length){noData(ctx,w,h);return}let min=Math.min(0,...all),max=Math.max(1,...all);if(max===min)max=min+1;let L=52,R=12,T=17,B=35,pw=w-L-R,ph=h-T-B;ctx.font="9px system-ui";ctx.strokeStyle="#e5e7eb";ctx.fillStyle="#64748b";ctx.textAlign="right";for(let i=0;i<=4;i++){let val=max-(max-min)*i/4,y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(Math.round(val).toLocaleString("pt-BR"),L-5,y+3)}let X=i=>labels.length===1?L+pw/2:L+pw*i/(labels.length-1),Y=v=>T+(max-v)/(max-min)*ph;series.forEach((s,si)=>{ctx.save();ctx.strokeStyle=s.color||COLORS[si];ctx.lineWidth=s.lineWidth||2.2;ctx.setLineDash(s.dash||[]);ctx.beginPath();s.vals.forEach((v,i)=>{let x=X(i),y=Y(v);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.restore()});ctx.fillStyle="#64748b";ctx.textAlign="center";labels.forEach((l,i)=>{if(labels.length<=12||i%Math.ceil(labels.length/10)===0||i===labels.length-1)ctx.fillText(l,X(i),h-10)})}
+function drawLines(id,labels,series){let z=setupCanvas(id);if(!z)return;let[ctx,w,h]=z,all=series.flatMap(s=>s.vals).filter(Number.isFinite);if(!all.length){noData(ctx,w,h);return}let min=Math.min(0,...all),max=Math.max(1,...all);if(max===min)max=min+1;let L=52,R=12,T=17,B=35,pw=w-L-R,ph=h-T-B;ctx.font="9px system-ui";ctx.strokeStyle="#e5e7eb";ctx.fillStyle="#64748b";ctx.textAlign="right";for(let i=0;i<=4;i++){let val=max-(max-min)*i/4,y=T+ph*i/4;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(Math.round(val).toLocaleString("pt-BR"),L-5,y+3)}let X=i=>labels.length===1?L+pw/2:L+pw*i/(labels.length-1),Y=v=>T+(max-v)/(max-min)*ph;series.forEach((s,si)=>{ctx.save();ctx.strokeStyle=s.color||COLORS[si];ctx.lineWidth=s.lineWidth||2.2;ctx.setLineDash(s.dash||[]);ctx.beginPath();let started=false;s.vals.forEach((v,i)=>{if(!Number.isFinite(v)){started=false;return}let x=X(i),y=Y(v);if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y)});ctx.stroke();ctx.restore()});ctx.fillStyle="#64748b";ctx.textAlign="center";labels.forEach((l,i)=>{if(labels.length<=12||i%Math.ceil(labels.length/10)===0||i===labels.length-1)ctx.fillText(l,X(i),h-10)})}
 function drawPatComponents(){
  let selectedMonths=chartRange(),minK=selectedMonths.length?selectedMonths[0].key:-Infinity,maxK=selectedMonths.length?selectedMonths.at(-1).key:Infinity;
  let h=componentHistory().filter(x=>keyYM(x.y,x.m)>=minK&&keyYM(x.y,x.m)<=maxK);
@@ -652,6 +681,8 @@ function drawPatComponents(){
  let labels=h.map(x=>x.label),classes=["Conta Corrente","Previdência","FGTS","Aplicações","Dinheiro"],series=[];
  classes.forEach(c=>{if(h.some(x=>(x.classes[c]||0)>0))series.push({label:c,vals:h.map(x=>x.classes[c]||0),color:PAT_COLORS[c]})});
  series.push({label:"Total",vals:h.map(x=>x.total),color:PAT_COLORS.Total,lineWidth:2.8});
+ let metaVals=h.map(x=>metaForMonth(x.y,x.m));
+ if(metaVals.some(Number.isFinite))series.push({label:"Meta sem FGTS",vals:metaVals,color:"#dc2626",dash:[7,5],lineWidth:1.8});
  drawLines("chartPatComponents",labels,series);
  $("patEvolutionLegend").innerHTML=series.map(s=>`<span><i class="dot" style="background:${s.color}"></i>${s.label}</span>`).join("");
 }
@@ -659,10 +690,14 @@ function drawPatProjection(){
  let p=projectionFromSettings();
  if(!p.months.length){let z=setupCanvas("chartPatProjection",285);if(z)noData(z[0],z[1],z[2]);return}
  let labels=[`${String(p.start.m).padStart(2,"0")}/${String(p.start.y).slice(2)}`,...p.months.map(x=>x.label)];
- let total=[p.start.total,...p.months.map(x=>x.total)],sem=[p.start.sem,...p.months.map(x=>x.sem)],meta=labels.map(()=>p.pr.meta);
- drawLines("chartPatProjection",labels,[{vals:total,color:"#2563eb"},{vals:sem,color:"#08a36d"},{vals:meta,color:"#dc2626",dash:[7,5],lineWidth:1.8}]);
- let end=p.months.at(-1),growth=end.total-p.start.total,gap=end.sem-p.pr.meta;
- $("projEndTotal").textContent=brl(end.total);$("projEndSemFgts").textContent=brl(end.sem);$("projGrowth").textContent=brl(growth);$("projGrowth").className="mk-value "+(growth>=0?"good":"bad");$("projEndGap").textContent=brl(gap);$("projEndGap").className="mk-value "+(gap>=0?"good":"bad");
+ let total=[p.start.total,...p.months.map(x=>x.total)],sem=[p.start.sem,...p.months.map(x=>x.sem)];
+ let meta=[metaForMonth(p.start.y,p.start.m),...p.months.map(x=>metaForMonth(x.y,x.m))];
+ let series=[{vals:total,color:"#2563eb"},{vals:sem,color:"#08a36d"}];
+ if(meta.some(Number.isFinite))series.push({vals:meta,color:"#dc2626",dash:[7,5],lineWidth:1.8});
+ drawLines("chartPatProjection",labels,series);
+ let end=p.months.at(-1),growth=end.total-p.start.total,endMeta=metaForMonth(end.y,end.m),gap=Number.isFinite(endMeta)?end.sem-endMeta:null;
+ $("projEndTotal").textContent=brl(end.total);$("projEndSemFgts").textContent=brl(end.sem);$("projGrowth").textContent=brl(growth);$("projGrowth").className="mk-value "+(growth>=0?"good":"bad");
+ $("projEndGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("projEndGap").className="mk-value "+(Number.isFinite(gap)?(gap>=0?"good":"bad"):"");
 }
 
 function renderGeneral(){
@@ -690,67 +725,64 @@ function renderReceitas(){
 }
 function renderParcelas(){let{y,m}=selected(),vals=[],labs=[];for(let k=0;k<12;k++){let t=shift(y,m,k);labs.push(`${MESES[t.m-1].slice(0,3)}/${String(t.y).slice(2)}`);vals.push(sumMonth(data.parcelas,t.y,t.m))}$("pMes").textContent=brl(vals[0]);$("pMedia").textContent=brl(avg3Total(data.parcelas,y,m));$("p6").textContent=brl(vals.slice(0,6).reduce((a,b)=>a+b,0));$("pFutureCount").textContent=data.parcelas.filter(x=>keyYM(x.ano,x.mes)>keyYM(y,m)&&Number(x.valor)>0).length.toLocaleString("pt-BR");drawBar("chartParcelasFut",labs,vals,Array(12).fill("#8b5cf6"))}
 function renderPat(){
- let{y,m}=selected(),p=currentPat(y,m),meta=Number(data.settings?.metaPatrimonioSemFGTS)||0,gap=p.sem-meta;
- $("patTotal").textContent=brl(p.total);$("patSemFgts").textContent=brl(p.sem);$("patMeta").textContent=brl(meta);$("patGap").textContent=brl(gap);$("patGap").className="value "+(gap>=0?"good":"bad");$("metaProgress").style.width=(meta?Math.min(100,p.sem/meta*100):0)+"%";$("patData").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";
+ let{y,m}=selected(),p=currentPat(y,m),my=p.y||y,mm=p.m||m,meta=metaForMonth(my,mm),gap=Number.isFinite(meta)?p.sem-meta:null;
+ $("patTotal").textContent=brl(p.total);$("patSemFgts").textContent=brl(p.sem);$("patMeta").textContent=Number.isFinite(meta)?brl(meta):"—";$("patGap").textContent=Number.isFinite(gap)?brl(gap):"—";$("patGap").className="value "+(Number.isFinite(gap)?(gap>=0?"good":"bad"):"");$("metaProgress").style.width=(Number.isFinite(meta)&&meta>0?Math.min(100,p.sem/meta*100):0)+"%";$("patData").textContent=p.y?`Fechamento ${String(p.m).padStart(2,"0")}/${p.y}`:"—";
  let by=classTotals(p.rows);drawDonut("chartPatDonut",by,"patLegend");
+ let info=metaCurveInfo();$("metaCurveStatus").innerHTML=info?`<b>Curva de meta carregada:</b> ${info.count} meses • ${String(info.first.mes).padStart(2,"0")}/${info.first.ano} até ${String(info.last.mes).padStart(2,"0")}/${info.last.ano}. Origem: <b>${esc(info.model?.origemPlanilha||"Aposentadoria (cálculo)")}</b>.`:`<b>Curva de meta ainda não carregada.</b> O valor fixo antigo é usado somente como compatibilidade. Importe o arquivo de curva gerado a partir do Excel.`;
  setProjectionInputs();drawPatComponents();drawPatProjection();
 }
 
 function recentEntries(){
  let items=[];
- ["fixos","variaveis","entradas"].forEach(k=>(data[k]||[]).filter(x=>x.origem==="app").forEach(x=>items.push({kind:k,groupId:null,records:[x],dateKey:keyYM(x.ano,x.mes)*100+(parseInt(String(x.data||"01").slice(0,2))||1),data:x.data,descricao:x.descricao||"",detail:k==="entradas"?(x.pessoa||""):(x.categoria||""),valor:Number(x.valor)||0,createdAt:x.createdAt||""})));
- let parcelRows=(data.parcelas||[]).filter(x=>x.origem==="app"),groups=new Map();
- parcelRows.forEach(x=>{let g=x.grupoParcelas||x.id;if(!groups.has(g))groups.set(g,[]);groups.get(g).push(x)});
- groups.forEach((rs,g)=>{rs.sort((a,b)=>keyYM(a.ano,a.mes)-keyYM(b.ano,b.mes));let first=rs[0];items.push({kind:"parcelas",groupId:g,records:rs,dateKey:keyYM(first.ano,first.mes)*100+(parseInt(String(first.data||"01").slice(0,2))||1),data:first.data,descricao:first.descricao||"",detail:`${first.categoria||""} • ${rs.length}x`,valor:sum(rs),createdAt:first.createdAt||""})});
- return items.sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")||b.dateKey-a.dateKey);
+ [["fixos","Fixo"],["variaveis","Variável"],["parcelas","Parcela"],["entradas","Entrada"],["investimentos","Patrimônio"]].forEach(([kind,label])=>{
+  (data[kind]||[]).filter(x=>kind!=="investimentos"||x.natureza==="Componente").forEach(x=>items.push({kind,label,id:x.id,data:x.data,ano:x.ano,mes:x.mes,descricao:x.descricao||x.categoria||"",detail:kind==="entradas"?(x.pessoa||""):(kind==="investimentos"?patrimonyClass(x.descricao):(x.categoria||"")),valor:Number(x.valor)||0,createdAt:x.createdAt||""}))
+ });
+ return items.sort((a,b)=>String(b.createdAt||"").localeCompare(String(a.createdAt||""))||recordOrder(b)-recordOrder(a));
 }
 function renderRecentEntries(){
  let body=$("recentEntriesBody");if(!body)return;
- let filter=$("recentTypeFilter")?.value||"all",rows=recentEntries().filter(x=>filter==="all"||x.kind===filter).slice(0,30);
- const names={fixos:"Fixo",variaveis:"Variável",parcelas:"Parcelado",entradas:"Entrada"};
- const colors={fixos:"#2563eb",variaveis:"#f59e0b",parcelas:"#8b5cf6",entradas:"#08a36d"};
- if(!rows.length){body.innerHTML=`<tr><td colspan="6"><div class="empty-state">Nenhum lançamento recente feito pelo dashboard.</div></td></tr>`;return}
- body.innerHTML=rows.map((x,i)=>`<tr><td>${esc(x.data)}</td><td><span class="type-dot" style="background:${colors[x.kind]}"></span>${names[x.kind]}</td><td>${esc(x.descricao)}</td><td>${esc(x.detail)}</td><td class="num">${brl(x.valor)}</td><td><button class="delete-entry" data-recent-index="${i}">Excluir</button></td></tr>`).join("");
- document.querySelectorAll(".delete-entry").forEach(btn=>btn.onclick=()=>deleteRecentEntry(rows[+btn.dataset.recentIndex]));
+ let filter=$("recentTypeFilter")?.value||"all",rows=recentEntries().filter(x=>filter==="all"||x.kind===filter).slice(0,50);
+ const colors={fixos:"#2563eb",variaveis:"#f59e0b",parcelas:"#8b5cf6",entradas:"#08a36d",investimentos:"#64748b"};
+ if(!rows.length){body.innerHTML=`<tr><td colspan="6"><div class="empty-state">Nenhum lançamento encontrado.</div></td></tr>`;return}
+ body.innerHTML=rows.map(x=>`<tr><td>${esc(x.data)}</td><td><span class="type-dot" style="background:${colors[x.kind]}"></span>${x.label}</td><td>${esc(x.descricao||"—")}</td><td>${esc(x.detail||"—")}</td><td class="num">${brl(x.valor)}</td><td><button class="delete-specific" data-kind="${x.kind}" data-id="${esc(x.id)}">Excluir</button></td></tr>`).join("");
+ bindSpecificDeleteButtons(body);
 }
-async function deleteRecentEntry(item){
+
+
+
+
+function kindLabel(kind){return({fixos:"gasto fixo",variaveis:"gasto variável",parcelas:"parcela",entradas:"entrada",investimentos:"saldo patrimonial"})[kind]||"lançamento"}
+function bindSpecificDeleteButtons(scope=document){scope.querySelectorAll(".delete-specific").forEach(btn=>btn.onclick=()=>deleteSpecificRecord(btn.dataset.kind,btn.dataset.id))}
+async function deleteSpecificRecord(kind,id){
  if(!account||!remoteMeta){toast("Conecte e sincronize o OneDrive primeiro.");return}
- let what=item.kind==="parcelas"?`a compra parcelada "${item.descricao}" e todas as ${item.records.length} parcelas`:`o lançamento "${item.descricao}"`;
- if(!confirm(`Excluir ${what}? Esta alteração será gravada no OneDrive.`))return;
+ if(!data[kind])return;
+ let rec=data[kind].find(x=>String(x.id)===String(id));if(!rec){toast("Registro não encontrado.");return}
+ let desc=rec.descricao||rec.categoria||rec.pessoa||"sem descrição",extra=kind==="parcelas"&&rec.parcela?` Parcela ${rec.parcela}/${rec.totalParcelas||"?"}.`:"",historical=rec.origem==="excel"?" Este registro veio da base histórica importada do Excel.":"";
+ if(!confirm(`Excluir somente este ${kindLabel(kind)}: "${desc}" (${rec.data}, ${brl(rec.valor)})?${extra}${historical}\n\nA exclusão será gravada no OneDrive.`))return;
  let before=structuredClone(data);
- try{
-   let ids=new Set(item.records.map(x=>x.id));
-   data[item.kind]=data[item.kind].filter(x=>!ids.has(x.id));
-   await saveRemoteWithConflictCheck();toast("Lançamento excluído do OneDrive.");fillFilters(true);render();
- }catch(e){data=before;handleError(e)}
+ try{data[kind]=data[kind].filter(x=>String(x.id)!==String(id));await saveRemoteWithConflictCheck();fillFilters(true);toast("Registro específico excluído do OneDrive.");render()}
+ catch(e){data=before;handleError(e)}
 }
-
-
 function renderPanelRecentExpenses(){
  let body=$("recentExpensesPanel");if(!body)return;
- let rows=[
-  ...(data.fixos||[]).map(x=>({...x,_kind:"Fixo",_color:"#2563eb"})),
-  ...(data.variaveis||[]).map(x=>({...x,_kind:"Variável",_color:"#f59e0b"}))
- ].filter(beforeSelected).sort((a,b)=>recordOrder(b)-recordOrder(a)||String(b.createdAt||"").localeCompare(String(a.createdAt||""))).slice(0,10);
- body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td><span class="record-kind"><i style="background:${x._color}"></i>${x._kind}</span></td><td><div class="recent-desc">${esc(x.descricao||x.categoria||"—")}</div></td><td>${esc(x.categoria||"—")}</td><td class="num">${brl(x.valor)}</td></tr>`).join(""):emptyPanelRow(5);
+ let rows=[...(data.fixos||[]).map(x=>({...x,_kind:"Fixo",_dataKind:"fixos",_color:"#2563eb"})),...(data.variaveis||[]).map(x=>({...x,_kind:"Variável",_dataKind:"variaveis",_color:"#f59e0b"}))].filter(beforeSelected).sort((a,b)=>recordOrder(b)-recordOrder(a)||String(b.createdAt||"").localeCompare(String(a.createdAt||""))).slice(0,10);
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td><span class="record-kind"><i style="background:${x._color}"></i>${x._kind}</span></td><td><div class="recent-desc">${esc(x.descricao||x.categoria||"—")}</div></td><td>${esc(x.categoria||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num"><button class="delete-specific" data-kind="${x._dataKind}" data-id="${esc(x.id)}">Excluir</button></td></tr>`).join(""):emptyPanelRow(6);
+ bindSpecificDeleteButtons(body);
 }
 function renderPanelRecentIncome(){
- let body=$("recentIncomePanel");if(!body)return;
- let rows=latestRows(data.entradas||[],10);
- body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td>${esc(x.pessoa||"—")}</td><td><div class="recent-desc">${esc(x.descricao||"Entrada")}</div></td><td class="num">${brl(x.valor)}</td></tr>`).join(""):emptyPanelRow(4);
+ let body=$("recentIncomePanel");if(!body)return;let rows=latestRows(data.entradas||[],10);
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td>${esc(x.pessoa||"—")}</td><td><div class="recent-desc">${esc(x.descricao||"Entrada")}</div></td><td class="num">${brl(x.valor)}</td><td class="num"><button class="delete-specific" data-kind="entradas" data-id="${esc(x.id)}">Excluir</button></td></tr>`).join(""):emptyPanelRow(5);
+ bindSpecificDeleteButtons(body);
 }
 function renderPanelRecentInstallments(){
- let body=$("recentInstallmentsPanel");if(!body)return;
- let rows=latestRows(data.parcelas||[],10);
- body.innerHTML=rows.length?rows.map(x=>{
-   let parcela=(x.parcela&&x.totalParcelas)?`${x.parcela}/${x.totalParcelas}`:"—";
-   return `<tr><td>${esc(x.data)}</td><td><div class="recent-desc">${esc(x.descricao||x.categoria||"—")}</div></td><td>${esc(x.categoria||"—")}</td><td>${parcela}</td><td class="num">${brl(x.valor)}</td></tr>`
- }).join(""):emptyPanelRow(5);
+ let body=$("recentInstallmentsPanel");if(!body)return;let rows=latestRows(data.parcelas||[],10);
+ body.innerHTML=rows.length?rows.map(x=>{let parcela=(x.parcela&&x.totalParcelas)?`${x.parcela}/${x.totalParcelas}`:"—";return `<tr><td>${esc(x.data)}</td><td><div class="recent-desc">${esc(x.descricao||x.categoria||"—")}</div></td><td>${esc(x.categoria||"—")}</td><td>${parcela}</td><td class="num">${brl(x.valor)}</td><td class="num"><button class="delete-specific" data-kind="parcelas" data-id="${esc(x.id)}">Excluir</button></td></tr>`}).join(""):emptyPanelRow(6);
+ bindSpecificDeleteButtons(body);
 }
 function renderPanelRecentPatrimony(){
- let body=$("recentPatrimonyPanel");if(!body)return;
- let rows=latestRows((data.investimentos||[]).filter(x=>x.natureza==="Componente"),10);
- body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td><div class="recent-desc">${esc(x.descricao||"—")}</div></td><td>${esc(patrimonyClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td></tr>`).join(""):emptyPanelRow(4);
+ let body=$("recentPatrimonyPanel");if(!body)return;let rows=latestRows((data.investimentos||[]).filter(x=>x.natureza==="Componente"),10);
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.data)}</td><td><div class="recent-desc">${esc(x.descricao||"—")}</div></td><td>${esc(patrimonyClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td><td class="num"><button class="delete-specific" data-kind="investimentos" data-id="${esc(x.id)}">Excluir</button></td></tr>`).join(""):emptyPanelRow(5);
+ bindSpecificDeleteButtons(body);
 }
 function renderAllPanelRecent(){
  renderPanelRecentExpenses();renderPanelRecentIncome();renderPanelRecentInstallments();renderPanelRecentPatrimony();
@@ -803,28 +835,34 @@ async function saveProjectionSettings(){
  if(!account||!remoteMeta){toast("Conecte e sincronize o OneDrive primeiro.");showTab("config");return}
  let pr=projectionInputs(),before=structuredClone(data);
  try{
-   data.settings=data.settings||{};
-   data.settings.metaPatrimonioSemFGTS=pr.meta;
-   data.settings.projecao=data.settings.projecao||{};
-   Object.assign(data.settings.projecao,{
-     rentabilidadeMensal:pr.rentAplic,
-     rentabilidadePrevFGTS:pr.rentPrevFgts,
-     aportePrevidenciaIgor:pr.aportePrev,
-     aporteFGTSIgor:pr.fgtsIgor,
-     aporteFGTSVitoria:pr.fgtsVitoria,
-     aporteAplicacoesIgor:pr.apliIgor,
-     aporteAplicacoesVitoria:pr.apliVitoria,
-     horizonteMeses:pr.horizonte
-   });
-   await saveRemoteWithConflictCheck();toast("Premissas salvas no OneDrive.");render();
+  data.settings=data.settings||{};data.settings.projecao=data.settings.projecao||{};
+  Object.assign(data.settings.projecao,{rentabilidadeMensal:pr.rentAplic,rentabilidadePrevFGTS:pr.rentPrevFgts,aportePrevidenciaIgor:pr.aportePrev,aporteFGTSIgor:pr.fgtsIgor,aporteFGTSVitoria:pr.fgtsVitoria,aporteAplicacoesIgor:pr.apliIgor,aporteAplicacoesVitoria:pr.apliVitoria,horizonteMeses:pr.horizonte});
+  await saveRemoteWithConflictCheck();toast("Premissas salvas no OneDrive.");render()
  }catch(e){data=before;handleError(e)}
 }
 function resetProjectionInputs(){
- setProjectionInputs({rentAplic:.01,rentPrevFgts:.005,aportePrev:1100,fgtsIgor:1100,fgtsVitoria:590,apliIgor:5000,apliVitoria:3000,horizonte:18,meta:Number(data.settings?.metaPatrimonioSemFGTS)||489830.22});
+ setProjectionInputs({rentAplic:.01,rentPrevFgts:.005,aportePrev:1100,fgtsIgor:1100,fgtsVitoria:590,apliIgor:5000,apliVitoria:3000,horizonte:18});
  toast("Premissas originais carregadas. Clique em Salvar para gravar.");
 }
 $("btnSaveProjection").onclick=saveProjectionSettings;
 $("btnResetProjection").onclick=resetProjectionInputs;
+
+
+async function importMetaCurvePatch(file){
+ if(!account||!remoteMeta){toast("Conecte e sincronize o OneDrive antes de importar a curva.");showTab("config");return}
+ let before=structuredClone(data);
+ try{
+  let obj=JSON.parse(await file.text()),settings=obj.settings||obj,serie=settings.metaPatrimonioSemFGTSSerie;
+  if(!Array.isArray(serie)||serie.length<2)throw new Error("Arquivo não contém uma curva mensal de meta válida.");
+  if(!serie.every(x=>x.ano&&x.mes&&Number.isFinite(Number(x.valor))))throw new Error("Há registros inválidos na curva de meta.");
+  data.settings=data.settings||{};
+  data.settings.metaPatrimonioSemFGTSSerie=serie.map(x=>({data:x.data||`01/${String(x.mes).padStart(2,"0")}/${x.ano}`,ano:Number(x.ano),mes:Number(x.mes),valor:Number(x.valor)}));
+  if(settings.metaPatrimonioModelo)data.settings.metaPatrimonioModelo=settings.metaPatrimonioModelo;
+  await saveRemoteWithConflictCheck();toast(`Curva de meta importada: ${serie.length} meses.`);render()
+ }catch(e){data=before;handleError(e)}
+ finally{$("metaPatchInput").value=""}
+}
+$("metaPatchInput").onchange=()=>{let f=$("metaPatchInput").files?.[0];if(f)importMetaCurvePatch(f)};
 
 function toast(msg){let e=$("toast");e.textContent=msg;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)}
 function setSyncStatus(text,cls=""){let e=$("syncPill");e.textContent=text;e.className="syncpill "+cls}
