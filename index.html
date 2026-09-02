@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.9</title>
+<title>Controle Financeiro • v8.10</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -42,12 +42,46 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  .table-filter-count{width:100%;margin-left:0}
 }
 
+
+.table-scroll-10{
+  max-height:430px;
+  overflow-y:auto;
+  overflow-x:auto;
+  border:1px solid var(--line,#e5eaf1);
+  border-radius:10px;
+}
+.table-scroll-10 table{margin:0}
+.table-scroll-10 thead th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  background:#fff;
+  box-shadow:0 1px 0 var(--line,#e5eaf1);
+}
+.table-scroll-10 tbody tr{height:38px}
+.table-scroll-10 tbody td{
+  padding-top:8px;
+  padding-bottom:8px;
+  vertical-align:middle;
+}
+.table-scroll-10 tbody td.desc{
+  max-width:320px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.table-period-note{
+  font-size:9px;
+  color:#7b8798;
+  margin:2px 0 8px;
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.9</small></div></div>
+  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.10</small></div></div>
   <div class="navlabel">Navegação</div>
   <div class="tabs">
     <button class="tab active" data-tab="geral">Visão Geral</button>
@@ -120,7 +154,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Sem filtros, mostra os 10 mais recentes. Use os campos abaixo para consultar o histórico.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
   <div class="table-filters">
    <div class="field"><label>Data inicial</label><input id="fxTableStart" type="date" min="2022-05-01"></div>
    <div class="field"><label>Data final</label><input id="fxTableEnd" type="date" min="2022-05-01"></div>
@@ -129,7 +163,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
    <button id="btnClearFxTable" class="btn secondary">Limpar filtros</button>
    <span id="fxTableCount" class="table-filter-count"></span>
   </div>
-  <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
+  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
 
   <div class="context-toolbar">
    <div class="field"><label>Mês de destino</label><input id="fxReplicateTarget" type="month" min="2022-05"></div>
@@ -150,7 +184,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Sem filtros, mostra os 10 mais recentes. Use os campos abaixo para consultar o histórico.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
   <div class="table-filters">
    <div class="field"><label>Data inicial</label><input id="varTableStart" type="date" min="2022-05-01"></div>
    <div class="field"><label>Data final</label><input id="varTableEnd" type="date" min="2022-05-01"></div>
@@ -159,7 +193,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
    <button id="btnClearVarTable" class="btn secondary">Limpar filtros</button>
    <span id="varTableCount" class="table-filter-count"></span>
   </div>
-  <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
+  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenVariable" class="btn green">Adicionar nova despesa variável</button></div>
 
   <div id="varForm" class="inline-editor hidden">
@@ -176,7 +210,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
 
  <div class="card section">
   <div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado pelos controles gerais da aba, sem remover registros do JSON.</p></div></div>
-  <div class="wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
+  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
  </div>
 </section>
 
@@ -193,7 +227,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card chart-card"><div class="chart-head"><div><h3>Composição do mês</h3><p>Participação por pessoa no mês de referência.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
  </div>
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Sem filtros, mostra os 10 mais recentes. Os filtros consultam todo o histórico.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
   <div class="table-filters">
    <div class="field"><label>Data inicial</label><input id="revTableStart" type="date" min="2022-05-01"></div>
    <div class="field"><label>Data final</label><input id="revTableEnd" type="date" min="2022-05-01"></div>
@@ -202,7 +236,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
    <button id="btnClearRevTable" class="btn secondary">Limpar filtros</button>
    <span id="revTableCount" class="table-filter-count"></span>
   </div>
-  <div class="wrap"><table><thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
+  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Pessoa</th><th>Descrição</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenRevenue" class="btn green">Adicionar nova receita</button></div>
   <div id="revForm" class="inline-editor hidden">
    <div class="context-title" id="revFormTitle">Adicionar nova receita</div>
@@ -230,7 +264,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   <div class="card chart-card"><div class="chart-head"><div><h3>Parcelas por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartParcelasCategoria"></canvas></div></div>
  </div>
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Sem filtros, mostra as 10 parcelas mais recentes. Os filtros podem consultar inclusive parcelas futuras.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar os registros exibidos.</p></div></div>
   <div class="table-filters">
    <div class="field"><label>Data inicial</label><input id="parTableStart" type="date" min="2022-05-01"></div>
    <div class="field"><label>Data final</label><input id="parTableEnd" type="date" min="2022-05-01"></div>
@@ -239,7 +273,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
    <button id="btnClearParTable" class="btn secondary">Limpar filtros</button>
    <span id="parTableCount" class="table-filter-count"></span>
   </div>
-  <div class="wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
+  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenInstallment" class="btn green">Adicionar nova parcela</button></div>
   <div id="parForm" class="inline-editor hidden">
    <div class="context-title" id="parFormTitle">Adicionar nova compra parcelada</div>
@@ -302,7 +336,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
  </div>
 
  <div class="card section">
-  <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Sem filtros, mostra os 10 mais recentes. Use os filtros para consultar qualquer período ou componente.</p></div></div>
+  <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>A tabela segue o período global selecionado no canto superior direito. Use os filtros abaixo para refinar por mês ou componente.</p></div></div>
   <div class="table-filters">
    <div class="field"><label>Mês inicial</label><input id="invTableStart" type="month" min="2022-05"></div>
    <div class="field"><label>Mês final</label><input id="invTableEnd" type="month" min="2022-05"></div>
@@ -311,7 +345,7 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
    <button id="btnClearInvTable" class="btn secondary">Limpar filtros</button>
    <span id="invTableCount" class="table-filter-count"></span>
   </div>
-  <div class="wrap"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th>Origem</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
+  <div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Componente</th><th>Classe</th><th>Origem</th><th class="num">Saldo</th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
   <div class="context-toolbar"><button id="btnOpenInvestment" class="btn green">Adicionar novo registro de investimento</button></div>
   <div id="invForm" class="inline-editor hidden">
    <div class="context-title" id="invFormTitle">Adicionar novo registro de investimento</div>
@@ -519,15 +553,32 @@ function filterTableRows(rows,{startId,endId,searchId,selectId,selectField}){
  )
 }
 function sortTableRows(rows){return [...rows].sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||String(b.data||"").localeCompare(String(a.data||"")))}
-function tableSlice(rows,filterIds){return rows.slice(0,tableFilterIsActive(filterIds)?250:10)}
-function setTableCount(id,shown,total,filtered){if($(id))$(id).textContent=filtered?`${shown} de ${total} registros encontrados`:`${shown} registros mais recentes`}
+function tableSlice(rows,filterIds){return rows}
+function setTableCount(id,shown,total,filtered){if($(id))$(id).textContent=`${shown} ${shown===1?"registro":"registros"} no período selecionado${filtered?" após os filtros da tabela":""}`}
 function clearTableFilters(ids,renderFn){ids.forEach(id=>{let e=$(id);if(!e)return;e.value=e.tagName==="SELECT"?"all":""});renderFn()}
 
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
+
+function syncTableFilterBounds(range){
+ let startDate=range.start+"-01",
+     endObj=new Date(Date.UTC(Number(range.end.slice(0,4)),Number(range.end.slice(5,7)),0)),
+     endDate=endObj.toISOString().slice(0,10);
+ ["fxTableStart","fxTableEnd","varTableStart","varTableEnd","revTableStart","revTableEnd","parTableStart","parTableEnd"].forEach(id=>{
+   let e=$(id);if(!e)return;
+   e.min=startDate;e.max=endDate;
+   if(e.value&&(e.value<startDate||e.value>endDate))e.value=""
+ });
+ ["invTableStart","invTableEnd"].forEach(id=>{
+   let e=$(id);if(!e)return;
+   e.min=range.start;e.max=range.end;
+   if(e.value&&(e.value<range.start||e.value>range.end))e.value=""
+ })
+}
 function renderExpenses(){
  if(!data)return;
- let r=periodRange(),ref=r.ref,cat=$("expenseCategoryFilter").value,type=$("expenseTypeFilter").value,
+ let r=periodRange();syncTableFilterBounds(r);
+ let ref=r.ref,cat=$("expenseCategoryFilter").value,type=$("expenseTypeFilter").value,
      filter=x=>cat==="all"||x.categoria===cat,
      fix=sumMonth(data.despesas.fixas,ref,filter),
      vr=sumMonth(data.despesas.variaveis,ref,filter),
@@ -547,11 +598,11 @@ function renderExpenses(){
  let rows=expenseRows(true);
 
  let fxIds=["fxTableStart","fxTableEnd","fxTableSearch","fxTableCategory"],
-     fxAll=sortTableRows(filterTableRows(data.despesas.fixas,{startId:"fxTableStart",endId:"fxTableEnd",searchId:"fxTableSearch",selectId:"fxTableCategory",selectField:"categoria"})),
+     fxAll=sortTableRows(filterTableRows(data.despesas.fixas.filter(x=>inRange(x,r)),{startId:"fxTableStart",endId:"fxTableEnd",searchId:"fxTableSearch",selectId:"fxTableCategory",selectField:"categoria"})),
      fxShown=tableSlice(fxAll,fxIds).map(x=>({...x,_kind:"fixas",_label:"Fixa"}));
 
  let varIds=["varTableStart","varTableEnd","varTableSearch","varTableCategory"],
-     varAll=sortTableRows(filterTableRows(data.despesas.variaveis,{startId:"varTableStart",endId:"varTableEnd",searchId:"varTableSearch",selectId:"varTableCategory",selectField:"categoria"})),
+     varAll=sortTableRows(filterTableRows(data.despesas.variaveis.filter(x=>inRange(x,r)),{startId:"varTableStart",endId:"varTableEnd",searchId:"varTableSearch",selectId:"varTableCategory",selectField:"categoria"})),
      varShown=tableSlice(varAll,varIds).map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
 
  $("recentFixas").innerHTML=fxShown.length?expenseTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa fixa encontrada.</div></td></tr>`;
@@ -565,7 +616,8 @@ function renderExpenses(){
 }
 function renderIncome(){
  if(!data)return;
- let r=periodRange(),ref=r.ref,person=$("incomePersonFilter").value,
+ let r=periodRange();syncTableFilterBounds(r);
+ let ref=r.ref,person=$("incomePersonFilter").value,
      filter=x=>(person==="all"||x.pessoa===person),
      rows=data.receitas.filter(filter),
      ig=incomeMonth(ref,"Igor"),vi=incomeMonth(ref,"Vitória"),
@@ -581,7 +633,7 @@ function renderIncome(){
  let comp={};people.forEach(p=>comp[p]=incomeMonth(ref,p));donut("chartReceitasDonut",comp,incomeColors);
 
  let ids=["revTableStart","revTableEnd","revTableSearch","revTablePerson"],
-     all=sortTableRows(filterTableRows(data.receitas,{startId:"revTableStart",endId:"revTableEnd",searchId:"revTableSearch",selectId:"revTablePerson",selectField:"pessoa"})),
+     all=sortTableRows(filterTableRows(data.receitas.filter(x=>inRange(x,r)),{startId:"revTableStart",endId:"revTableEnd",searchId:"revTableSearch",selectId:"revTablePerson",selectField:"pessoa"})),
      shown=tableSlice(all,ids);
 
  $("recentReceitas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Nenhuma receita encontrada.</div></td></tr>`;
@@ -590,7 +642,8 @@ function renderIncome(){
 }
 function renderInstallments(){
  if(!data)return;
- let r=periodRange(),ref=r.ref,cat=$("installmentCategoryFilter").value,
+ let r=periodRange();syncTableFilterBounds(r);
+ let ref=r.ref,cat=$("installmentCategoryFilter").value,
      filter=x=>cat==="all"||x.categoria===cat,
      arr=data.parcelas.filter(filter),
      sumFuture=(n)=>monthsBetween(addMonths(ref,1),addMonths(ref,n)).reduce((s,m)=>s+sumMonth(arr,m),0),
@@ -613,7 +666,7 @@ function renderInstallments(){
  horizontalBar("chartParcelasCategoria",categoryTotals(arr,r));
 
  let ids=["parTableStart","parTableEnd","parTableSearch","parTableCategory"],
-     all=sortTableRows(filterTableRows(data.parcelas,{startId:"parTableStart",endId:"parTableEnd",searchId:"parTableSearch",selectId:"parTableCategory",selectField:"categoria"})),
+     all=sortTableRows(filterTableRows(data.parcelas.filter(x=>inRange(x,r)),{startId:"parTableStart",endId:"parTableEnd",searchId:"parTableSearch",selectId:"parTableCategory",selectField:"categoria"})),
      shown=tableSlice(all,ids);
 
  $("recentParcelas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td>${x.parcela||"—"}/${x.totalParcelas||"—"}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("parcelas",x.id)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhuma parcela encontrada.</div></td></tr>`;
@@ -622,7 +675,8 @@ function renderInstallments(){
 }
 function renderInvestments(){
  if(!data)return;
- let r=periodRange(),snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),
+ let r=periodRange();syncTableFilterBounds(r);
+ let snap=actualSnapshot(r.ref)||actualSnapshot("9999-12"),
      meta=snap?metaForMonth(snap.month):null,
      gap=snap&&Number.isFinite(meta)?snap.semFGTS-meta:null;
 
@@ -639,7 +693,7 @@ function renderInvestments(){
  renderCapitalAllocationChart("chartInvestAllocation",r);
 
  let ids=["invTableStart","invTableEnd","invTableSearch","invTableComponent"],
-     all=sortTableRows(filterTableRows(data.investimentos.historico,{startId:"invTableStart",endId:"invTableEnd",searchId:"invTableSearch",selectId:"invTableComponent",selectField:"descricao"})),
+     all=sortTableRows(filterTableRows(data.investimentos.historico.filter(x=>inRange(x,r)),{startId:"invTableStart",endId:"invTableEnd",searchId:"invTableSearch",selectId:"invTableComponent",selectField:"descricao"})),
      shown=tableSlice(all,ids);
 
  $("recentInvestimentos").innerHTML=shown.length
