@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle Financeiro • v8.10</title>
+<title>Controle Financeiro • v8.12</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -76,12 +76,447 @@ main{max-width:1500px;margin:auto;padding:18px 20px 90px}.workspace-head{display
   margin:2px 0 8px;
 }
 
+
+/* ==========================================================
+   v8.12 — refinamento visual inspirado na identidade Bradesco
+   Somente apresentação: sem alterações em dados/funcionalidades.
+   ========================================================== */
+
+:root{
+  --br-red:#CC092F;
+  --br-red-dark:#900F15;
+  --br-magenta:#B81570;
+  --br-indigo:#333B8F;
+  --br-rose:#D63A59;
+  --ink:#2C2528;
+  --muted:#746C70;
+  --paper:#F7F3F1;
+  --paper-2:#FCFAF9;
+  --card:#FFFFFF;
+  --line:#E9E1DF;
+  --line-strong:#DDD1CE;
+  --soft-red:#F9ECEF;
+  --soft-wine:#F4E9EA;
+  --soft-blue:#EEF0F8;
+  --soft-green:#EDF4F0;
+  --shadow:0 10px 30px rgba(78,34,40,.055);
+  --radius:18px;
+  --radius-sm:12px;
+}
+
+*{scrollbar-width:thin;scrollbar-color:#CBBFC1 transparent}
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#CBBFC1;border-radius:99px}
+*::-webkit-scrollbar-thumb:hover{background:#B9AAAD}
+
+html,body{
+  background:
+    radial-gradient(circle at 85% -5%, rgba(204,9,47,.055), transparent 28rem),
+    radial-gradient(circle at -8% 35%, rgba(51,59,143,.035), transparent 26rem),
+    var(--paper);
+  color:var(--ink);
+}
+
+body{
+  font-family:Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing:-.005em;
+}
+
+/* Navegação: mais editorial e menos "app template" */
+.sidebar{
+  background:
+    linear-gradient(160deg, #8F101A 0%, var(--br-red-dark) 38%, #741018 100%);
+  color:#fff;
+  border-right:0;
+  box-shadow:18px 0 45px rgba(91,15,24,.08);
+}
+
+.brand{
+  padding-top:24px;
+  padding-bottom:22px;
+  border-bottom:1px solid rgba(255,255,255,.13);
+}
+.brand-mark{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:none;
+}
+.brand strong{font-weight:720;letter-spacing:-.02em}
+.brand small{color:rgba(255,255,255,.68)}
+
+.tabs{gap:5px;padding-top:14px}
+.tab{
+  border:0;
+  color:rgba(255,255,255,.72);
+  background:transparent;
+  border-radius:10px;
+  padding:11px 12px;
+  font-weight:560;
+  transition:background .16s ease,color .16s ease,transform .16s ease;
+}
+.tab:hover{
+  color:#fff;
+  background:rgba(255,255,255,.075);
+  transform:translateX(2px);
+}
+.tab.active{
+  color:#fff;
+  background:rgba(255,255,255,.13);
+  box-shadow:inset 3px 0 0 #fff;
+}
+
+.sidebar-foot{
+  color:rgba(255,255,255,.62);
+  border-top:1px solid rgba(255,255,255,.13);
+}
+
+/* Topo: menos containerizado, mais "relatório financeiro" */
+.content-shell{background:transparent}
+.topbar{
+  background:rgba(247,243,241,.88);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(221,209,206,.75);
+}
+.top-title b{
+  color:var(--ink);
+  font-size:13px;
+  font-weight:720;
+}
+.top-title small{color:var(--muted)}
+.syncpill{
+  border-color:var(--line-strong);
+  background:rgba(255,255,255,.72);
+  color:#5E565A;
+}
+.syncpill.online{
+  background:#EEF4F0;
+  color:#34634D;
+  border-color:#D9E8DE;
+}
+.syncpill.warn{
+  background:#FBF2E9;
+  color:#865931;
+  border-color:#F0DDC9;
+}
+
+/* Área de página */
+main{padding-top:28px}
+.workspace-head{
+  align-items:flex-end;
+  margin-bottom:24px;
+}
+.eyebrow{
+  color:var(--br-red);
+  font-size:9px;
+  letter-spacing:.16em;
+  font-weight:800;
+}
+#pageTitle{
+  font-size:31px;
+  line-height:1.05;
+  letter-spacing:-.045em;
+  font-weight:720;
+  color:#2B2427;
+  margin-top:4px;
+}
+#pageSubtitle{
+  color:#80777B;
+  max-width:720px;
+  margin-top:7px;
+  font-size:11px;
+  line-height:1.55;
+}
+
+.periodbar{
+  background:rgba(255,255,255,.78);
+  border:1px solid var(--line);
+  padding:5px;
+  border-radius:13px;
+  box-shadow:0 4px 15px rgba(78,34,40,.025);
+}
+.periodbar select,.periodbar input{
+  background:transparent;
+  border-color:transparent;
+}
+.period-summary{color:#8A7E82!important}
+
+/* Cards: menos "caixinhas iguais"; mais superfícies leves */
+.card{
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(226,216,213,.86);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.card:hover{
+  border-color:#DED0CD;
+}
+.section{margin-top:20px}
+
+/* KPIs — menor altura, mais tipografia, menos borda */
+.kpi{
+  min-height:104px;
+  padding:17px 18px 15px;
+  position:relative;
+  overflow:hidden;
+}
+.kpi::after{
+  content:"";
+  position:absolute;
+  right:-26px;
+  top:-34px;
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(204,9,47,.055),rgba(204,9,47,0) 68%);
+  pointer-events:none;
+}
+.kpi label{
+  color:#8A7E82;
+  font-size:9px;
+  font-weight:680;
+  letter-spacing:.025em;
+  text-transform:none;
+}
+.kpi strong{
+  color:#2C2528;
+  font-size:22px;
+  font-weight:710;
+  letter-spacing:-.035em;
+  margin-top:8px;
+}
+.kpi small{
+  color:#94898D;
+  font-size:9px;
+  margin-top:5px;
+}
+.kpi .good,.good{color:#3D7257!important}
+.kpi .bad,.bad{color:var(--br-red)!important}
+
+/* Cabeçalhos dos gráficos com cara de apresentação, não de widget */
+.chart-card{padding:18px 18px 15px}
+.chart-head{
+  margin-bottom:13px;
+  align-items:flex-start;
+}
+.chart-head h3{
+  color:#30282B;
+  font-size:13px;
+  font-weight:710;
+  letter-spacing:-.018em;
+}
+.chart-head p{
+  color:#897D81;
+  font-size:9.5px;
+  line-height:1.45;
+  margin-top:3px;
+  max-width:640px;
+}
+.pill{
+  background:var(--soft-red);
+  color:#8F2E41;
+  border:0;
+  border-radius:999px;
+  font-weight:650;
+  font-size:8px;
+  padding:5px 9px;
+}
+.chart-wrap{
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(252,250,249,.78),rgba(255,255,255,.98));
+}
+
+/* Formulários e filtros: mais próximos de papel/caderno financeiro */
+.filterbar,.context-toolbar,.projection-form{
+  background:transparent;
+}
+.filterbar{
+  padding:0;
+  border:0;
+  margin-bottom:16px;
+}
+.filter-group{
+  gap:7px;
+}
+select,input{
+  border-color:#DED4D1;
+  background:#FFFDFC;
+  border-radius:9px;
+  color:#42393D;
+}
+select:focus,input:focus{
+  border-color:rgba(204,9,47,.52);
+  box-shadow:0 0 0 3px rgba(204,9,47,.075);
+  outline:none;
+}
+
+.table-filters{
+  background:#FAF7F6;
+  border:1px solid #EEE5E2;
+  border-radius:13px;
+  padding:11px;
+  margin-bottom:10px;
+}
+.field label{
+  color:#7C7074;
+  text-transform:none;
+  letter-spacing:.01em;
+  font-weight:650;
+}
+
+/* Botões: menos genéricos; ação primária Bradesco */
+.btn{
+  border-radius:9px;
+  font-weight:650;
+  box-shadow:none;
+  transition:transform .14s ease,box-shadow .14s ease,background .14s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.green,
+.btn.primary{
+  background:var(--br-red);
+  border-color:var(--br-red);
+  color:#fff;
+}
+.btn.green:hover,
+.btn.primary:hover{
+  background:#B5092B;
+  box-shadow:0 7px 18px rgba(204,9,47,.14);
+}
+.btn.secondary{
+  background:#FFFDFC;
+  color:#5A4F53;
+  border-color:#DED4D1;
+}
+.btn.secondary:hover{
+  background:#F8F1EF;
+  border-color:#D5C5C2;
+}
+.mini-btn{
+  border-radius:8px;
+  border-color:#E1D7D4;
+  background:#fff;
+  color:#685C60;
+}
+.mini-btn:hover{
+  border-color:#CDBBBA;
+  background:#FAF6F5;
+}
+.mini-btn.del{
+  color:#A82A40;
+  background:#FFF9FA;
+  border-color:#F0D9DE;
+}
+
+/* Tabelas: leitura de relatório em vez de planilha dentro de card */
+.wrap.table-scroll-10{
+  border-color:#E9DFDC;
+  border-radius:12px;
+  background:#fff;
+}
+table{
+  font-variant-numeric:tabular-nums;
+}
+thead th{
+  background:#F7F2F1!important;
+  color:#75696D;
+  font-size:8.5px;
+  font-weight:720;
+  letter-spacing:.02em;
+  text-transform:none;
+  border-bottom-color:#E8DDDA!important;
+}
+tbody td{
+  color:#51464A;
+  border-bottom-color:#F0E9E7!important;
+}
+tbody tr:hover td{
+  background:#FCF8F7;
+}
+td.num,th.num{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.01em;
+}
+
+/* Últimos registros: mais "bloco editorial" */
+.context-card,.inline-editor{
+  background:#FAF6F5;
+  border-color:#EAE0DD;
+}
+.context-title{
+  color:#44393D;
+  letter-spacing:-.01em;
+}
+
+/* Notices */
+.notice{
+  border-radius:12px;
+  border-width:1px;
+}
+.notice.warn{
+  background:#FBF3EC;
+  border-color:#F0DDCF;
+  color:#77553C;
+}
+
+/* Micro-elementos */
+.empty{color:#94898D}
+.hint{color:#8C7F83}
+.chart-note{
+  color:#84777B;
+  background:#FAF6F5;
+  border-color:#ECE1DF;
+  border-radius:10px;
+}
+
+/* Pequena assinatura visual orgânica no topo do conteúdo */
+.workspace-head::before{
+  content:"";
+  position:absolute;
+  width:82px;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--br-red),var(--br-magenta),var(--br-indigo));
+  transform:translateY(-15px);
+  opacity:.9;
+}
+.workspace-head{position:relative}
+
+/* Receitas: preserva a identificação solicitada */
+.soft-pink{color:#D97E9B!important}
+.soft-blue{color:#4566A9!important}
+
+/* Menos "blocos perfeitos" em desktop: grids respiram um pouco mais */
+.grid7,.grid5,.grid4,.grid3,.grid2{gap:13px}
+.grid7 .kpi:nth-child(3n+1),
+.grid5 .kpi:nth-child(2n){
+  transform:translateY(2px);
+}
+
+/* Responsividade */
+@media(max-width:1100px){
+  #pageTitle{font-size:27px}
+  .kpi{min-height:98px}
+  .kpi strong{font-size:20px}
+  .grid7 .kpi:nth-child(3n+1),
+  .grid5 .kpi:nth-child(2n){transform:none}
+}
+@media(max-width:760px){
+  body{background:var(--paper)}
+  main{padding-top:20px}
+  .workspace-head::before{width:54px}
+  #pageTitle{font-size:24px}
+  .card{border-radius:15px}
+  .kpi{min-height:auto}
+  .table-filters{padding:9px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.10</small></div></div>
+  <div class="brand"><div class="brandmark">F</div><div><b>Finanças</b><small>Dashboard consolidado v8.12</small></div></div>
   <div class="navlabel">Navegação</div>
   <div class="tabs">
     <button class="tab active" data-tab="geral">Visão Geral</button>
