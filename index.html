@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.18 — ajustes finais de identidade e legibilidade */
+/* v8.19 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.18 — acompanhamento mensal de gastos fixos */
+/* v8.19 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -609,7 +609,7 @@ td.num,th.num{
 }
 
 
-/* v8.18 — despesas: ação no topo + tabela dinâmica */
+/* v8.19 — despesas: ação no topo + tabela dinâmica */
 .page-period-side{display:flex;flex-direction:column;align-items:flex-end}
 .page-period-row{display:flex;align-items:center;gap:8px}
 .page-add-variable{
@@ -1853,7 +1853,6 @@ $("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").
 ["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;
 
 $("btnOpenFixed").onclick=()=>openContextForm("fixas");
-$("btnOpenVariable").onclick=()=>openContextForm("variaveis");
 $("btnTopAddVariable").onclick=()=>{expenseTableView="variaveis";renderExpenseTableView();openContextForm("variaveis")};
 document.querySelectorAll("[data-expense-table-view]").forEach(b=>b.onclick=()=>setExpenseTableView(b.dataset.expenseTableView));
 $("btnOpenRevenue").onclick=()=>openContextForm("receitas");
