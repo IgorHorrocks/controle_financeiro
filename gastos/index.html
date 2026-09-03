@@ -877,7 +877,7 @@ td.num,th.num{
 }
 
 
-/* Controle de Gastos v1.2 — segundo aplicativo, mesma base financeira */
+/* Controle de Gastos PWA v1.3 — segundo aplicativo, mesma base financeira */
 #fixas > .card,
 #variaveis > .card{margin-top:0}
 #fixas .expense-table-pane,
@@ -897,7 +897,7 @@ td.num,th.num{
   #resumo .grid4{grid-template-columns:1fr}
 }
 
-/* Controle de Gastos v1.2.1 — análises por categoria */
+/* Controle de Gastos PWA v1.3.1 — análises por categoria */
 .expense-analysis-grid{
   margin-top:0;
   margin-bottom:14px;
@@ -915,6 +915,15 @@ td.num,th.num{
 }
 
 </style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#CC092F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Controle de Gastos">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 </head>
 <body>
 <div class="app">
@@ -2103,5 +2112,15 @@ $("btnUploadCurrent").onclick=async()=>{try{if(!account)throw new Error("Entre c
 await initPca();updateStatus();
 if(account){try{await syncFromOneDrive()}catch(e){console.warn(e);updateCloudUi()}}
 </script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js", { scope: "./" })
+      .catch(err => console.warn("Service Worker não registrado:", err));
+  });
+}
+</script>
+
 </body>
 </html>
