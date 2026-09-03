@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.17 — ajustes finais de identidade e legibilidade */
+/* v8.18 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.17 — acompanhamento mensal de gastos fixos */
+/* v8.18 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -608,6 +608,97 @@ td.num,th.num{
  .fixed-month-nav input{flex:1}
 }
 
+
+/* v8.18 — despesas: ação no topo + tabela dinâmica */
+.page-period-side{display:flex;flex-direction:column;align-items:flex-end}
+.page-period-row{display:flex;align-items:center;gap:8px}
+.page-add-variable{
+  background:var(--br-red)!important;
+  border-color:var(--br-red)!important;
+  color:#fff!important;
+  min-height:40px;
+  padding:8px 13px;
+  box-shadow:0 6px 15px rgba(204,9,47,.10);
+  white-space:nowrap;
+}
+.page-add-variable:hover{background:#B80B30!important;border-color:#B80B30!important}
+
+.expense-table-switcher{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.expense-table-switcher-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:15px 18px;
+  border-bottom:1px solid var(--line);
+  background:#FDFBFA;
+}
+.expense-table-switcher-head h3{
+  margin:0;
+  font-size:14px;
+  letter-spacing:-.015em;
+}
+.expense-table-switcher-head p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:9.5px;
+}
+.expense-table-toggle{
+  display:flex;
+  padding:3px;
+  gap:3px;
+  background:#F2ECEA;
+  border-radius:10px;
+}
+.expense-table-toggle button{
+  border:0;
+  background:transparent;
+  color:#776B6F;
+  border-radius:8px;
+  padding:8px 12px;
+  font-size:9px;
+  font-weight:780;
+  transition:background .15s ease,color .15s ease,box-shadow .15s ease;
+}
+.expense-table-toggle button.active{
+  background:var(--br-red);
+  color:#fff;
+  box-shadow:0 3px 9px rgba(204,9,47,.14);
+}
+.expense-table-toggle button:not(.active):hover{
+  background:#fff;
+  color:#4A3F43;
+}
+.expense-table-pane{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  margin:0!important;
+}
+.expense-table-pane.fixed-month-card{border:0!important}
+#expenseVariablePane{padding:17px 18px 18px}
+#expenseVariablePane>.chart-head{padding:0 0 12px}
+#expenseVariablePane .inline-editor{margin-top:12px}
+
+@media(max-width:900px){
+ .page-period-side{align-items:stretch}
+ .page-period-row{flex-wrap:wrap;justify-content:flex-end}
+ .expense-table-switcher-head{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:620px){
+ .page-period-row{width:100%;align-items:stretch}
+ .page-add-variable{width:100%}
+ .page-period-row .periodbar{flex:1}
+ .expense-table-toggle{width:100%}
+ .expense-table-toggle button{flex:1}
+}
+
 </style>
 </head>
 <body>
@@ -633,31 +724,31 @@ td.num,th.num{
 <div class="notice warn" id="noDataNotice"><b>Primeiro acesso:</b> vá em “Configuração / Importação” para carregar seus dados.</div>
 <div class="workspace-head">
 <div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle"></p></div>
-<div><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
+<div class="page-period-side"><div class="page-period-row"><button class="btn page-add-variable hidden" id="btnTopAddVariable" type="button">+ Adicionar despesa variável</button><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
 <section id="geral">
 <div class="grid4">
- <div class="card kpi">
-  <label>Média de receitas • últimos 3 meses</label>
-  <strong id="gMediaReceita3">—</strong>
-  <small id="gMediaReceita3Sub">—</small>
- </div>
- <div class="card kpi">
-  <label>Média de despesas • últimos 3 meses</label>
-  <strong id="gMediaDespesa3">—</strong>
-  <small>Fixas + variáveis + parcelas</small>
- </div>
- <div class="card kpi">
-  <label>Parcelas a pagar no futuro</label>
-  <strong id="gParcelasFuturo">—</strong>
-  <small>A partir do próximo mês</small>
- </div>
- <div class="card kpi">
-  <label>Patrimônio</label>
-  <strong id="gPat">—</strong>
-  <small id="gPatData">—</small>
-  <small id="gPatMetaStatus">—</small>
- </div>
+<div class="card kpi">
+<label>Média de receitas • últimos 3 meses</label>
+<strong id="gMediaReceita3">—</strong>
+<small id="gMediaReceita3Sub">—</small>
+</div>
+<div class="card kpi">
+<label>Média de despesas • últimos 3 meses</label>
+<strong id="gMediaDespesa3">—</strong>
+<small>Fixas + variáveis + parcelas</small>
+</div>
+<div class="card kpi">
+<label>Parcelas a pagar no futuro</label>
+<strong id="gParcelasFuturo">—</strong>
+<small>A partir do próximo mês</small>
+</div>
+<div class="card kpi">
+<label>Patrimônio</label>
+<strong id="gPat">—</strong>
+<small id="gPatData">—</small>
+<small id="gPatMetaStatus">—</small>
+</div>
 </div>
 <div class="card chart-card section">
 <div class="chart-head">
@@ -689,76 +780,69 @@ td.num,th.num{
 <div class="card chart-card"><div class="chart-head"><div><h3>Evolução das despesas</h3><p>Fixas e variáveis por mês.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasEvolucao"></canvas></div></div>
 <div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div>
 </div>
-<div class="card section fixed-month-card">
- <div class="fixed-month-head">
-  <div>
-   <h3>Gastos Fixos</h3>
-   <p id="fxMonthSubtitle">Acompanhe pagamentos e vencimentos do mês.</p>
-  </div>
-  <div class="fixed-month-actions">
-   <div class="fixed-month-nav">
-    <button type="button" id="fxMonthPrev" aria-label="Mês anterior">‹</button>
-    <input id="fxMonthPicker" type="month" min="2022-05">
-    <button type="button" id="fxMonthNext" aria-label="Mês seguinte">›</button>
-   </div>
-   <button class="btn secondary" id="btnReplicateFixed">Replicar para o mês seguinte</button>
-   <button class="btn green" id="btnOpenFixed">Adicionar gasto fixo</button>
-  </div>
- </div>
-
- <div class="fixed-month-kpis">
-  <div class="fixed-mini-kpi"><span>Total previsto</span><strong id="fxMonthTotal">—</strong><small id="fxMonthCount">—</small></div>
-  <div class="fixed-mini-kpi paid"><span>Já pago</span><strong id="fxMonthPaid">—</strong><small id="fxMonthPaidCount">—</small></div>
-  <div class="fixed-mini-kpi pending"><span>Pendente</span><strong id="fxMonthPending">—</strong><small id="fxMonthPendingCount">—</small></div>
-  <div class="fixed-mini-kpi"><span>Percentual pago</span><strong id="fxMonthPct">—</strong><small>do total previsto</small></div>
- </div>
-
- <div class="fixed-progress">
-  <div class="fixed-progress-line"><span>Progresso dos pagamentos</span><strong id="fxProgressText">—</strong></div>
-  <div class="fixed-progress-track"><div id="fxProgressBar" class="fixed-progress-bar"></div></div>
- </div>
-
- <div class="fixed-table-toolbar">
-  <div class="fixed-status-tabs" id="fxStatusTabs">
-   <button type="button" class="active" data-fixed-status="all">Todos</button>
-   <button type="button" data-fixed-status="pending">Pendentes</button>
-   <button type="button" data-fixed-status="paid">Pagos</button>
-  </div>
-  <span class="table-filter-count" id="fxTableCount"></span>
- </div>
-
- <div class="wrap table-scroll-10">
-  <table>
-   <thead>
-    <tr>
-     <th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th>
-     <th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="fixas" type="button">▾</button></span></th>
-     <th>Vencimento</th>
-     <th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="fixas" type="button">▾</button></span></th>
-     <th>Status</th>
-     <th class="num">Ações</th>
-    </tr>
-   </thead>
-   <tbody id="recentFixas"></tbody>
-  </table>
- </div>
-
- <div class="inline-editor hidden" id="fxForm">
-  <div class="context-title" id="fxFormTitle">Adicionar gasto fixo</div>
-  <div class="formgrid">
-   <div class="field"><label>Vencimento</label><input id="cFxDate" type="date"></div>
-   <div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"></div>
-   <div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
-   <div class="field"><label>Valor (R$)</label><input class="money-input" id="cFxValue" inputmode="decimal" placeholder="0,00"></div>
-  </div>
-  <div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
- </div>
+<div class="expense-table-switcher section"><div class="expense-table-switcher-head"><div><h3>Lançamentos de despesas</h3><p>Alterne entre gastos fixos e variáveis na mesma área.</p></div><div class="expense-table-toggle"><button class="active" data-expense-table-view="fixas" type="button">Gastos Fixos</button><button class="" data-expense-table-view="variaveis" type="button">Gastos Variáveis</button></div></div><div class="card fixed-month-card expense-table-pane" id="expenseFixedPane">
+<div class="fixed-month-head">
+<div>
+<h3>Gastos Fixos</h3>
+<p id="fxMonthSubtitle">Acompanhe pagamentos e vencimentos do mês.</p>
 </div>
-<div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
-
+<div class="fixed-month-actions">
+<div class="fixed-month-nav">
+<button aria-label="Mês anterior" id="fxMonthPrev" type="button">‹</button>
+<input id="fxMonthPicker" min="2022-05" type="month"/>
+<button aria-label="Mês seguinte" id="fxMonthNext" type="button">›</button>
+</div>
+<button class="btn secondary" id="btnReplicateFixed">Replicar para o mês seguinte</button>
+<button class="btn green" id="btnOpenFixed">Adicionar gasto fixo</button>
+</div>
+</div>
+<div class="fixed-month-kpis">
+<div class="fixed-mini-kpi"><span>Total previsto</span><strong id="fxMonthTotal">—</strong><small id="fxMonthCount">—</small></div>
+<div class="fixed-mini-kpi paid"><span>Já pago</span><strong id="fxMonthPaid">—</strong><small id="fxMonthPaidCount">—</small></div>
+<div class="fixed-mini-kpi pending"><span>Pendente</span><strong id="fxMonthPending">—</strong><small id="fxMonthPendingCount">—</small></div>
+<div class="fixed-mini-kpi"><span>Percentual pago</span><strong id="fxMonthPct">—</strong><small>do total previsto</small></div>
+</div>
+<div class="fixed-progress">
+<div class="fixed-progress-line"><span>Progresso dos pagamentos</span><strong id="fxProgressText">—</strong></div>
+<div class="fixed-progress-track"><div class="fixed-progress-bar" id="fxProgressBar"></div></div>
+</div>
+<div class="fixed-table-toolbar">
+<div class="fixed-status-tabs" id="fxStatusTabs">
+<button class="active" data-fixed-status="all" type="button">Todos</button>
+<button data-fixed-status="pending" type="button">Pendentes</button>
+<button data-fixed-status="paid" type="button">Pagos</button>
+</div>
+<span class="table-filter-count" id="fxTableCount"></span>
+</div>
+<div class="wrap table-scroll-10">
+<table>
+<thead>
+<tr>
+<th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th>
+<th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="fixas" type="button">▾</button></span></th>
+<th>Vencimento</th>
+<th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="fixas" type="button">▾</button></span></th>
+<th>Status</th>
+<th class="num">Ações</th>
+</tr>
+</thead>
+<tbody id="recentFixas"></tbody>
+</table>
+</div>
+<div class="inline-editor hidden" id="fxForm">
+<div class="context-title" id="fxFormTitle">Adicionar gasto fixo</div>
+<div class="formgrid">
+<div class="field"><label>Vencimento</label><input id="cFxDate" type="date"/></div>
+<div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"/></div>
+<div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
+<div class="field"><label>Valor (R$)</label><input class="money-input" id="cFxValue" inputmode="decimal" placeholder="0,00"/></div>
+</div>
+<div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
+</div>
+</div><div class="card expense-table-pane hidden" id="expenseVariablePane">
+<div class="chart-head"><div><h3>Gastos Variáveis</h3><p>Lançamentos do período selecionado. Use os filtros no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
-<div class="context-toolbar"><button class="btn green" id="btnOpenVariable">Adicionar nova despesa variável</button></div>
+
 <div class="inline-editor hidden" id="varForm">
 <div class="context-title" id="varFormTitle">Adicionar nova despesa variável</div>
 <div class="formgrid">
@@ -769,11 +853,9 @@ td.num,th.num{
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveVariable">Salvar</button><button class="btn secondary" id="btnCancelVariable">Cancelar</button></div>
 </div>
-</div>
-<div class="card section">
-<div class="chart-head"><div><h3>Histórico de despesas</h3><p>Filtrado pelos controles gerais da aba, sem remover registros do JSON.</p></div></div>
-<div class="wrap table-scroll-10"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th class="num">Valor</th><th class="num">Ações</th></tr></thead><tbody id="allDespesas"></tbody></table></div>
-</div>
+</div></div>
+
+
 </section>
 <section class="hidden" id="receitas">
 <div class="filterbar"><div class="filter-group"><select id="incomePersonFilter"><option value="all">Todas as pessoas</option></select></div></div>
@@ -789,7 +871,6 @@ td.num,th.num{
 </div>
 <div class="card section">
 <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="revTableCount"></span></div>
-
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Pessoa</span><button aria-label="Filtrar Pessoa" class="excel-filter-btn" data-field="pessoa" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="receitas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="receitas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenRevenue">Adicionar nova receita</button></div>
 <div class="inline-editor hidden" id="revForm">
@@ -818,7 +899,6 @@ td.num,th.num{
 </div>
 <div class="card section">
 <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="parTableCount"></span></div>
-
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Parcela</span><button aria-label="Filtrar Parcela" class="excel-filter-btn" data-field="parcela" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenInstallment">Adicionar nova parcela</button></div>
 <div class="inline-editor hidden" id="parForm">
@@ -873,11 +953,11 @@ td.num,th.num{
 <div class="field"><label>Aporte Aplicações Vitória</label><input class="money-input" id="projAplVit" inputmode="decimal"/></div>
 <div class="field"><label>Horizonte da projeção</label>
 <select id="projHorizon">
- <option value="24">2 anos</option>
- <option value="60">5 anos</option>
- <option value="120">10 anos</option>
- <option value="180">15 anos</option>
- <option value="240">20 anos</option>
+<option value="24">2 anos</option>
+<option value="60">5 anos</option>
+<option value="120">10 anos</option>
+<option value="180">15 anos</option>
+<option value="240">20 anos</option>
 </select>
 </div>
 </div>
@@ -885,7 +965,6 @@ td.num,th.num{
 </div>
 <div class="card section">
 <div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="invTableCount"></span></div>
-
 <div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Origem</span><button aria-label="Filtrar Origem" class="excel-filter-btn" data-field="origem" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
 <div class="context-toolbar"><button class="btn green" id="btnOpenInvestment">Adicionar novo registro de investimento</button></div>
 <div class="inline-editor hidden" id="invForm">
@@ -976,6 +1055,7 @@ const fmtDateLong=new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit"
 const fmtMonthLong=new Intl.DateTimeFormat("pt-BR",{month:"short",year:"numeric",timeZone:"UTC"});
 let data=null, charts={}, dirty=false, editing=null, contextEditing=null, pca=null, account=null, appRoot=null, remoteMeta=null, accessToken=null;
 let fixedMonthSelection=null, fixedStatusFilter="all";
+let expenseTableView="fixas";
 
 function brl(v){return fmtMoney.format(Number(v)||0)}
 function num(v){return fmtNumber.format(Number(v)||0)}
@@ -1328,6 +1408,17 @@ function syncTableFilterBounds(range){
    if(e.value&&(e.value<range.start||e.value>range.end))e.value=""
  })
 }
+function renderExpenseTableView(){
+ let fixed=expenseTableView==="fixas";
+ if($("expenseFixedPane"))$("expenseFixedPane").classList.toggle("hidden",!fixed);
+ if($("expenseVariablePane"))$("expenseVariablePane").classList.toggle("hidden",fixed);
+ document.querySelectorAll("[data-expense-table-view]").forEach(b=>b.classList.toggle("active",b.dataset.expenseTableView===expenseTableView))
+}
+function setExpenseTableView(view){
+ expenseTableView=view==="variaveis"?"variaveis":"fixas";
+ renderExpenseTableView()
+}
+
 function renderExpenses(){
  if(!data)return;
  let r=periodRange();syncTableFilterBounds(r);
@@ -1382,7 +1473,8 @@ function renderExpenses(){
  setTableCount("varTableCount",varShown.length,varAll.length,excelTableHasFilters("variaveis"));
  updateExcelFilterHeaders();
 
- $("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
+ if($("allDespesas"))$("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
+ renderExpenseTableView();
  bindFixedActions()
 }
 function renderIncome(){
@@ -1558,6 +1650,7 @@ function openContextForm(kind,rec=null){
  let c=contextConfig(kind);if(!c)return;
  contextEditing=rec?{kind,id:rec.id}:null;
  showTab(c.tab);
+ if(kind==="fixas"||kind==="variaveis"){expenseTableView=kind;renderExpenseTableView()}
  $(c.form).classList.remove("hidden");
  $(c.title).textContent=contextTitle(kind,!!rec);
 
@@ -1731,6 +1824,7 @@ function showTab(id){
  Object.keys(titles).forEach(x=>$(x).classList.toggle("hidden",x!==id));
  ["patrimonio","projecao","novo"].forEach(x=>{if($(x))$(x).classList.add("hidden")});
  $("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];
+ if($("btnTopAddVariable"))$("btnTopAddVariable").classList.toggle("hidden",id!=="despesas");
  setTimeout(()=>{renderVisibleTab(id);Object.values(charts).forEach(c=>c.resize())},80)
 }
 
@@ -1760,6 +1854,8 @@ $("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").
 
 $("btnOpenFixed").onclick=()=>openContextForm("fixas");
 $("btnOpenVariable").onclick=()=>openContextForm("variaveis");
+$("btnTopAddVariable").onclick=()=>{expenseTableView="variaveis";renderExpenseTableView();openContextForm("variaveis")};
+document.querySelectorAll("[data-expense-table-view]").forEach(b=>b.onclick=()=>setExpenseTableView(b.dataset.expenseTableView));
 $("btnOpenRevenue").onclick=()=>openContextForm("receitas");
 $("btnOpenInstallment").onclick=()=>openContextForm("parcelas");
 $("btnOpenInvestment").onclick=()=>openContextForm("investimento");
