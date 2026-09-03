@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Controle de Gastos</title>
+<title>Controle Financeiro</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#65748a;--line:#e3e8ef;--nav:#122643;--nav2:#0b1931;--blue:#2563eb;--green:#059669;--orange:#f59e0b;--purple:#8b5cf6;--red:#dc2626;--cyan:#0891b2;--pink:#db2777;--shadow:0 7px 24px rgba(15,35,65,.07)}
@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.25 — ajustes finais de identidade e legibilidade */
+/* v8.26 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.25 — acompanhamento mensal de gastos fixos */
+/* v8.26 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -609,7 +609,7 @@ td.num,th.num{
 }
 
 
-/* v8.25 — despesas: ação no topo + tabela dinâmica */
+/* v8.26 — despesas: ação no topo + tabela dinâmica */
 .page-period-side{display:flex;flex-direction:column;align-items:flex-end}
 .page-period-row{display:flex;align-items:center;gap:8px}
 .page-add-variable{
@@ -700,7 +700,7 @@ td.num,th.num{
 }
 
 
-/* v8.25 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
+/* v8.26 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
 .monthly-record-card{padding:0;overflow:hidden}
 .monthly-record-card>.inline-editor{margin:12px 18px 18px}
 .monthly-record-card .fixed-table-toolbar .table-period-note{margin:0}
@@ -708,7 +708,7 @@ td.num,th.num{
 #btnTopAddInstallment:hover{background:#B80B30!important;border-color:#B80B30!important}
 
 
-/* v8.25 — tabelas compactas e responsivas */
+/* v8.26 — tabelas compactas e responsivas */
 .compact-data-table{
   width:100%;
   table-layout:fixed;
@@ -836,7 +836,7 @@ td.num,th.num{
 }
 
 
-/* v8.25 — investimentos sem coluna Origem */
+/* v8.26 — investimentos sem coluna Origem */
 .table-investimentos th:nth-child(1),.table-investimentos td:nth-child(1){width:36%}
 .table-investimentos th:nth-child(2),.table-investimentos td:nth-child(2){width:22%}
 .table-investimentos th:nth-child(3),.table-investimentos td:nth-child(3){width:18%}
@@ -849,7 +849,7 @@ td.num,th.num{
 }
 
 
-/* v8.25 — ações das tabelas com ícones */
+/* v8.26 — ações das tabelas com ícones */
 .icon-btn{
   width:28px;
   height:28px;
@@ -881,7 +881,7 @@ td.num,th.num{
 <body>
 <div class="app">
 <aside class="sidebar">
-<div class="brand"><div><b>Controle de Gastos</b></div></div>
+<div class="brand"><div><b>Controle Financeiro</b></div></div>
 <div class="navlabel">Navegação</div>
 <div class="tabs">
 <button class="tab active" data-tab="geral">Visão Geral</button>
@@ -894,7 +894,7 @@ td.num,th.num{
 </aside>
 <div class="content-shell">
 <header class="topbar"><div class="topbar-inner">
-<div class="top-title"><b>Controle de Gastos</b><small id="dataStatus">Nenhum dado carregado</small></div>
+<div class="top-title"><b>Controle Financeiro</b><small id="dataStatus">Nenhum dado carregado</small></div>
 <div class="top-actions"><span class="period-summary" id="dirtyState"></span><span class="syncpill" id="syncPill">Sem dados</span><button class="btn secondary" id="btnTopSync">Sincronizar</button></div>
 </div></header>
 <main>
