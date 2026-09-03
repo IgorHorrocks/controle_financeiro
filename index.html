@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.22 — ajustes finais de identidade e legibilidade */
+/* v8.24 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.22 — acompanhamento mensal de gastos fixos */
+/* v8.24 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -609,7 +609,7 @@ td.num,th.num{
 }
 
 
-/* v8.22 — despesas: ação no topo + tabela dinâmica */
+/* v8.24 — despesas: ação no topo + tabela dinâmica */
 .page-period-side{display:flex;flex-direction:column;align-items:flex-end}
 .page-period-row{display:flex;align-items:center;gap:8px}
 .page-add-variable{
@@ -700,7 +700,7 @@ td.num,th.num{
 }
 
 
-/* v8.22 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
+/* v8.24 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
 .monthly-record-card{padding:0;overflow:hidden}
 .monthly-record-card>.inline-editor{margin:12px 18px 18px}
 .monthly-record-card .fixed-table-toolbar .table-period-note{margin:0}
@@ -708,7 +708,7 @@ td.num,th.num{
 #btnTopAddInstallment:hover{background:#B80B30!important;border-color:#B80B30!important}
 
 
-/* v8.22 — tabelas compactas e responsivas */
+/* v8.24 — tabelas compactas e responsivas */
 .compact-data-table{
   width:100%;
   table-layout:fixed;
@@ -833,6 +833,47 @@ td.num,th.num{
   .table-investimentos{min-width:455px}
   .table-fixas{min-width:535px}
   .table-parcelas{min-width:535px}
+}
+
+
+/* v8.24 — investimentos sem coluna Origem */
+.table-investimentos th:nth-child(1),.table-investimentos td:nth-child(1){width:36%}
+.table-investimentos th:nth-child(2),.table-investimentos td:nth-child(2){width:22%}
+.table-investimentos th:nth-child(3),.table-investimentos td:nth-child(3){width:18%}
+.table-investimentos th:nth-child(4),.table-investimentos td:nth-child(4){width:24%}
+@media(max-width:700px){
+  .table-investimentos{min-width:410px}
+}
+@media(max-width:430px){
+  .table-investimentos{min-width:385px}
+}
+
+
+/* v8.24 — ações das tabelas com ícones */
+.icon-btn{
+  width:28px;
+  height:28px;
+  padding:5px!important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.icon-btn svg{
+  width:14px;
+  height:14px;
+  display:block;
+  fill:currentColor;
+}
+@media(max-width:700px){
+  .icon-btn{
+    width:24px;
+    height:24px;
+    padding:4px!important;
+  }
+  .icon-btn svg{
+    width:12px;
+    height:12px;
+  }
 }
 
 </style>
@@ -1090,7 +1131,7 @@ td.num,th.num{
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveProjection">Salvar premissas</button><button class="btn secondary" id="btnResetProjection">Restaurar premissas padrão</button></div>
 </div>
-<div class="card section monthly-record-card" id="investmentMonthCard"><div class="fixed-month-head"><div><h3>Investimentos do mês</h3><p id="invMonthSubtitle">Acompanhe e atualize a composição patrimonial do mês.</p></div><div class="fixed-month-actions"><div class="fixed-month-nav"><button aria-label="Mês anterior" id="invMonthPrev" type="button">‹</button><input id="invMonthPicker" min="2022-05" type="month"/><button aria-label="Mês seguinte" id="invMonthNext" type="button">›</button></div><button class="btn secondary" id="btnReplicateInvestment" type="button">Replicar para o mês seguinte</button><button class="btn green" id="btnOpenInvestment">Adicionar registro</button></div></div><div class="fixed-month-kpis"><div class="fixed-mini-kpi"><span>Patrimônio total</span><strong id="invMonthTotal">—</strong><small>soma dos componentes</small></div><div class="fixed-mini-kpi"><span>Sem FGTS</span><strong id="invMonthSem">—</strong><small>no mês selecionado</small></div><div class="fixed-mini-kpi"><span>FGTS total</span><strong id="invMonthFgts">—</strong><small>no mês selecionado</small></div><div class="fixed-mini-kpi"><span>Registros</span><strong id="invMonthCount">—</strong><small>componentes no mês</small></div></div><div class="fixed-table-toolbar"><div class="table-period-note">Use os filtros no cabeçalho das colunas.</div><span class="table-filter-count" id="invTableCount"></span></div><div class="wrap table-scroll-10"><table class="compact-data-table table-investimentos"><thead><tr><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Origem</span><button aria-label="Filtrar Origem" class="excel-filter-btn" data-field="origem" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div><div class="inline-editor hidden" id="invForm">
+<div class="card section monthly-record-card" id="investmentMonthCard"><div class="fixed-month-head"><div><h3>Investimentos do mês</h3><p id="invMonthSubtitle">Acompanhe e atualize a composição patrimonial do mês.</p></div><div class="fixed-month-actions"><div class="fixed-month-nav"><button aria-label="Mês anterior" id="invMonthPrev" type="button">‹</button><input id="invMonthPicker" min="2022-05" type="month"/><button aria-label="Mês seguinte" id="invMonthNext" type="button">›</button></div><button class="btn secondary" id="btnReplicateInvestment" type="button">Replicar para o mês seguinte</button><button class="btn green" id="btnOpenInvestment">Adicionar registro</button></div></div><div class="fixed-month-kpis"><div class="fixed-mini-kpi"><span>Patrimônio total</span><strong id="invMonthTotal">—</strong><small>soma dos componentes</small></div><div class="fixed-mini-kpi"><span>Sem FGTS</span><strong id="invMonthSem">—</strong><small>no mês selecionado</small></div><div class="fixed-mini-kpi"><span>FGTS total</span><strong id="invMonthFgts">—</strong><small>no mês selecionado</small></div><div class="fixed-mini-kpi"><span>Registros</span><strong id="invMonthCount">—</strong><small>componentes no mês</small></div></div><div class="fixed-table-toolbar"><div class="table-period-note">Use os filtros no cabeçalho das colunas.</div><span class="table-filter-count" id="invTableCount"></span></div><div class="wrap table-scroll-10"><table class="compact-data-table table-investimentos"><thead><tr><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div><div class="inline-editor hidden" id="invForm">
 <div class="context-title" id="invFormTitle">Adicionar novo registro de investimento</div>
 <div class="formgrid">
 <div class="field hidden"><label>Mês</label><input id="cInvDate" min="2022-05" type="month"/></div>
@@ -1381,11 +1422,15 @@ function renderGeneral(){
  renderCapitalAllocationChart("chartCapital",r);
  stackedByCategory("chartFixosOverview",data.despesas.fixas,r);stackedByCategory("chartVariaveisOverview",data.despesas.variaveis,r);stackedByCategory("chartParcelasOverview",data.parcelas,r);}
 
-function actionButtons(kind,id){return `<div class="actions"><button class="mini-btn" data-edit-kind="${kind}" data-id="${esc(id)}">Editar</button><button class="mini-btn del" data-del-kind="${kind}" data-id="${esc(id)}">Excluir</button></div>`}
-function bindActions(scope=document){scope.querySelectorAll("[data-del-kind]").forEach(b=>b.onclick=()=>deleteRecord(b.dataset.delKind,b.dataset.id));scope.querySelectorAll("[data-edit-kind]").forEach(b=>b.onclick=()=>beginEdit(b.dataset.editKind,b.dataset.id))}
-
-function tableFilterIsActive(ids){
- return ids.some(id=>{let e=$(id);if(!e)return false;return e.tagName==="SELECT"?e.value!=="all":!!String(e.value||"").trim()})
+function actionButtons(kind,id){
+ return `<div class="actions">
+  <button class="mini-btn icon-btn" data-edit-kind="${esc(kind)}" data-id="${esc(id)}" title="Editar" aria-label="Editar">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5V20h3.5L18.6 8.9l-3.5-3.5L4 16.5Zm16.7-10.3a1 1 0 0 0 0-1.4l-1.5-1.5a1 1 0 0 0-1.4 0l-1.6 1.6 3.5 3.5 1.6-1.6Z"/></svg>
+  </button>
+  <button class="mini-btn del icon-btn" data-del-kind="${esc(kind)}" data-id="${esc(id)}" title="Excluir" aria-label="Excluir">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21a2 2 0 0 1-2-2V7h14v12a2 2 0 0 1-2 2H7Zm1-3h2V10H8v8Zm6 0h2V10h-2v8ZM4 4h5l1-1h4l1 1h5v2H4V4Z"/></svg>
+  </button>
+ </div>`
 }
 function tableDatePass(rec,start,end){
  let d=String(rec.data||"").slice(0,10),m=monthKey(rec.data);
@@ -1431,7 +1476,6 @@ const EXCEL_TABLE_CONFIG={
  investimentos:{render:()=>renderInvestments(),rows:()=>data.investimentos.historico.filter(x=>monthKey(x.data)===investmentMonth()),columns:{
   descricao:{label:"Componente",value:x=>x.descricao||"",type:"text"},
   classe:{label:"Classe",value:x=>x.classe||investmentClass(x.descricao),type:"text"},
-  origem:{label:"Origem",value:x=>x.origem||"—",type:"text"},
   valor:{label:"Saldo",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}}
 };
 function excelRawKey(v){return typeof v==="number"?`n:${v}`:`s:${String(v)}`}
@@ -1565,8 +1609,12 @@ function fixedActionButtons(rec){
  let paid=fixedIsPaid(rec);
  return `<div class="actions">
   <button class="mini-btn ${paid?"":"pay"}" data-fixed-pay="${esc(rec.id)}">${paid?"Desfazer":"Marcar pago"}</button>
-  <button class="mini-btn" data-edit-kind="fixas" data-id="${esc(rec.id)}">Editar valor</button>
-  <button class="mini-btn del" data-del-kind="fixas" data-id="${esc(rec.id)}">Excluir</button>
+  <button class="mini-btn icon-btn" data-edit-kind="fixas" data-id="${esc(rec.id)}" title="Editar" aria-label="Editar">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5V20h3.5L18.6 8.9l-3.5-3.5L4 16.5Zm16.7-10.3a1 1 0 0 0 0-1.4l-1.5-1.5a1 1 0 0 0-1.4 0l-1.6 1.6 3.5 3.5 1.6-1.6Z"/></svg>
+  </button>
+  <button class="mini-btn del icon-btn" data-del-kind="fixas" data-id="${esc(rec.id)}" title="Excluir" aria-label="Excluir">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21a2 2 0 0 1-2-2V7h14v12a2 2 0 0 1-2 2H7Zm1-3h2V10H8v8Zm6 0h2V10h-2v8ZM4 4h5l1-1h4l1 1h5v2H4V4Z"/></svg>
+  </button>
  </div>`
 }
 function fixedTableHtml(rows){
@@ -1812,8 +1860,8 @@ function renderInvestments(){
  $("invMonthCount").textContent=String(base.length);
 
  $("recentInvestimentos").innerHTML=all.length
-  ?all.map(x=>`<tr><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
-  :`<tr><td colspan="5"><div class="empty">Nenhum registro de investimento neste mês.</div></td></tr>`;
+  ?all.map(x=>`<tr><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
+  :`<tr><td colspan="4"><div class="empty">Nenhum registro de investimento neste mês.</div></td></tr>`;
 
  $("invTableCount").textContent=`${all.length} de ${base.length} em ${monthLabel(im)}`;
  updateExcelFilterHeaders();
