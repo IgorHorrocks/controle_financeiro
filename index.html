@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.19 — ajustes finais de identidade e legibilidade */
+/* v8.22 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.19 — acompanhamento mensal de gastos fixos */
+/* v8.22 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -609,7 +609,7 @@ td.num,th.num{
 }
 
 
-/* v8.19 — despesas: ação no topo + tabela dinâmica */
+/* v8.22 — despesas: ação no topo + tabela dinâmica */
 .page-period-side{display:flex;flex-direction:column;align-items:flex-end}
 .page-period-row{display:flex;align-items:center;gap:8px}
 .page-add-variable{
@@ -699,6 +699,142 @@ td.num,th.num{
  .expense-table-toggle button{flex:1}
 }
 
+
+/* v8.22 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
+.monthly-record-card{padding:0;overflow:hidden}
+.monthly-record-card>.inline-editor{margin:12px 18px 18px}
+.monthly-record-card .fixed-table-toolbar .table-period-note{margin:0}
+#btnTopAddInstallment{background:var(--br-red)!important;border-color:var(--br-red)!important;color:#fff!important}
+#btnTopAddInstallment:hover{background:#B80B30!important;border-color:#B80B30!important}
+
+
+/* v8.22 — tabelas compactas e responsivas */
+.compact-data-table{
+  width:100%;
+  table-layout:fixed;
+  min-width:0;
+}
+.compact-data-table th,
+.compact-data-table td{
+  padding-left:6px;
+  padding-right:6px;
+}
+.compact-data-table td{
+  font-size:9px;
+}
+.compact-data-table thead th{
+  font-size:7.8px;
+}
+.compact-data-table .excel-th{
+  gap:2px;
+}
+.compact-data-table .excel-filter-btn{
+  width:16px;
+  height:16px;
+  flex:0 0 16px;
+  line-height:16px;
+  font-size:8px;
+}
+.compact-data-table .actions{
+  gap:3px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.compact-data-table .mini-btn{
+  padding:4px 5px;
+  font-size:7.2px;
+  border-radius:6px;
+  line-height:1.1;
+}
+.compact-data-table td.desc{
+  max-width:none!important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Gastos variáveis: Data | Descrição | Categoria | Valor | Ações */
+.table-variaveis th:nth-child(1),.table-variaveis td:nth-child(1){width:13%}
+.table-variaveis th:nth-child(2),.table-variaveis td:nth-child(2){width:25%}
+.table-variaveis th:nth-child(3),.table-variaveis td:nth-child(3){width:23%}
+.table-variaveis th:nth-child(4),.table-variaveis td:nth-child(4){width:16%}
+.table-variaveis th:nth-child(5),.table-variaveis td:nth-child(5){width:23%}
+
+/* Gastos fixos */
+.table-fixas th:nth-child(1),.table-fixas td:nth-child(1){width:20%}
+.table-fixas th:nth-child(2),.table-fixas td:nth-child(2){width:18%}
+.table-fixas th:nth-child(3),.table-fixas td:nth-child(3){width:13%}
+.table-fixas th:nth-child(4),.table-fixas td:nth-child(4){width:13%}
+.table-fixas th:nth-child(5),.table-fixas td:nth-child(5){width:13%}
+.table-fixas th:nth-child(6),.table-fixas td:nth-child(6){width:23%}
+
+/* Receitas */
+.table-receitas th:nth-child(1),.table-receitas td:nth-child(1){width:20%}
+.table-receitas th:nth-child(2),.table-receitas td:nth-child(2){width:35%}
+.table-receitas th:nth-child(3),.table-receitas td:nth-child(3){width:19%}
+.table-receitas th:nth-child(4),.table-receitas td:nth-child(4){width:26%}
+
+/* Parcelas */
+.table-parcelas th:nth-child(1),.table-parcelas td:nth-child(1){width:12%}
+.table-parcelas th:nth-child(2),.table-parcelas td:nth-child(2){width:22%}
+.table-parcelas th:nth-child(3),.table-parcelas td:nth-child(3){width:20%}
+.table-parcelas th:nth-child(4),.table-parcelas td:nth-child(4){width:12%}
+.table-parcelas th:nth-child(5),.table-parcelas td:nth-child(5){width:14%}
+.table-parcelas th:nth-child(6),.table-parcelas td:nth-child(6){width:20%}
+
+/* Investimentos */
+.table-investimentos th:nth-child(1),.table-investimentos td:nth-child(1){width:28%}
+.table-investimentos th:nth-child(2),.table-investimentos td:nth-child(2){width:18%}
+.table-investimentos th:nth-child(3),.table-investimentos td:nth-child(3){width:15%}
+.table-investimentos th:nth-child(4),.table-investimentos td:nth-child(4){width:17%}
+.table-investimentos th:nth-child(5),.table-investimentos td:nth-child(5){width:22%}
+
+@media(max-width:700px){
+  .table-scroll-10{
+    max-height:390px;
+  }
+  .compact-data-table th,
+  .compact-data-table td{
+    padding:6px 4px!important;
+  }
+  .compact-data-table td{font-size:8px}
+  .compact-data-table thead th{font-size:7px}
+  .compact-data-table .excel-filter-btn{
+    width:14px;
+    height:14px;
+    flex-basis:14px;
+    line-height:14px;
+  }
+  .compact-data-table .mini-btn{
+    padding:3px 4px;
+    font-size:6.7px;
+  }
+  .compact-data-table .actions{
+    gap:2px;
+  }
+  .table-receitas{min-width:390px}
+  .table-variaveis{min-width:485px}
+  .table-investimentos{min-width:485px}
+  .table-fixas{min-width:570px}
+  .table-parcelas{min-width:570px}
+}
+@media(max-width:430px){
+  .table-scroll-10{
+    margin-left:-2px;
+    margin-right:-2px;
+  }
+  .compact-data-table th,
+  .compact-data-table td{
+    padding-left:3px!important;
+    padding-right:3px!important;
+  }
+  .table-receitas{min-width:360px}
+  .table-variaveis{min-width:455px}
+  .table-investimentos{min-width:455px}
+  .table-fixas{min-width:535px}
+  .table-parcelas{min-width:535px}
+}
+
 </style>
 </head>
 <body>
@@ -724,7 +860,7 @@ td.num,th.num{
 <div class="notice warn" id="noDataNotice"><b>Primeiro acesso:</b> vá em “Configuração / Importação” para carregar seus dados.</div>
 <div class="workspace-head">
 <div><h1 id="pageTitle">Visão Geral</h1><p id="pageSubtitle"></p></div>
-<div class="page-period-side"><div class="page-period-row"><button class="btn page-add-variable hidden" id="btnTopAddVariable" type="button">+ Adicionar despesa variável</button><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
+<div class="page-period-side"><div class="page-period-row"><button class="btn page-add-variable hidden" id="btnTopAddVariable" type="button">+ Adicionar despesa variável</button><button class="btn page-add-variable hidden" id="btnTopAddInstallment" type="button">+ Adicionar parcela</button><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
 <section id="geral">
 <div class="grid4">
@@ -815,7 +951,7 @@ td.num,th.num{
 <span class="table-filter-count" id="fxTableCount"></span>
 </div>
 <div class="wrap table-scroll-10">
-<table>
+<table class="compact-data-table table-fixas">
 <thead>
 <tr>
 <th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th>
@@ -833,7 +969,7 @@ td.num,th.num{
 <div class="context-title" id="fxFormTitle">Adicionar gasto fixo</div>
 <div class="formgrid">
 <div class="field"><label>Vencimento</label><input id="cFxDate" type="date"/></div>
-<div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"/></div>
+<div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="20" placeholder="Ex.: Condomínio"/></div>
 <div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
 <div class="field"><label>Valor (R$)</label><input class="money-input" id="cFxValue" inputmode="decimal" placeholder="0,00"/></div>
 </div>
@@ -841,21 +977,18 @@ td.num,th.num{
 </div>
 </div><div class="card expense-table-pane hidden" id="expenseVariablePane">
 <div class="chart-head"><div><h3>Gastos Variáveis</h3><p>Lançamentos do período selecionado. Use os filtros no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
-<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
-
+<div class="wrap table-scroll-10"><table class="compact-data-table table-variaveis"><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
 <div class="inline-editor hidden" id="varForm">
 <div class="context-title" id="varFormTitle">Adicionar nova despesa variável</div>
 <div class="formgrid">
 <div class="field"><label>Data</label><input id="cVarDate" type="date"/></div>
-<div class="field"><label>Descrição</label><input id="cVarDesc" maxlength="160" placeholder="Ex.: Supermercado"/></div>
+<div class="field"><label>Descrição</label><input id="cVarDesc" maxlength="20" placeholder="Ex.: Supermercado"/></div>
 <div class="field"><label>Categoria</label><select id="cVarCat"></select></div>
 <div class="field"><label>Valor (R$)</label><input class="money-input" id="cVarValue" inputmode="decimal" placeholder="0,00"/></div>
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveVariable">Salvar</button><button class="btn secondary" id="btnCancelVariable">Cancelar</button></div>
 </div>
 </div></div>
-
-
 </section>
 <section class="hidden" id="receitas">
 <div class="filterbar"><div class="filter-group"><select id="incomePersonFilter"><option value="all">Todas as pessoas</option></select></div></div>
@@ -869,21 +1002,16 @@ td.num,th.num{
 <div class="card chart-card"><div class="chart-head"><div><h3>Receitas mensais</h3><p>Igor em azul e Vitória em rosa pastel.</p></div></div><div class="chart-wrap"><canvas id="chartReceitas"></canvas></div></div>
 <div class="card chart-card"><div class="chart-head"><div><h3>Composição da receita</h3><p>Participação percentual pela média do período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartReceitasDonut"></canvas></div></div>
 </div>
-<div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="revTableCount"></span></div>
-<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Pessoa</span><button aria-label="Filtrar Pessoa" class="excel-filter-btn" data-field="pessoa" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="receitas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="receitas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div>
-<div class="context-toolbar"><button class="btn green" id="btnOpenRevenue">Adicionar nova receita</button></div>
-<div class="inline-editor hidden" id="revForm">
+<div class="card section monthly-record-card" id="revenueMonthCard"><div class="fixed-month-head"><div><h3>Receitas do mês</h3><p id="revMonthSubtitle">Acompanhe e atualize as receitas do mês.</p></div><div class="fixed-month-actions"><div class="fixed-month-nav"><button aria-label="Mês anterior" id="revMonthPrev" type="button">‹</button><input id="revMonthPicker" min="2022-05" type="month"/><button aria-label="Mês seguinte" id="revMonthNext" type="button">›</button></div><button class="btn secondary" id="btnReplicateRevenue" type="button">Replicar para o mês seguinte</button><button class="btn green" id="btnOpenRevenue">Adicionar receita</button></div></div><div class="fixed-month-kpis"><div class="fixed-mini-kpi"><span>Total do mês</span><strong id="revMonthTotal">—</strong><small id="revMonthCount">—</small></div><div class="fixed-mini-kpi"><span>Igor</span><strong id="revMonthIgor">—</strong><small>receitas no mês</small></div><div class="fixed-mini-kpi"><span>Vitória</span><strong id="revMonthVitoria">—</strong><small>receitas no mês</small></div><div class="fixed-mini-kpi"><span>Média por lançamento</span><strong id="revMonthAverage">—</strong><small>no mês selecionado</small></div></div><div class="fixed-table-toolbar"><div class="table-period-note">Use os filtros no cabeçalho das colunas.</div><span class="table-filter-count" id="revTableCount"></span></div><div class="wrap table-scroll-10"><table class="compact-data-table table-receitas"><thead><tr><th><span class="excel-th"><span>Pessoa</span><button aria-label="Filtrar Pessoa" class="excel-filter-btn" data-field="pessoa" data-table-filter="receitas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="receitas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="receitas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentReceitas"></tbody></table></div><div class="inline-editor hidden" id="revForm">
 <div class="context-title" id="revFormTitle">Adicionar nova receita</div>
 <div class="formgrid">
-<div class="field"><label>Data</label><input id="cRevDate" type="date"/></div>
+<div class="field hidden"><label>Data</label><input id="cRevDate" type="date"/></div>
 <div class="field"><label>Pessoa</label><select id="cRevPerson"></select></div>
-<div class="field"><label>Descrição</label><input id="cRevDesc" maxlength="160" placeholder="Ex.: Salário"/></div>
+<div class="field"><label>Descrição</label><input id="cRevDesc" maxlength="20" placeholder="Ex.: Salário"/></div>
 <div class="field"><label>Valor (R$)</label><input class="money-input" id="cRevValue" inputmode="decimal" placeholder="0,00"/></div>
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveRevenue">Salvar</button><button class="btn secondary" id="btnCancelRevenue">Cancelar</button></div>
-</div>
-</div>
+</div></div>
 </section>
 <section class="hidden" id="parcelas">
 <div class="filterbar"><div class="filter-group"><select id="installmentCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
@@ -899,13 +1027,12 @@ td.num,th.num{
 </div>
 <div class="card section">
 <div class="chart-head"><div><h3>Últimos lançamentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="parTableCount"></span></div>
-<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Parcela</span><button aria-label="Filtrar Parcela" class="excel-filter-btn" data-field="parcela" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
-<div class="context-toolbar"><button class="btn green" id="btnOpenInstallment">Adicionar nova parcela</button></div>
+<div class="wrap table-scroll-10"><table class="compact-data-table table-parcelas"><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="parcelas" type="button">▾</button></span></th><th><span class="excel-th"><span>Parcela</span><button aria-label="Filtrar Parcela" class="excel-filter-btn" data-field="parcela" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="parcelas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentParcelas"></tbody></table></div>
 <div class="inline-editor hidden" id="parForm">
 <div class="context-title" id="parFormTitle">Adicionar nova compra parcelada</div>
 <div class="formgrid">
 <div class="field"><label>Data da primeira parcela</label><input id="cParDate" type="date"/></div>
-<div class="field"><label>Descrição</label><input id="cParDesc" maxlength="160" placeholder="Ex.: Passagem aérea"/></div>
+<div class="field"><label>Descrição</label><input id="cParDesc" maxlength="20" placeholder="Ex.: Passagem aérea"/></div>
 <div class="field"><label>Categoria</label><select id="cParCat"></select></div>
 <div class="field"><label id="cParValueLabel">Valor total da compra (R$)</label><input class="money-input" id="cParValue" inputmode="decimal" placeholder="0,00"/></div>
 <div class="field"><label>Número de parcelas</label><input id="cParNum" max="120" min="1" type="number" value="1"/></div>
@@ -963,21 +1090,16 @@ td.num,th.num{
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveProjection">Salvar premissas</button><button class="btn secondary" id="btnResetProjection">Restaurar premissas padrão</button></div>
 </div>
-<div class="card section">
-<div class="chart-head"><div><h3>Últimos registros / atualizações dos investimentos</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="invTableCount"></span></div>
-<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Origem</span><button aria-label="Filtrar Origem" class="excel-filter-btn" data-field="origem" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div>
-<div class="context-toolbar"><button class="btn green" id="btnOpenInvestment">Adicionar novo registro de investimento</button></div>
-<div class="inline-editor hidden" id="invForm">
+<div class="card section monthly-record-card" id="investmentMonthCard"><div class="fixed-month-head"><div><h3>Investimentos do mês</h3><p id="invMonthSubtitle">Acompanhe e atualize a composição patrimonial do mês.</p></div><div class="fixed-month-actions"><div class="fixed-month-nav"><button aria-label="Mês anterior" id="invMonthPrev" type="button">‹</button><input id="invMonthPicker" min="2022-05" type="month"/><button aria-label="Mês seguinte" id="invMonthNext" type="button">›</button></div><button class="btn secondary" id="btnReplicateInvestment" type="button">Replicar para o mês seguinte</button><button class="btn green" id="btnOpenInvestment">Adicionar registro</button></div></div><div class="fixed-month-kpis"><div class="fixed-mini-kpi"><span>Patrimônio total</span><strong id="invMonthTotal">—</strong><small>soma dos componentes</small></div><div class="fixed-mini-kpi"><span>Sem FGTS</span><strong id="invMonthSem">—</strong><small>no mês selecionado</small></div><div class="fixed-mini-kpi"><span>FGTS total</span><strong id="invMonthFgts">—</strong><small>no mês selecionado</small></div><div class="fixed-mini-kpi"><span>Registros</span><strong id="invMonthCount">—</strong><small>componentes no mês</small></div></div><div class="fixed-table-toolbar"><div class="table-period-note">Use os filtros no cabeçalho das colunas.</div><span class="table-filter-count" id="invTableCount"></span></div><div class="wrap table-scroll-10"><table class="compact-data-table table-investimentos"><thead><tr><th><span class="excel-th"><span>Componente</span><button aria-label="Filtrar Componente" class="excel-filter-btn" data-field="descricao" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Classe</span><button aria-label="Filtrar Classe" class="excel-filter-btn" data-field="classe" data-table-filter="investimentos" type="button">▾</button></span></th><th><span class="excel-th"><span>Origem</span><button aria-label="Filtrar Origem" class="excel-filter-btn" data-field="origem" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Saldo</span><button aria-label="Filtrar Saldo" class="excel-filter-btn" data-field="valor" data-table-filter="investimentos" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentInvestimentos"></tbody></table></div><div class="inline-editor hidden" id="invForm">
 <div class="context-title" id="invFormTitle">Adicionar novo registro de investimento</div>
 <div class="formgrid">
-<div class="field"><label>Mês</label><input id="cInvDate" min="2022-05" type="month"/></div>
+<div class="field hidden"><label>Mês</label><input id="cInvDate" min="2022-05" type="month"/></div>
 <div class="field"><label>Componente patrimonial</label><select id="cInvComp"></select></div>
 <div class="field"><label>Saldo (R$)</label><input class="money-input" id="cInvValue" inputmode="decimal" placeholder="0,00"/></div>
 </div>
 <div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e altera apenas o componente informado.</div>
 <div class="form-actions"><button class="btn green" id="btnSaveInvestment">Salvar</button><button class="btn secondary" id="btnCancelInvestment">Cancelar</button></div>
-</div>
-</div>
+</div></div>
 </section>
 <section class="hidden" id="patrimonio"></section>
 <section class="hidden" id="projecao"></section>
@@ -986,7 +1108,7 @@ td.num,th.num{
 <div class="formgrid">
 <div class="field"><label>Tipo</label><select id="nTipo"><option value="fixas">Despesa fixa</option><option value="variaveis">Despesa variável</option><option value="parcelas">Compra parcelada</option><option value="receitas">Receita</option><option value="investimento">Atualização de investimento / patrimônio</option></select></div>
 <div class="field"><label>Data</label><input id="nData" type="date"/></div>
-<div class="field" id="fDescricao"><label>Descrição</label><input id="nDescricao" maxlength="160" placeholder="Ex.: Supermercado, seguro do carro, salário"/></div>
+<div class="field" id="fDescricao"><label>Descrição</label><input id="nDescricao" maxlength="20" placeholder="Ex.: Supermercado, seguro do carro, salário"/></div>
 <div class="field" id="fCategoria"><label>Categoria</label><select id="nCategoria"></select></div>
 <div class="field hidden" id="fPessoa"><label>Pessoa</label><select id="nPessoa"><option>Igor</option><option>Vitória</option><option>Outro</option></select></div>
 <div class="field hidden" id="fComponente"><label>Componente patrimonial</label><select id="nComponente"></select><div class="hint">Ao criar um novo mês, o dashboard replica o último fechamento e atualiza apenas este componente.</div></div>
@@ -1015,6 +1137,14 @@ td.num,th.num{
 <div class="excel-filter-actions"><button class="btn secondary" id="excelFilterClear" type="button">Limpar</button><button class="btn green" id="excelFilterApply" type="button">Aplicar</button></div>
 </div><div class="toast" id="toast"></div>
 <script type="module">
+function normalizeDescription20(value){
+ return String(value||"")
+  .replace(/^\s*Ajuste\s+do\s+resumo\s+Excel\s*[-–—:]\s*/i,"")
+  .replace(/\s+/g," ")
+  .trim()
+  .slice(0,20)
+}
+
 import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
 
 const $=id=>document.getElementById(id);
@@ -1056,6 +1186,7 @@ const fmtMonthLong=new Intl.DateTimeFormat("pt-BR",{month:"short",year:"numeric"
 let data=null, charts={}, dirty=false, editing=null, contextEditing=null, pca=null, account=null, appRoot=null, remoteMeta=null, accessToken=null;
 let fixedMonthSelection=null, fixedStatusFilter="all";
 let expenseTableView="fixas";
+let revenueMonthSelection=null, investmentMonthSelection=null;
 
 function brl(v){return fmtMoney.format(Number(v)||0)}
 function num(v){return fmtNumber.format(Number(v)||0)}
@@ -1110,8 +1241,27 @@ function makeChart(id,config){if(charts[id])charts[id].destroy();let el=$(id);if
 function lineDataset(label,data,color,extra={}){return{type:"line",label,data,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:1.5,pointHoverRadius:4,tension:.2,fill:false,stack:`line:${label}`,...extra}}
 function stackedByCategory(id,records,range){let cats=[...new Set(records.filter(x=>inRange(x,range)).map(x=>x.categoria||"Outros"))].sort(),labels=range.months,datasets=cats.map(c=>({type:"bar",label:c,data:labels.map(m=>sumMonth(records,m,x=>(x.categoria||"Outros")===c)),backgroundColor:categoryColor(c),borderColor:categoryColor(c),borderWidth:0,stack:"total"}));datasets.push(lineDataset("Total",labels.map(m=>sumMonth(records,m)),"#42363A",{borderWidth:2.3}));makeChart(id,{type:"bar",data:{labels:labels.map(monthLabel),datasets},options:chartOpts({stacked:true})})}
 function donut(id,obj,colorMap=null){let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);makeChart(id,{type:"doughnut",data:{labels:entries.map(x=>x[0]),datasets:[{data:entries.map(x=>x[1]),backgroundColor:entries.map((x,i)=>colorMap?.[x[0]]||COLORS[i%COLORS.length]),borderWidth:2,borderColor:"#FCFAF9"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"58%",plugins:{legend:{position:"bottom",labels:{boxWidth:9,boxHeight:9,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${brl(ctx.raw)}`}}}}})}
-function donutPercent(id,obj,colorMap=null){
+function donutPercent(id,obj,colorMap=null,showDataLabels=false){
  let entries=Object.entries(obj).filter(([,v])=>Number(v)>0);
+ const inlineLabels={
+  id:`inlineLabels-${id}`,
+  afterDatasetsDraw(chart){
+   if(!showDataLabels)return;
+   const {ctx}=chart,meta=chart.getDatasetMeta(0),vals=chart.data.datasets[0]?.data||[];
+   ctx.save();
+   ctx.textAlign="center";ctx.textBaseline="middle";ctx.font='700 10px Inter, "Segoe UI", sans-serif';
+   meta.data.forEach((arc,i)=>{
+    let v=Number(vals[i]||0);if(v<=0)return;
+    let a=(arc.startAngle+arc.endAngle)/2,
+        radius=(arc.innerRadius+arc.outerRadius)/2,
+        x=arc.x+Math.cos(a)*radius,y=arc.y+Math.sin(a)*radius,
+        label=v.toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1})+"%";
+    ctx.lineWidth=3;ctx.strokeStyle="rgba(44,37,40,.28)";ctx.strokeText(label,x,y);
+    ctx.fillStyle="#fff";ctx.fillText(label,x,y)
+   });
+   ctx.restore()
+  }
+ };
  makeChart(id,{
   type:"doughnut",
   data:{
@@ -1123,6 +1273,7 @@ function donutPercent(id,obj,colorMap=null){
     borderColor:"#FCFAF9"
    }]
   },
+  plugins:showDataLabels?[inlineLabels]:[],
   options:{
    responsive:true,
    maintainAspectRatio:false,
@@ -1267,8 +1418,7 @@ const EXCEL_TABLE_CONFIG={
   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
- receitas:{render:()=>renderIncome(),rows:()=>data.receitas.filter(x=>inRange(x,periodRange())),columns:{
-  data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+ receitas:{render:()=>renderIncome(),rows:()=>data.receitas.filter(x=>monthKey(x.data)===revenueMonth()),columns:{
   pessoa:{label:"Pessoa",value:x=>x.pessoa||"—",type:"text"},
   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
@@ -1278,8 +1428,7 @@ const EXCEL_TABLE_CONFIG={
   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
   parcela:{label:"Parcela",value:x=>`${x.parcela||"—"}/${x.totalParcelas||"—"}`,type:"text"},
   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
- investimentos:{render:()=>renderInvestments(),rows:()=>data.investimentos.historico.filter(x=>inRange(x,periodRange())),columns:{
-  data:{label:"Data",value:x=>x.data,display:v=>monthLabel(monthKey(v)),type:"date"},
+ investimentos:{render:()=>renderInvestments(),rows:()=>data.investimentos.historico.filter(x=>monthKey(x.data)===investmentMonth()),columns:{
   descricao:{label:"Componente",value:x=>x.descricao||"",type:"text"},
   classe:{label:"Classe",value:x=>x.classe||investmentClass(x.descricao),type:"text"},
   origem:{label:"Origem",value:x=>x.origem||"—",type:"text"},
@@ -1322,6 +1471,67 @@ function excelApplyCurrent(){
 function excelClearCurrent(){if(!excelMenuContext)return;let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key];delete excelTableFilters[key][field];closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()}
 function updateExcelFilterHeaders(){document.querySelectorAll(".excel-filter-btn").forEach(btn=>{let state=excelTableFilters[btn.dataset.tableFilter]?.[btn.dataset.field];btn.classList.toggle("active",!!(state&&(state.sort||state.selected instanceof Set)));btn.textContent=state&&(state.selected instanceof Set)?"◆":"▾"})}
 
+
+function latestRevenueMonth(){
+ let months=data?.receitas?.map(x=>monthKey(x.data)).filter(Boolean).sort()||[];
+ return months.at(-1)||latestOperationalMonth()
+}
+function revenueMonth(){
+ if(!revenueMonthSelection)revenueMonthSelection=latestRevenueMonth();
+ if(revenueMonthSelection<HISTORY_START)revenueMonthSelection=HISTORY_START;
+ return revenueMonthSelection
+}
+function latestInvestmentMonth(){
+ let months=data?.investimentos?.historico?.map(x=>monthKey(x.data)).filter(Boolean).sort()||[];
+ return months.at(-1)||latestOperationalMonth()
+}
+function investmentMonth(){
+ if(!investmentMonthSelection)investmentMonthSelection=latestInvestmentMonth();
+ if(investmentMonthSelection<HISTORY_START)investmentMonthSelection=HISTORY_START;
+ return investmentMonthSelection
+}
+async function replicateRevenueNext(){
+ if(!data)return;
+ let source=revenueMonth(),target=addMonths(source,1),
+     sourceRows=data.receitas.filter(x=>monthKey(x.data)===source),
+     targetRows=data.receitas.filter(x=>monthKey(x.data)===target);
+ if(!sourceRows.length){toast(`Não há receitas em ${monthLabel(source)} para replicar.`);return}
+ let key=x=>`${normSearch(x.pessoa)}|${normSearch(x.descricao)}`,
+     existing=new Set(targetRows.map(key)),seen=new Set(existing),toCopy=[];
+ sourceRows.forEach(x=>{let k=key(x);if(!seen.has(k)){toCopy.push(x);seen.add(k)}});
+ if(!toCopy.length){toast(`As receitas de ${monthLabel(source)} já estão em ${monthLabel(target)}.`);return}
+ let skipped=sourceRows.length-toCopy.length;
+ if(!confirm(`Replicar receitas de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} lançamentos.${skipped?`\n${skipped} equivalentes já existentes serão ignorados.`:""}`))return;
+ let now=new Date().toISOString();
+ toCopy.forEach(x=>{
+  let day=Number(String(x.data||"").slice(8,10))||1;
+  data.receitas.push({
+   id:uid(),data:fixedDateWithDay(target,day),descricao:x.descricao,pessoa:x.pessoa,
+   valor:Number(x.valor),origem:"app",createdAt:now,replicadoDe:x.id,replicadoDeMes:source
+  })
+ });
+ revenueMonthSelection=target;
+ touch();await afterMutation(`${toCopy.length} receitas replicadas para ${monthLabel(target)}.`)
+}
+async function replicateInvestmentNext(){
+ if(!data)return;
+ let source=investmentMonth(),target=addMonths(source,1),
+     sourceRows=data.investimentos.historico.filter(x=>monthKey(x.data)===source),
+     targetRows=data.investimentos.historico.filter(x=>monthKey(x.data)===target);
+ if(!sourceRows.length){toast(`Não há registros de investimentos em ${monthLabel(source)} para replicar.`);return}
+ let existing=new Set(targetRows.map(x=>normSearch(x.descricao))),toCopy=sourceRows.filter(x=>!existing.has(normSearch(x.descricao)));
+ if(!toCopy.length){toast(`A composição de ${monthLabel(source)} já está em ${monthLabel(target)}.`);return}
+ let skipped=sourceRows.length-toCopy.length;
+ if(!confirm(`Replicar a composição de investimentos de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} registros com os mesmos saldos.${skipped?`\n${skipped} componentes já existentes serão preservados.`:""}`))return;
+ let now=new Date().toISOString();
+ toCopy.forEach(x=>data.investimentos.historico.push({
+  id:uid(),data:target+"-01",descricao:x.descricao,classe:x.classe||investmentClass(x.descricao),
+  pessoa:x.pessoa||"",valor:Number(x.valor),origem:"app",tipoRegistro:"saldoMensal",
+  createdAt:now,replicadoDe:x.id,replicadoDeMes:source
+ }));
+ investmentMonthSelection=target;
+ touch();await afterMutation(`${toCopy.length} registros de investimentos replicados para ${monthLabel(target)}.`)
+}
 
 function fixedMonth(){
  if(!fixedMonthSelection)fixedMonthSelection=latestOperationalMonth();
@@ -1392,6 +1602,8 @@ function bindFixedActions(){
 
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
+function variableExpenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("variaveis",x.id)}</td></tr>`).join("")}
+
 
 function syncTableFilterBounds(range){
  let startDate=range.start+"-01",
@@ -1469,7 +1681,7 @@ function renderExpenses(){
  let varAll=excelFilteredRows("variaveis",data.despesas.variaveis.filter(x=>inRange(x,r))),
      varShown=varAll.map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
 
- $("recentVariaveis").innerHTML=varShown.length?expenseTableHtml(varShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
+ $("recentVariaveis").innerHTML=varShown.length?variableExpenseTableHtml(varShown):`<tr><td colspan="5"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
  setTableCount("varTableCount",varShown.length,varAll.length,excelTableHasFilters("variaveis"));
  updateExcelFilterHeaders();
 
@@ -1497,13 +1709,26 @@ function renderIncome(){
  people.forEach(p=>avgByPerson[p]=r.months.reduce((s,m)=>s+incomeMonth(m,p),0)/(r.months.length||1));
  let avgTotal=Object.values(avgByPerson).reduce((a,b)=>a+b,0),comp={};
  people.forEach(p=>comp[p]=avgTotal?avgByPerson[p]/avgTotal*100:0);
- donutPercent("chartReceitasDonut",comp,incomeColors);
+ donutPercent("chartReceitasDonut",comp,incomeColors,true);
 
- let all=excelFilteredRows("receitas",data.receitas.filter(x=>inRange(x,r))),
-     shown=all;
+ let rm=revenueMonth(),
+     base=data.receitas.filter(x=>monthKey(x.data)===rm),
+     all=excelFilteredRows("receitas",base),
+     totalM=base.reduce((s,x)=>s+Number(x.valor||0),0),
+     igM=base.filter(x=>x.pessoa==="Igor").reduce((s,x)=>s+Number(x.valor||0),0),
+     viM=base.filter(x=>x.pessoa==="Vitória").reduce((s,x)=>s+Number(x.valor||0),0);
 
- $("recentReceitas").innerHTML=shown.length?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="5"><div class="empty">Nenhuma receita encontrada.</div></td></tr>`;
- setTableCount("revTableCount",shown.length,all.length,excelTableHasFilters("receitas"));
+ $("revMonthPicker").value=rm;
+ $("revMonthSubtitle").textContent=`Acompanhe e atualize as receitas de ${monthLabel(rm)}.`;
+ $("btnReplicateRevenue").textContent=`Replicar para ${monthLabel(addMonths(rm,1))}`;
+ $("revMonthTotal").textContent=brl(totalM);
+ $("revMonthCount").textContent=`${base.length} ${base.length===1?"lançamento":"lançamentos"}`;
+ $("revMonthIgor").textContent=brl(igM);
+ $("revMonthVitoria").textContent=brl(viM);
+ $("revMonthAverage").textContent=brl(base.length?totalM/base.length:0);
+
+ $("recentReceitas").innerHTML=all.length?all.map(x=>`<tr><td>${esc(x.pessoa)}</td><td class="desc">${esc(x.descricao)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("receitas",x.id)}</td></tr>`).join(""):`<tr><td colspan="4"><div class="empty">Nenhuma receita neste mês.</div></td></tr>`;
+ $("revTableCount").textContent=`${all.length} de ${base.length} em ${monthLabel(rm)}`;
  updateExcelFilterHeaders();
  bindActions($("receitas"))
 }
@@ -1572,14 +1797,25 @@ function renderInvestments(){
 
  renderCapitalAllocationChart("chartInvestAllocation",r);
 
- let all=excelFilteredRows("investimentos",data.investimentos.historico.filter(x=>inRange(x,r))),
-     shown=all;
+ let im=investmentMonth(),
+     base=data.investimentos.historico.filter(x=>monthKey(x.data)===im),
+     all=excelFilteredRows("investimentos",base),
+     totalM=base.reduce((s,x)=>s+Number(x.valor||0),0),
+     fgtsM=base.filter(x=>/FGTS/i.test(x.descricao||"")).reduce((s,x)=>s+Number(x.valor||0),0);
 
- $("recentInvestimentos").innerHTML=shown.length
-  ?shown.map(x=>`<tr><td>${dateLabel(x.data)}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
-  :`<tr><td colspan="6"><div class="empty">Nenhum registro de investimento encontrado.</div></td></tr>`;
+ $("invMonthPicker").value=im;
+ $("invMonthSubtitle").textContent=`Acompanhe e atualize a composição patrimonial de ${monthLabel(im)}.`;
+ $("btnReplicateInvestment").textContent=`Replicar para ${monthLabel(addMonths(im,1))}`;
+ $("invMonthTotal").textContent=brl(totalM);
+ $("invMonthSem").textContent=brl(totalM-fgtsM);
+ $("invMonthFgts").textContent=brl(fgtsM);
+ $("invMonthCount").textContent=String(base.length);
 
- setTableCount("invTableCount",shown.length,all.length,excelTableHasFilters("investimentos"));
+ $("recentInvestimentos").innerHTML=all.length
+  ?all.map(x=>`<tr><td class="desc">${esc(x.descricao)}</td><td>${esc(x.classe||investmentClass(x.descricao))}</td><td>${esc(x.origem||"—")}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons("investimento",x.id)}</td></tr>`).join("")
+  :`<tr><td colspan="5"><div class="empty">Nenhum registro de investimento neste mês.</div></td></tr>`;
+
+ $("invTableCount").textContent=`${all.length} de ${base.length} em ${monthLabel(im)}`;
  updateExcelFilterHeaders();
  bindActions($("investimentos"))
 }
@@ -1655,11 +1891,11 @@ function openContextForm(kind,rec=null){
  $(c.title).textContent=contextTitle(kind,!!rec);
 
  if(kind==="investimento"){
-  $(c.date).value=rec?monthKey(rec.data):periodRange().ref;
+  $(c.date).value=rec?monthKey(rec.data):investmentMonth();
   $(c.comp).value=rec?.descricao||componentDefs()[0]?.descricao||"";
   $(c.value).value=rec?moneyInput(rec.valor):"";
  }else{
-  $(c.date).value=rec?.data||(kind==="fixas"?fixedDateWithDay(fixedMonth(),10):defaultContextDate());
+  $(c.date).value=rec?.data||(kind==="fixas"?fixedDateWithDay(fixedMonth(),10):kind==="receitas"?revenueMonth()+"-01":defaultContextDate());
   if(c.desc)$(c.desc).value=rec?.descricao||"";
   if(c.cat)$(c.cat).value=rec?.categoria||categories()[0]||"";
   if(c.person)$(c.person).value=rec?.pessoa||"Igor";
@@ -1701,7 +1937,7 @@ async function saveContextRecord(kind){
    rec.data=ym+"-01";rec.descricao=comp;rec.valor=val;
    let def=componentDefs().find(x=>x.descricao===comp);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||"";
   }else{
-   let date=$(c.date).value,desc=$(c.desc).value.trim();
+   let date=$(c.date).value,desc=normalizeDescription20($(c.desc).value);
    if(!date||!desc){toast("Preencha data e descrição.");return}
    rec.data=date;rec.descricao=desc;rec.valor=val;
    if(kind==="receitas")rec.pessoa=$(c.person).value;
@@ -1712,15 +1948,15 @@ async function saveContextRecord(kind){
  }
 
  if(kind==="fixas"||kind==="variaveis"){
-  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value;
+  let date=$(c.date).value,desc=normalizeDescription20($(c.desc).value),cat=$(c.cat).value;
   if(!date||!desc){toast("Preencha data e descrição.");return}
   data.despesas[kind].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt,...(kind==="fixas"?{pago:false,vencimentoDia:Number(date.slice(8,10))||1}:{})})
  }else if(kind==="receitas"){
-  let date=$(c.date).value,desc=$(c.desc).value.trim();
+  let date=$(c.date).value,desc=normalizeDescription20($(c.desc).value);
   if(!date||!desc){toast("Preencha data e descrição.");return}
   data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$(c.person).value,valor:val,origem:"app",createdAt})
  }else if(kind==="parcelas"){
-  let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value,n=Math.max(1,Number($(c.num).value)||1);
+  let date=$(c.date).value,desc=normalizeDescription20($(c.desc).value),cat=$(c.cat).value,n=Math.max(1,Number($(c.num).value)||1);
   if(!date||!desc){toast("Preencha data e descrição.");return}
   let cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();
   for(let i=0;i<n;i++)data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})
@@ -1774,8 +2010,8 @@ function cancelEdit(){editing=null;$("editBanner").classList.add("hidden");$("bt
 function updateLaunchForm(){let t=$("nTipo").value;$("fCategoria").classList.toggle("hidden",!['fixas','variaveis','parcelas'].includes(t));$("fPessoa").classList.toggle("hidden",t!=="receitas");$("fComponente").classList.toggle("hidden",t!=="investimento");$("fNumParcelas").classList.toggle("hidden",t!=="parcelas"||!!editing);$("fDescricao").classList.toggle("hidden",t==="investimento");$("nValorLabel").textContent=t==="parcelas"&&!editing?"Valor total da compra (R$)":t==="investimento"?"Saldo do componente (R$)":"Valor (R$)"}
 function prevSnapshotBefore(ym){let months=[...new Set(data.investimentos.historico.map(x=>monthKey(x.data)))].filter(m=>m<ym).sort(),m=months.at(-1);if(!m)return{};let o={};data.investimentos.historico.filter(x=>monthKey(x.data)===m).forEach(x=>o[x.descricao]=Number(x.valor)||0);return o}
 function ensureInvestmentMonth(ym){let existing=data.investimentos.historico.filter(x=>monthKey(x.data)===ym);if(existing.length)return;let prev=prevSnapshotBefore(ym);componentDefs().forEach(c=>data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:c.descricao,classe:c.classe,pessoa:c.pessoa,valor:Number(prev[c.descricao]||0),origem:"app",tipoRegistro:"saldoMensal",createdAt:new Date().toISOString()}))}
-async function saveLaunch(){if(!data){toast("Importe dados_financeiros.json primeiro.");return}let t=$("nTipo").value,date=$("nData").value,val=parseMoney($("nValor").value);if(!date||!$("nValor").value.trim()||!Number.isFinite(val)){toast("Preencha data e valor.");return}if(editing){let{rec}=findRecord(editing.kind,editing.id);if(!rec)return;rec.data=editing.kind==="investimento"?monthKey(date)+"-01":date;rec.valor=val;if(editing.kind==="receitas"){rec.descricao=$("nDescricao").value.trim()||"Entrada";rec.pessoa=$("nPessoa").value}else if(editing.kind==="investimento"){rec.descricao=$("nComponente").value;let def=componentDefs().find(x=>x.descricao===rec.descricao);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||""}else{rec.descricao=$("nDescricao").value.trim()||$("nCategoria").value;rec.categoria=$("nCategoria").value}rec.updatedAt=new Date().toISOString();touch();cancelEdit();await afterMutation("Lançamento editado.");return}
- let desc=$("nDescricao").value.trim(),cat=$("nCategoria").value,createdAt=new Date().toISOString();if(t==="fixas"||t==="variaveis"){if(!desc){toast("Informe a descrição do gasto.");return}data.despesas[t].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})}else if(t==="receitas"){if(!desc){toast("Informe a descrição da receita.");return}data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$("nPessoa").value,valor:val,origem:"app",createdAt,legado:false})}else if(t==="parcelas"){if(!desc){toast("Informe a descrição da compra.");return}let n=Math.max(1,Number($("nNumParcelas").value)||1),cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();for(let i=0;i<n;i++){data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})}}else{let ym=monthKey(date),comp=$("nComponente").value;ensureInvestmentMonth(ym);let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);if(rec){rec.valor=val;rec.origem="app";rec.updatedAt=createdAt}else{let def=componentDefs().find(x=>x.descricao===comp);data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})}}
+async function saveLaunch(){if(!data){toast("Importe dados_financeiros.json primeiro.");return}let t=$("nTipo").value,date=$("nData").value,val=parseMoney($("nValor").value);if(!date||!$("nValor").value.trim()||!Number.isFinite(val)){toast("Preencha data e valor.");return}if(editing){let{rec}=findRecord(editing.kind,editing.id);if(!rec)return;rec.data=editing.kind==="investimento"?monthKey(date)+"-01":date;rec.valor=val;if(editing.kind==="receitas"){rec.descricao=normalizeDescription20($("nDescricao").value)||"Entrada";rec.pessoa=$("nPessoa").value}else if(editing.kind==="investimento"){rec.descricao=$("nComponente").value;let def=componentDefs().find(x=>x.descricao===rec.descricao);rec.classe=def?.classe||"Outros";rec.pessoa=def?.pessoa||""}else{rec.descricao=normalizeDescription20($("nDescricao").value)||$("nCategoria").value;rec.categoria=$("nCategoria").value}rec.updatedAt=new Date().toISOString();touch();cancelEdit();await afterMutation("Lançamento editado.");return}
+ let desc=normalizeDescription20($("nDescricao").value),cat=$("nCategoria").value,createdAt=new Date().toISOString();if(t==="fixas"||t==="variaveis"){if(!desc){toast("Informe a descrição do gasto.");return}data.despesas[t].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})}else if(t==="receitas"){if(!desc){toast("Informe a descrição da receita.");return}data.receitas.push({id:uid(),data:date,descricao:desc,pessoa:$("nPessoa").value,valor:val,origem:"app",createdAt,legado:false})}else if(t==="parcelas"){if(!desc){toast("Informe a descrição da compra.");return}let n=Math.max(1,Number($("nNumParcelas").value)||1),cents=Math.round(val*100),base=Math.floor(cents/n),rest=cents-base*n,gid=uid();for(let i=0;i<n;i++){data.parcelas.push({id:uid(),grupoId:gid,parcela:i+1,totalParcelas:n,data:addMonthsDate(date,i),descricao:desc,categoria:cat,valor:(base+(i===n-1?rest:0))/100,origem:"app",createdAt})}}else{let ym=monthKey(date),comp=$("nComponente").value;ensureInvestmentMonth(ym);let rec=data.investimentos.historico.find(x=>monthKey(x.data)===ym&&x.descricao===comp);if(rec){rec.valor=val;rec.origem="app";rec.updatedAt=createdAt}else{let def=componentDefs().find(x=>x.descricao===comp);data.investimentos.historico.push({id:uid(),data:ym+"-01",descricao:comp,classe:def?.classe||"Outros",pessoa:def?.pessoa||"",valor:val,origem:"app",tipoRegistro:"saldoMensal",createdAt})}}
  touch();$("nDescricao").value="";$("nValor").value="";await afterMutation("Lançamento adicionado.")}
 async function afterMutation(msg){rebuildPatrimonyHistory();renderAll();if(account&&remoteMeta){try{await saveRemoteWithConflictCheck();dirty=false;updateStatus();toast(msg+" Salvo no OneDrive.")}catch(e){handleError(e);toast(msg+" Alteração mantida localmente; exporte o JSON.")}}else toast(msg+" Exporte o JSON para guardar a alteração.")}
 
@@ -1825,6 +2061,7 @@ function showTab(id){
  ["patrimonio","projecao","novo"].forEach(x=>{if($(x))$(x).classList.add("hidden")});
  $("pageTitle").textContent=titles[id][0];$("pageSubtitle").textContent=titles[id][1];
  if($("btnTopAddVariable"))$("btnTopAddVariable").classList.toggle("hidden",id!=="despesas");
+ if($("btnTopAddInstallment"))$("btnTopAddInstallment").classList.toggle("hidden",id!=="parcelas");
  setTimeout(()=>{renderVisibleTab(id);Object.values(charts).forEach(c=>c.resize())},80)
 }
 
@@ -1854,9 +2091,9 @@ $("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").
 
 $("btnOpenFixed").onclick=()=>openContextForm("fixas");
 $("btnTopAddVariable").onclick=()=>{expenseTableView="variaveis";renderExpenseTableView();openContextForm("variaveis")};
+$("btnTopAddInstallment").onclick=()=>openContextForm("parcelas");
 document.querySelectorAll("[data-expense-table-view]").forEach(b=>b.onclick=()=>setExpenseTableView(b.dataset.expenseTableView));
 $("btnOpenRevenue").onclick=()=>openContextForm("receitas");
-$("btnOpenInstallment").onclick=()=>openContextForm("parcelas");
 $("btnOpenInvestment").onclick=()=>openContextForm("investimento");
 $("btnSaveFixed").onclick=()=>saveContextRecord("fixas");
 $("btnSaveVariable").onclick=()=>saveContextRecord("variaveis");
@@ -1869,6 +2106,14 @@ $("btnCancelRevenue").onclick=()=>closeContextForm("receitas");
 $("btnCancelInstallment").onclick=()=>closeContextForm("parcelas");
 $("btnCancelInvestment").onclick=()=>closeContextForm("investimento");
 $("btnReplicateFixed").onclick=replicateFixedPrevious;
+$("btnReplicateRevenue").onclick=replicateRevenueNext;
+$("revMonthPrev").onclick=()=>{revenueMonthSelection=addMonths(revenueMonth(),-1);if(revenueMonthSelection<HISTORY_START)revenueMonthSelection=HISTORY_START;renderIncome()};
+$("revMonthNext").onclick=()=>{revenueMonthSelection=addMonths(revenueMonth(),1);renderIncome()};
+$("revMonthPicker").onchange=e=>{revenueMonthSelection=e.target.value||revenueMonth();renderIncome()};
+$("btnReplicateInvestment").onclick=replicateInvestmentNext;
+$("invMonthPrev").onclick=()=>{investmentMonthSelection=addMonths(investmentMonth(),-1);if(investmentMonthSelection<HISTORY_START)investmentMonthSelection=HISTORY_START;renderInvestments()};
+$("invMonthNext").onclick=()=>{investmentMonthSelection=addMonths(investmentMonth(),1);renderInvestments()};
+$("invMonthPicker").onchange=e=>{investmentMonthSelection=e.target.value||investmentMonth();renderInvestments()};
 $("fxMonthPrev").onclick=()=>{fixedMonthSelection=addMonths(fixedMonth(),-1);if(fixedMonthSelection<HISTORY_START)fixedMonthSelection=HISTORY_START;renderExpenses()};
 $("fxMonthNext").onclick=()=>{fixedMonthSelection=addMonths(fixedMonth(),1);renderExpenses()};
 $("fxMonthPicker").onchange=e=>{fixedMonthSelection=e.target.value||fixedMonth();renderExpenses()};
