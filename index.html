@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.24 — ajustes finais de identidade e legibilidade */
+/* v8.25 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.24 — acompanhamento mensal de gastos fixos */
+/* v8.25 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -609,7 +609,7 @@ td.num,th.num{
 }
 
 
-/* v8.24 — despesas: ação no topo + tabela dinâmica */
+/* v8.25 — despesas: ação no topo + tabela dinâmica */
 .page-period-side{display:flex;flex-direction:column;align-items:flex-end}
 .page-period-row{display:flex;align-items:center;gap:8px}
 .page-add-variable{
@@ -700,7 +700,7 @@ td.num,th.num{
 }
 
 
-/* v8.24 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
+/* v8.25 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
 .monthly-record-card{padding:0;overflow:hidden}
 .monthly-record-card>.inline-editor{margin:12px 18px 18px}
 .monthly-record-card .fixed-table-toolbar .table-period-note{margin:0}
@@ -708,7 +708,7 @@ td.num,th.num{
 #btnTopAddInstallment:hover{background:#B80B30!important;border-color:#B80B30!important}
 
 
-/* v8.24 — tabelas compactas e responsivas */
+/* v8.25 — tabelas compactas e responsivas */
 .compact-data-table{
   width:100%;
   table-layout:fixed;
@@ -836,7 +836,7 @@ td.num,th.num{
 }
 
 
-/* v8.24 — investimentos sem coluna Origem */
+/* v8.25 — investimentos sem coluna Origem */
 .table-investimentos th:nth-child(1),.table-investimentos td:nth-child(1){width:36%}
 .table-investimentos th:nth-child(2),.table-investimentos td:nth-child(2){width:22%}
 .table-investimentos th:nth-child(3),.table-investimentos td:nth-child(3){width:18%}
@@ -849,7 +849,7 @@ td.num,th.num{
 }
 
 
-/* v8.24 — ações das tabelas com ícones */
+/* v8.25 — ações das tabelas com ícones */
 .icon-btn{
   width:28px;
   height:28px;
@@ -1642,6 +1642,25 @@ async function updateFixedDueDay(id,day){
  rec.data=next;rec.vencimentoDia=fixedDueDay(rec);rec.origem="app";rec.updatedAt=new Date().toISOString();
  touch();await afterMutation(`Vencimento atualizado para o dia ${fixedDueDay(rec)}.`)
 }
+
+function bindActions(root){
+ if(!root)return;
+ root.querySelectorAll("[data-edit-kind]").forEach(btn=>{
+  btn.onclick=e=>{
+   e.preventDefault();
+   e.stopPropagation();
+   beginEdit(btn.dataset.editKind,btn.dataset.id)
+  }
+ });
+ root.querySelectorAll("[data-del-kind]").forEach(btn=>{
+  btn.onclick=e=>{
+   e.preventDefault();
+   e.stopPropagation();
+   deleteRecord(btn.dataset.delKind,btn.dataset.id)
+  }
+ })
+}
+
 function bindFixedActions(){
  document.querySelectorAll("[data-fixed-pay]").forEach(b=>b.onclick=()=>toggleFixedPaid(b.dataset.fixedPay));
  document.querySelectorAll("[data-fixed-due]").forEach(i=>i.onchange=()=>updateFixedDueDay(i.dataset.fixedDue,i.value));
