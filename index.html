@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.16 — ajustes finais de identidade e legibilidade */
+/* v8.17 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -552,6 +552,61 @@ td.num,th.num{
 .excel-filter-menu input[type="checkbox"]{width:13px;height:13px;accent-color:#CC092F;flex:0 0 auto}
 .excel-filter-actions{display:flex;justify-content:space-between;gap:7px;padding-top:7px;border-top:1px solid #EEE5E3}.excel-filter-actions .btn{flex:1;min-height:30px;padding:6px 8px}
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
+
+
+/* v8.17 — acompanhamento mensal de gastos fixos */
+.fixed-month-card{padding:0;overflow:hidden}
+.fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
+.fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
+.fixed-month-head p{margin:4px 0 0;color:var(--muted);font-size:9.5px}
+.fixed-month-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.fixed-month-nav{display:flex;align-items:center;gap:3px;background:#faf6f5;border:1px solid var(--line);border-radius:10px;padding:3px}
+.fixed-month-nav button{border:0;background:transparent;width:28px;height:28px;border-radius:7px;color:#75696d;font-size:15px;line-height:1}
+.fixed-month-nav button:hover{background:#efe6e4}
+.fixed-month-nav input{border:0;background:transparent;outline:0;padding:4px 5px;font-size:9px;font-weight:700;color:#4c4145}
+.fixed-month-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-bottom:1px solid var(--line)}
+.fixed-mini-kpi{padding:14px 17px;border-right:1px solid var(--line);min-width:0}
+.fixed-mini-kpi:last-child{border-right:0}
+.fixed-mini-kpi span{display:block;color:#817579;font-size:8px;font-weight:750;text-transform:uppercase;letter-spacing:.035em}
+.fixed-mini-kpi strong{display:block;margin-top:6px;font-size:17px;letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+.fixed-mini-kpi small{display:block;color:#998d91;font-size:8px;margin-top:3px}
+.fixed-mini-kpi.paid strong{color:#557d67}
+.fixed-mini-kpi.pending strong{color:#cc092f}
+.fixed-progress{padding:12px 18px 13px;border-bottom:1px solid var(--line);background:#fdfbfa}
+.fixed-progress-line{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;color:#776b6f;font-size:8.5px}
+.fixed-progress-track{height:7px;border-radius:99px;background:#eee6e3;overflow:hidden}
+.fixed-progress-bar{height:100%;width:0;border-radius:inherit;background:#557d67;transition:width .2s ease}
+.fixed-table-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line)}
+.fixed-status-tabs{display:flex;background:#f2ecea;padding:3px;border-radius:9px}
+.fixed-status-tabs button{border:0;background:transparent;color:#786c70;padding:6px 9px;border-radius:7px;font-size:8.5px;font-weight:750}
+.fixed-status-tabs button.active{background:#fff;color:#3d3337;box-shadow:0 1px 5px rgba(50,25,31,.07)}
+.fixed-pay-status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:800;white-space:nowrap}
+.fixed-pay-status::before{content:"";width:6px;height:6px;border-radius:50%}
+.fixed-pay-status.paid{background:#edf5f0;color:#416851}
+.fixed-pay-status.paid::before{background:#557d67}
+.fixed-pay-status.pending{background:#faecef;color:#a12c43}
+.fixed-pay-status.pending::before{background:#cc092f}
+.fixed-row-paid td:first-child{box-shadow:inset 3px 0 #668b74}
+.fixed-row-pending td:first-child{box-shadow:inset 3px 0 #cc092f}
+.fixed-due-edit{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.fixed-due-edit span{color:#8b7e82;font-size:8px}
+.fixed-due-input{width:48px!important;min-height:28px!important;padding:3px 5px!important;text-align:center;font-size:9px!important;border-radius:7px!important}
+.fixed-month-card .inline-editor{margin:12px 18px 18px}
+@media(max-width:980px){
+ .fixed-month-head{align-items:flex-start;flex-direction:column}
+ .fixed-month-actions{justify-content:flex-start}
+ .fixed-month-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .fixed-mini-kpi:nth-child(2){border-right:0}
+ .fixed-mini-kpi:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media(max-width:620px){
+ .fixed-month-kpis{grid-template-columns:1fr}
+ .fixed-mini-kpi{border-right:0;border-bottom:1px solid var(--line)!important}
+ .fixed-mini-kpi:last-child{border-bottom:0!important}
+ .fixed-month-actions{width:100%}
+ .fixed-month-nav{width:100%;justify-content:space-between}
+ .fixed-month-nav input{flex:1}
+}
 
 </style>
 </head>
@@ -634,25 +689,70 @@ td.num,th.num{
 <div class="card chart-card"><div class="chart-head"><div><h3>Evolução das despesas</h3><p>Fixas e variáveis por mês.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasEvolucao"></canvas></div></div>
 <div class="card chart-card"><div class="chart-head"><div><h3>Composição por categoria</h3><p>Total no período selecionado.</p></div></div><div class="chart-wrap"><canvas id="chartDespesasCategoria"></canvas></div></div>
 </div>
-<div class="card section">
-<div class="chart-head"><div><h3>Últimos lançamentos — Despesas Fixas</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="fxTableCount"></span></div>
+<div class="card section fixed-month-card">
+ <div class="fixed-month-head">
+  <div>
+   <h3>Gastos Fixos</h3>
+   <p id="fxMonthSubtitle">Acompanhe pagamentos e vencimentos do mês.</p>
+  </div>
+  <div class="fixed-month-actions">
+   <div class="fixed-month-nav">
+    <button type="button" id="fxMonthPrev" aria-label="Mês anterior">‹</button>
+    <input id="fxMonthPicker" type="month" min="2022-05">
+    <button type="button" id="fxMonthNext" aria-label="Mês seguinte">›</button>
+   </div>
+   <button class="btn secondary" id="btnReplicateFixed">Replicar para o mês seguinte</button>
+   <button class="btn green" id="btnOpenFixed">Adicionar gasto fixo</button>
+  </div>
+ </div>
 
-<div class="wrap table-scroll-10"><table><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="fixas" type="button">▾</button></span></th><th>Tipo</th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="fixas" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="fixas" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentFixas"></tbody></table></div>
-<div class="context-toolbar">
-<div class="field"><label>Mês de destino</label><input id="fxReplicateTarget" min="2022-05" type="month"/></div>
-<button class="btn secondary" id="btnReplicateFixed">Replicar mês anterior</button>
-<button class="btn green" id="btnOpenFixed">Adicionar nova despesa fixa</button>
-</div>
-<div class="inline-editor hidden" id="fxForm">
-<div class="context-title" id="fxFormTitle">Adicionar nova despesa fixa</div>
-<div class="formgrid">
-<div class="field"><label>Data</label><input id="cFxDate" type="date"/></div>
-<div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"/></div>
-<div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
-<div class="field"><label>Valor (R$)</label><input class="money-input" id="cFxValue" inputmode="decimal" placeholder="0,00"/></div>
-</div>
-<div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
-</div>
+ <div class="fixed-month-kpis">
+  <div class="fixed-mini-kpi"><span>Total previsto</span><strong id="fxMonthTotal">—</strong><small id="fxMonthCount">—</small></div>
+  <div class="fixed-mini-kpi paid"><span>Já pago</span><strong id="fxMonthPaid">—</strong><small id="fxMonthPaidCount">—</small></div>
+  <div class="fixed-mini-kpi pending"><span>Pendente</span><strong id="fxMonthPending">—</strong><small id="fxMonthPendingCount">—</small></div>
+  <div class="fixed-mini-kpi"><span>Percentual pago</span><strong id="fxMonthPct">—</strong><small>do total previsto</small></div>
+ </div>
+
+ <div class="fixed-progress">
+  <div class="fixed-progress-line"><span>Progresso dos pagamentos</span><strong id="fxProgressText">—</strong></div>
+  <div class="fixed-progress-track"><div id="fxProgressBar" class="fixed-progress-bar"></div></div>
+ </div>
+
+ <div class="fixed-table-toolbar">
+  <div class="fixed-status-tabs" id="fxStatusTabs">
+   <button type="button" class="active" data-fixed-status="all">Todos</button>
+   <button type="button" data-fixed-status="pending">Pendentes</button>
+   <button type="button" data-fixed-status="paid">Pagos</button>
+  </div>
+  <span class="table-filter-count" id="fxTableCount"></span>
+ </div>
+
+ <div class="wrap table-scroll-10">
+  <table>
+   <thead>
+    <tr>
+     <th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="fixas" type="button">▾</button></span></th>
+     <th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="fixas" type="button">▾</button></span></th>
+     <th>Vencimento</th>
+     <th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="fixas" type="button">▾</button></span></th>
+     <th>Status</th>
+     <th class="num">Ações</th>
+    </tr>
+   </thead>
+   <tbody id="recentFixas"></tbody>
+  </table>
+ </div>
+
+ <div class="inline-editor hidden" id="fxForm">
+  <div class="context-title" id="fxFormTitle">Adicionar gasto fixo</div>
+  <div class="formgrid">
+   <div class="field"><label>Vencimento</label><input id="cFxDate" type="date"></div>
+   <div class="field"><label>Descrição</label><input id="cFxDesc" maxlength="160" placeholder="Ex.: Condomínio"></div>
+   <div class="field"><label>Categoria</label><select id="cFxCat"></select></div>
+   <div class="field"><label>Valor (R$)</label><input class="money-input" id="cFxValue" inputmode="decimal" placeholder="0,00"></div>
+  </div>
+  <div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
+ </div>
 </div>
 <div class="card section">
 <div class="chart-head"><div><h3>Últimos lançamentos — Despesas Variáveis</h3><p>Use o filtro no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
@@ -875,6 +975,7 @@ const fmtPct=new Intl.NumberFormat("pt-BR",{style:"percent",minimumFractionDigit
 const fmtDateLong=new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"UTC"});
 const fmtMonthLong=new Intl.DateTimeFormat("pt-BR",{month:"short",year:"numeric",timeZone:"UTC"});
 let data=null, charts={}, dirty=false, editing=null, contextEditing=null, pca=null, account=null, appRoot=null, remoteMeta=null, accessToken=null;
+let fixedMonthSelection=null, fixedStatusFilter="all";
 
 function brl(v){return fmtMoney.format(Number(v)||0)}
 function num(v){return fmtNumber.format(Number(v)||0)}
@@ -1077,8 +1178,7 @@ function clearTableFilters(ids,renderFn){ids.forEach(id=>{let e=$(id);if(!e)retu
 const excelTableFilters={fixas:{},variaveis:{},receitas:{},parcelas:{},investimentos:{}};
 let excelMenuContext=null,excelMenuSort=null;
 const EXCEL_TABLE_CONFIG={
- fixas:{render:()=>renderExpenses(),rows:()=>data.despesas.fixas.filter(x=>inRange(x,periodRange())),columns:{
-  data:{label:"Data",value:x=>x.data,display:v=>dateLabel(v),type:"date"},
+ fixas:{render:()=>renderExpenses(),rows:()=>data.despesas.fixas.filter(x=>monthKey(x.data)===fixedMonth()),columns:{
   descricao:{label:"Descrição",value:x=>x.descricao||"",type:"text"},
   categoria:{label:"Categoria",value:x=>x.categoria||"Outros",type:"text"},
   valor:{label:"Valor",value:x=>Number(x.valor||0),display:v=>brl(v),type:"number"}}},
@@ -1142,6 +1242,74 @@ function excelApplyCurrent(){
 function excelClearCurrent(){if(!excelMenuContext)return;let {key,field}=excelMenuContext,cfg=EXCEL_TABLE_CONFIG[key];delete excelTableFilters[key][field];closeExcelFilterMenu();cfg.render();updateExcelFilterHeaders()}
 function updateExcelFilterHeaders(){document.querySelectorAll(".excel-filter-btn").forEach(btn=>{let state=excelTableFilters[btn.dataset.tableFilter]?.[btn.dataset.field];btn.classList.toggle("active",!!(state&&(state.sort||state.selected instanceof Set)));btn.textContent=state&&(state.selected instanceof Set)?"◆":"▾"})}
 
+
+function fixedMonth(){
+ if(!fixedMonthSelection)fixedMonthSelection=latestOperationalMonth();
+ if(fixedMonthSelection<HISTORY_START)fixedMonthSelection=HISTORY_START;
+ return fixedMonthSelection
+}
+function fixedDueDay(rec){
+ let d=Number(String(rec?.data||"").slice(8,10));
+ return Number.isFinite(d)&&d>0?d:1
+}
+function fixedDateWithDay(ym,day){
+ let[y,m]=ym.split("-").map(Number),
+     last=new Date(Date.UTC(y,m,0)).getUTCDate(),
+     d=Math.max(1,Math.min(last,Number(day)||1));
+ return `${ym}-${String(d).padStart(2,"0")}`
+}
+function fixedIsPaid(rec){
+ if(rec?.pago===true)return true;
+ if(rec?.pago===false)return false;
+ return monthKey(rec?.data)<currentCalendarMonth()
+}
+function fixedMonthRows(){
+ let m=fixedMonth(),
+     rows=data.despesas.fixas.filter(x=>monthKey(x.data)===m);
+ rows=excelFilteredRows("fixas",rows);
+ if(fixedStatusFilter==="paid")rows=rows.filter(fixedIsPaid);
+ else if(fixedStatusFilter==="pending")rows=rows.filter(x=>!fixedIsPaid(x));
+ return rows
+}
+function fixedActionButtons(rec){
+ let paid=fixedIsPaid(rec);
+ return `<div class="actions">
+  <button class="mini-btn ${paid?"":"pay"}" data-fixed-pay="${esc(rec.id)}">${paid?"Desfazer":"Marcar pago"}</button>
+  <button class="mini-btn" data-edit-kind="fixas" data-id="${esc(rec.id)}">Editar valor</button>
+  <button class="mini-btn del" data-del-kind="fixas" data-id="${esc(rec.id)}">Excluir</button>
+ </div>`
+}
+function fixedTableHtml(rows){
+ return rows.map(x=>{
+  let paid=fixedIsPaid(x),day=fixedDueDay(x);
+  return `<tr class="${paid?"fixed-row-paid":"fixed-row-pending"}">
+   <td class="desc">${esc(x.descricao)}</td>
+   <td>${esc(x.categoria)}</td>
+   <td><div class="fixed-due-edit"><span>dia</span><input class="fixed-due-input" type="number" min="1" max="31" value="${day}" data-fixed-due="${esc(x.id)}" title="Editar dia do vencimento"></div></td>
+   <td class="num">${brl(x.valor)}</td>
+   <td><span class="fixed-pay-status ${paid?"paid":"pending"}">${paid?"Pago":"Pendente"}</span></td>
+   <td class="num">${fixedActionButtons(x)}</td>
+  </tr>`
+ }).join("")
+}
+async function toggleFixedPaid(id){
+ let{rec}=findRecord("fixas",id);if(!rec)return;
+ rec.pago=!fixedIsPaid(rec);rec.origem="app";rec.updatedAt=new Date().toISOString();
+ touch();await afterMutation(rec.pago?"Pagamento marcado como pago.":"Pagamento voltou para pendente.")
+}
+async function updateFixedDueDay(id,day){
+ let{rec}=findRecord("fixas",id);if(!rec)return;
+ let m=monthKey(rec.data),next=fixedDateWithDay(m,day);
+ if(next===rec.data)return;
+ rec.data=next;rec.vencimentoDia=fixedDueDay(rec);rec.origem="app";rec.updatedAt=new Date().toISOString();
+ touch();await afterMutation(`Vencimento atualizado para o dia ${fixedDueDay(rec)}.`)
+}
+function bindFixedActions(){
+ document.querySelectorAll("[data-fixed-pay]").forEach(b=>b.onclick=()=>toggleFixedPaid(b.dataset.fixedPay));
+ document.querySelectorAll("[data-fixed-due]").forEach(i=>i.onchange=()=>updateFixedDueDay(i.dataset.fixedDue,i.value));
+ bindActions($("despesas"))
+}
+
 function expenseRows(filtered=true){let r=periodRange(),type=$("expenseTypeFilter")?.value||"all",cat=$("expenseCategoryFilter")?.value||"all",rows=[];if(type==="all"||type==="fixas")rows.push(...data.despesas.fixas.map(x=>({...x,_kind:"fixas",_label:"Fixa"})));if(type==="all"||type==="variaveis")rows.push(...data.despesas.variaveis.map(x=>({...x,_kind:"variaveis",_label:"Variável"})));if(filtered)rows=rows.filter(x=>inRange(x,r)&&(cat==="all"||x.categoria===cat));return rows.sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||"")||b.data.localeCompare(a.data))}
 function expenseTableHtml(rows){return rows.map(x=>`<tr><td>${dateLabel(x.data)}</td><td>${x._label}</td><td class="desc">${esc(x.descricao)}</td><td>${esc(x.categoria)}</td><td class="num">${brl(x.valor)}</td><td class="num">${actionButtons(x._kind,x.id)}</td></tr>`).join("")}
 
@@ -1182,21 +1350,40 @@ function renderExpenses(){
 
  let rows=expenseRows(true);
 
- let fxAll=excelFilteredRows("fixas",data.despesas.fixas.filter(x=>inRange(x,r))),
-     fxShown=fxAll.map(x=>({...x,_kind:"fixas",_label:"Fixa"}));
+ let fxM=fixedMonth(),
+     fxBase=data.despesas.fixas.filter(x=>monthKey(x.data)===fxM),
+     fxAll=excelFilteredRows("fixas",fxBase),
+     fxShown=fixedStatusFilter==="paid"?fxAll.filter(fixedIsPaid):fixedStatusFilter==="pending"?fxAll.filter(x=>!fixedIsPaid(x)):fxAll,
+     fxPaid=fxBase.filter(fixedIsPaid),
+     fxTotal=fxBase.reduce((s,x)=>s+Number(x.valor||0),0),
+     fxPaidValue=fxPaid.reduce((s,x)=>s+Number(x.valor||0),0),
+     fxPendingValue=fxTotal-fxPaidValue,
+     fxPct=fxTotal?fxPaidValue/fxTotal:0;
+
+ $("fxMonthPicker").value=fxM;
+ $("fxMonthSubtitle").textContent=`Acompanhe pagamentos e vencimentos de ${monthLabel(fxM)}.`;
+ $("btnReplicateFixed").textContent=`Replicar para ${monthLabel(addMonths(fxM,1))}`;
+ $("fxMonthTotal").textContent=brl(fxTotal);
+ $("fxMonthCount").textContent=`${fxBase.length} ${fxBase.length===1?"gasto previsto":"gastos previstos"}`;
+ $("fxMonthPaid").textContent=brl(fxPaidValue);
+ $("fxMonthPaidCount").textContent=`${fxPaid.length} ${fxPaid.length===1?"pagamento concluído":"pagamentos concluídos"}`;
+ $("fxMonthPending").textContent=brl(fxPendingValue);
+ $("fxMonthPendingCount").textContent=`${fxBase.length-fxPaid.length} ${fxBase.length-fxPaid.length===1?"pagamento pendente":"pagamentos pendentes"}`;
+ $("fxMonthPct").textContent=(fxPct*100).toLocaleString("pt-BR",{maximumFractionDigits:0})+"%";
+ $("fxProgressText").textContent=`${brl(fxPaidValue)} de ${brl(fxTotal)}`;
+ $("fxProgressBar").style.width=Math.min(100,fxPct*100)+"%";
+ $("recentFixas").innerHTML=fxShown.length?fixedTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhum gasto fixo neste filtro.</div></td></tr>`;
+ $("fxTableCount").textContent=`${fxShown.length} de ${fxBase.length} em ${monthLabel(fxM)}`;
 
  let varAll=excelFilteredRows("variaveis",data.despesas.variaveis.filter(x=>inRange(x,r))),
      varShown=varAll.map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
 
- $("recentFixas").innerHTML=fxShown.length?expenseTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa fixa encontrada.</div></td></tr>`;
  $("recentVariaveis").innerHTML=varShown.length?expenseTableHtml(varShown):`<tr><td colspan="6"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
- setTableCount("fxTableCount",fxShown.length,fxAll.length,excelTableHasFilters("fixas"));
  setTableCount("varTableCount",varShown.length,varAll.length,excelTableHasFilters("variaveis"));
  updateExcelFilterHeaders();
 
  $("allDespesas").innerHTML=rows.length?expenseTableHtml(rows.slice(0,300)):`<tr><td colspan="6"><div class="empty">Sem lançamentos no período.</div></td></tr>`;
- if(!$("fxReplicateTarget").value)$("fxReplicateTarget").value=ref;
- bindActions($("despesas"))
+ bindFixedActions()
 }
 function renderIncome(){
  if(!data)return;
@@ -1379,7 +1566,7 @@ function openContextForm(kind,rec=null){
   $(c.comp).value=rec?.descricao||componentDefs()[0]?.descricao||"";
   $(c.value).value=rec?moneyInput(rec.valor):"";
  }else{
-  $(c.date).value=rec?.data||defaultContextDate();
+  $(c.date).value=rec?.data||(kind==="fixas"?fixedDateWithDay(fixedMonth(),10):defaultContextDate());
   if(c.desc)$(c.desc).value=rec?.descricao||"";
   if(c.cat)$(c.cat).value=rec?.categoria||categories()[0]||"";
   if(c.person)$(c.person).value=rec?.pessoa||"Igor";
@@ -1425,7 +1612,7 @@ async function saveContextRecord(kind){
    if(!date||!desc){toast("Preencha data e descrição.");return}
    rec.data=date;rec.descricao=desc;rec.valor=val;
    if(kind==="receitas")rec.pessoa=$(c.person).value;
-   else rec.categoria=$(c.cat).value;
+   else{rec.categoria=$(c.cat).value;if(kind==="fixas")rec.vencimentoDia=Number(date.slice(8,10))||1}
   }
   rec.origem="app";rec.updatedAt=createdAt;
   touch();closeContextForm(kind);await afterMutation("Lançamento editado.");return
@@ -1434,7 +1621,7 @@ async function saveContextRecord(kind){
  if(kind==="fixas"||kind==="variaveis"){
   let date=$(c.date).value,desc=$(c.desc).value.trim(),cat=$(c.cat).value;
   if(!date||!desc){toast("Preencha data e descrição.");return}
-  data.despesas[kind].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt})
+  data.despesas[kind].push({id:uid(),data:date,descricao:desc,categoria:cat,valor:val,origem:"app",createdAt,...(kind==="fixas"?{pago:false,vencimentoDia:Number(date.slice(8,10))||1}:{})})
  }else if(kind==="receitas"){
   let date=$(c.date).value,desc=$(c.desc).value.trim();
   if(!date||!desc){toast("Preencha data e descrição.");return}
@@ -1462,31 +1649,33 @@ async function saveContextRecord(kind){
 }
 async function replicateFixedPrevious(){
  if(!data)return;
- let target=$("fxReplicateTarget").value||periodRange().ref;
- if(target<HISTORY_START){toast("O histórico começa em mai/2022.");return}
- let source=addMonths(target,-1),
+ let source=fixedMonth(),target=addMonths(source,1),
      sourceRows=data.despesas.fixas.filter(x=>monthKey(x.data)===source),
      targetRows=data.despesas.fixas.filter(x=>monthKey(x.data)===target);
 
- if(!sourceRows.length){toast(`Não há despesas fixas em ${monthLabel(source)} para replicar.`);return}
+ if(!sourceRows.length){toast(`Não há gastos fixos em ${monthLabel(source)} para replicar.`);return}
 
  let key=x=>`${normSearch(x.descricao)}|${normSearch(x.categoria)}`,
      existing=new Set(targetRows.map(key)),
      seen=new Set(existing),toCopy=[];
  sourceRows.forEach(x=>{let k=key(x);if(!seen.has(k)){toCopy.push(x);seen.add(k)}});
 
- if(!toCopy.length){toast(`Todos os lançamentos equivalentes de ${monthLabel(source)} já existem em ${monthLabel(target)}.`);return}
+ if(!toCopy.length){toast(`Os gastos de ${monthLabel(source)} já estão em ${monthLabel(target)}.`);return}
 
  let skipped=sourceRows.length-toCopy.length;
- let msg=`Replicar despesas fixas de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} lançamentos.${skipped?`\n${skipped} equivalentes já existentes serão ignorados.`:""}\n\nDepois você poderá editar cada lançamento individualmente.`;
+ let msg=`Replicar gastos fixos de ${monthLabel(source)} para ${monthLabel(target)}?\n\nSerão criados ${toCopy.length} lançamentos como pendentes.${skipped?`\n${skipped} equivalentes já existentes serão ignorados.`:""}`;
  if(!confirm(msg))return;
 
  let now=new Date().toISOString();
  toCopy.forEach(x=>{
-  let newDate=addMonthsDate(x.data,1);
-  data.despesas.fixas.push({id:uid(),data:newDate,descricao:x.descricao,categoria:x.categoria,valor:Number(x.valor),origem:"app",createdAt:now,replicadoDe:x.id,replicadoDeMes:source})
+  let day=fixedDueDay(x),newDate=fixedDateWithDay(target,day);
+  data.despesas.fixas.push({
+   id:uid(),data:newDate,descricao:x.descricao,categoria:x.categoria,valor:Number(x.valor),
+   pago:false,vencimentoDia:day,origem:"app",createdAt:now,replicadoDe:x.id,replicadoDeMes:source
+  })
  });
- touch();await afterMutation(`${toCopy.length} despesas fixas replicadas para ${monthLabel(target)}.`)
+ fixedMonthSelection=target;
+ touch();await afterMutation(`${toCopy.length} gastos fixos replicados para ${monthLabel(target)}.`)
 }
 function cancelEdit(){editing=null;$("editBanner").classList.add("hidden");$("btnCancelEdit").classList.add("hidden");$("nTipo").disabled=false;$("nDescricao").value="";$("nValor").value="";updateLaunchForm()}
 function updateLaunchForm(){let t=$("nTipo").value;$("fCategoria").classList.toggle("hidden",!['fixas','variaveis','parcelas'].includes(t));$("fPessoa").classList.toggle("hidden",t!=="receitas");$("fComponente").classList.toggle("hidden",t!=="investimento");$("fNumParcelas").classList.toggle("hidden",t!=="parcelas"||!!editing);$("fDescricao").classList.toggle("hidden",t==="investimento");$("nValorLabel").textContent=t==="parcelas"&&!editing?"Valor total da compra (R$)":t==="investimento"?"Saldo do componente (R$)":"Valor (R$)"}
@@ -1585,6 +1774,14 @@ $("btnCancelRevenue").onclick=()=>closeContextForm("receitas");
 $("btnCancelInstallment").onclick=()=>closeContextForm("parcelas");
 $("btnCancelInvestment").onclick=()=>closeContextForm("investimento");
 $("btnReplicateFixed").onclick=replicateFixedPrevious;
+$("fxMonthPrev").onclick=()=>{fixedMonthSelection=addMonths(fixedMonth(),-1);if(fixedMonthSelection<HISTORY_START)fixedMonthSelection=HISTORY_START;renderExpenses()};
+$("fxMonthNext").onclick=()=>{fixedMonthSelection=addMonths(fixedMonth(),1);renderExpenses()};
+$("fxMonthPicker").onchange=e=>{fixedMonthSelection=e.target.value||fixedMonth();renderExpenses()};
+document.querySelectorAll("[data-fixed-status]").forEach(b=>b.onclick=()=>{
+ fixedStatusFilter=b.dataset.fixedStatus;
+ document.querySelectorAll("[data-fixed-status]").forEach(x=>x.classList.toggle("active",x===b));
+ renderExpenses()
+});
 
 document.addEventListener("click",e=>{
  let btn=e.target.closest(".excel-filter-btn");
