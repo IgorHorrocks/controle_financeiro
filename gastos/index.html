@@ -877,7 +877,7 @@ td.num,th.num{
 }
 
 
-/* Controle de Gastos v1 — segundo aplicativo, mesma base financeira */
+/* Controle de Gastos v1.1 — segundo aplicativo, mesma base financeira */
 #fixas > .card,
 #variaveis > .card{margin-top:0}
 #fixas .expense-table-pane,
@@ -896,6 +896,24 @@ td.num,th.num{
 @media(max-width:430px){
   #resumo .grid4{grid-template-columns:1fr}
 }
+
+/* Controle de Gastos v1.1.1 — análises por categoria */
+.expense-analysis-grid{
+  margin-top:0;
+  margin-bottom:14px;
+}
+.expense-analysis-grid .chart-card{
+  min-width:0;
+}
+@media(max-width:700px){
+  .expense-analysis-grid{
+    grid-template-columns:1fr;
+  }
+  .expense-analysis-grid .chart-wrap.short{
+    min-height:250px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -917,7 +935,7 @@ td.num,th.num{
 <div class="page-period-side"><div class="page-period-row"><button class="btn page-add-variable hidden" id="btnTopAddVariable" type="button">+ Adicionar despesa variável</button><button class="btn page-add-variable hidden" id="btnTopAddInstallment" type="button">+ Adicionar parcela</button><div class="periodbar"><select id="periodPreset"><option value="current">Mês atual</option><option value="3">Últimos 3 meses</option><option value="6">Últimos 6 meses</option><option selected="" value="12">Últimos 12 meses</option><option value="year">Ano atual</option><option value="custom">Período personalizado</option><option value="all">Histórico completo</option></select><input class="hidden" id="periodStart" min="2022-05" type="month"/><input class="hidden" id="periodEnd" min="2022-05" type="month"/></div></div><div class="period-summary" id="periodSummary" style="margin-top:4px;text-align:right">—</div></div>
 </div>
 <section id="resumo"><div class="grid4"><div class="card kpi"><label>Média de despesas fixas • últimos 3 meses</label><strong id="gMediaFixas3">—</strong><small>Média mensal</small></div><div class="card kpi"><label>Média de despesas variáveis • últimos 3 meses</label><strong id="gMediaVariaveis3">—</strong><small>Média mensal</small></div><div class="card kpi"><label>Média de parcelas • últimos 3 meses</label><strong id="gMediaParcelas3">—</strong><small>Média mensal</small></div><div class="card kpi"><label>Parcelas a pagar no futuro</label><strong id="gParcelasFuturo">—</strong><small>A partir do próximo mês</small></div></div><div class="grid3 section"><div class="card chart-card"><div class="chart-head"><div><h3>Gastos fixos</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartFixosOverview"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Gastos variáveis</h3><p>Evolução mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisOverview"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Parcelas</h3><p>Comprometimento mensal por categoria.</p></div></div><div class="chart-wrap short"><canvas id="chartParcelasOverview"></canvas></div></div></div></section>
-<section class="hidden" id="fixas"><div class="card fixed-month-card expense-table-pane" id="expenseFixedPane">
+<section class="hidden" id="fixas"><div class="grid2 section expense-analysis-grid"><div class="card chart-card"><div class="chart-head"><div><h3>Evolução por categoria</h3><p>Composição mensal dos gastos fixos no período selecionado.</p></div></div><div class="chart-wrap short"><canvas id="chartFixasCategoriaEvolucao"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Gastos fixos por categoria</h3><p>Total acumulado por categoria no período selecionado.</p></div></div><div class="chart-wrap short"><canvas id="chartFixasCategoriaTotal"></canvas></div></div></div><div class="card fixed-month-card expense-table-pane" id="expenseFixedPane">
 <div class="fixed-month-head">
 <div>
 <h3>Gastos Fixos</h3>
@@ -976,7 +994,7 @@ td.num,th.num{
 </div>
 <div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
 </div>
-</div></section><section class="hidden" id="variaveis"><div class="card expense-table-pane" id="expenseVariablePane">
+</div></section><section class="hidden" id="variaveis"><div class="grid2 section expense-analysis-grid"><div class="card chart-card"><div class="chart-head"><div><h3>Evolução por categoria</h3><p>Composição mensal dos gastos variáveis no período selecionado.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisCategoriaEvolucao"></canvas></div></div><div class="card chart-card"><div class="chart-head"><div><h3>Gastos variáveis por categoria</h3><p>Total acumulado por categoria no período selecionado.</p></div></div><div class="chart-wrap short"><canvas id="chartVariaveisCategoriaTotal"></canvas></div></div></div><div class="card expense-table-pane" id="expenseVariablePane">
 <div class="chart-head"><div><h3>Gastos Variáveis</h3><p>Lançamentos do período selecionado. Use os filtros no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
 <div class="wrap table-scroll-10"><table class="compact-data-table table-variaveis"><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
 <div class="inline-editor hidden" id="varForm">
@@ -990,7 +1008,6 @@ td.num,th.num{
 <div class="form-actions"><button class="btn green" id="btnSaveVariable">Salvar</button><button class="btn secondary" id="btnCancelVariable">Cancelar</button></div>
 </div>
 </div></section>
-
 <section class="hidden" id="parcelas">
 <div class="filterbar"><div class="filter-group"><select id="installmentCategoryFilter"><option value="all">Todas as categorias</option></select></div></div>
 <div class="grid4">
@@ -1019,10 +1036,6 @@ td.num,th.num{
 </div>
 </div>
 </section>
-
-
-
-
 <section class="hidden" id="config">
 <div class="grid2">
 <div class="card"><div class="title">Importação e exportação</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados<input accept=".json,application/json" hidden="" id="jsonImport" type="file"/></label><button class="btn secondary" id="btnExportJson">Exportar dados</button><button class="btn secondary" id="btnUploadCurrent">Enviar versão atual ao OneDrive</button></div><div class="small" id="jsonInfo">Nenhum dado importado.</div></div>
@@ -1518,7 +1531,9 @@ function setExpenseTableView(view){
 
 function renderFixed(){
  if(!data)return;
- let r=periodRange();syncTableFilterBounds(r);
+ let r=periodRange();
+ syncTableFilterBounds(r);
+
  let fxM=fixedMonth(),
      fxBase=data.despesas.fixas.filter(x=>monthKey(x.data)===fxM),
      fxAll=excelFilteredRows("fixas",fxBase),
@@ -1541,19 +1556,35 @@ function renderFixed(){
  $("fxMonthPct").textContent=(fxPct*100).toLocaleString("pt-BR",{maximumFractionDigits:0})+"%";
  $("fxProgressText").textContent=`${brl(fxPaidValue)} de ${brl(fxTotal)}`;
  $("fxProgressBar").style.width=Math.min(100,fxPct*100)+"%";
- $("recentFixas").innerHTML=fxShown.length?fixedTableHtml(fxShown):`<tr><td colspan="6"><div class="empty">Nenhum gasto fixo neste filtro.</div></td></tr>`;
+ $("recentFixas").innerHTML=fxShown.length
+  ?fixedTableHtml(fxShown)
+  :`<tr><td colspan="6"><div class="empty">Nenhum gasto fixo neste filtro.</div></td></tr>`;
  $("fxTableCount").textContent=`${fxShown.length} de ${fxBase.length} em ${monthLabel(fxM)}`;
+
+ stackedByCategory("chartFixasCategoriaEvolucao",data.despesas.fixas,r);
+ horizontalBar("chartFixasCategoriaTotal",categoryTotals(data.despesas.fixas,r));
+
  updateExcelFilterHeaders();
  bindFixedActions()
 }
 function renderVariable(){
  if(!data)return;
- let r=periodRange();syncTableFilterBounds(r),
-     varBase=data.despesas.variaveis.filter(x=>inRange(x,r)),
+ let r=periodRange();
+ syncTableFilterBounds(r);
+
+ let varBase=data.despesas.variaveis.filter(x=>inRange(x,r)),
      varAll=excelFilteredRows("variaveis",varBase),
      varShown=varAll.map(x=>({...x,_kind:"variaveis",_label:"Variável"}));
- $("recentVariaveis").innerHTML=varShown.length?variableExpenseTableHtml(varShown):`<tr><td colspan="5"><div class="empty">Nenhuma despesa variável encontrada.</div></td></tr>`;
+
+ $("recentVariaveis").innerHTML=varShown.length
+  ?variableExpenseTableHtml(varShown)
+  :`<tr><td colspan="5"><div class="empty">Nenhuma despesa variável encontrada no período selecionado.</div></td></tr>`;
+
  setTableCount("varTableCount",varShown.length,varBase.length,excelTableHasFilters("variaveis"));
+
+ stackedByCategory("chartVariaveisCategoriaEvolucao",data.despesas.variaveis,r);
+ horizontalBar("chartVariaveisCategoriaTotal",categoryTotals(data.despesas.variaveis,r));
+
  updateExcelFilterHeaders();
  bindActions($("variaveis"))
 }
