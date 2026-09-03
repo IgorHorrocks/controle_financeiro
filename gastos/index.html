@@ -877,7 +877,7 @@ td.num,th.num{
 }
 
 
-/* Controle de Gastos v1.1 — segundo aplicativo, mesma base financeira */
+/* Controle de Gastos v1.2 — segundo aplicativo, mesma base financeira */
 #fixas > .card,
 #variaveis > .card{margin-top:0}
 #fixas .expense-table-pane,
@@ -897,7 +897,7 @@ td.num,th.num{
   #resumo .grid4{grid-template-columns:1fr}
 }
 
-/* Controle de Gastos v1.1.1 — análises por categoria */
+/* Controle de Gastos v1.2.1 — análises por categoria */
 .expense-analysis-grid{
   margin-top:0;
   margin-bottom:14px;
@@ -1065,7 +1065,7 @@ function normalizeDescription20(value){
 import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
 
 const $=id=>document.getElementById(id);
-const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI=location.origin+location.pathname;
+const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI="https://igorhorrocks.github.io/controle_financeiro/";
 const COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5B6EB4","#7D4D7B","#6F8E7B","#C58A2B","#654E57","#D66A7D","#41596C"];
 const CATEGORY_COLORS={
  "Alimentação":"#CC092F",
