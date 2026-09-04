@@ -514,7 +514,7 @@ td.num,th.num{
 }
 
 
-/* v8.26 — ajustes finais de identidade e legibilidade */
+/* v8.27 — ajustes finais de identidade e legibilidade */
 .brand{
   display:block;
   padding:10px 10px 20px;
@@ -554,7 +554,7 @@ td.num,th.num{
 .table-filter-count{color:#93868A;font-size:9px;margin-left:auto;white-space:nowrap}
 
 
-/* v8.26 — acompanhamento mensal de gastos fixos */
+/* v8.27 — acompanhamento mensal de gastos fixos */
 .fixed-month-card{padding:0;overflow:hidden}
 .fixed-month-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:17px 18px;border-bottom:1px solid var(--line)}
 .fixed-month-head h3{margin:0;font-size:14px;letter-spacing:-.015em}
@@ -609,7 +609,7 @@ td.num,th.num{
 }
 
 
-/* v8.26 — despesas: ação no topo + tabela dinâmica */
+/* v8.27 — despesas: ação no topo + tabela dinâmica */
 .page-period-side{display:flex;flex-direction:column;align-items:flex-end}
 .page-period-row{display:flex;align-items:center;gap:8px}
 .page-add-variable{
@@ -700,7 +700,7 @@ td.num,th.num{
 }
 
 
-/* v8.26 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
+/* v8.27 — painéis mensais de receitas/investimentos e ação de parcelas no topo */
 .monthly-record-card{padding:0;overflow:hidden}
 .monthly-record-card>.inline-editor{margin:12px 18px 18px}
 .monthly-record-card .fixed-table-toolbar .table-period-note{margin:0}
@@ -708,7 +708,7 @@ td.num,th.num{
 #btnTopAddInstallment:hover{background:#B80B30!important;border-color:#B80B30!important}
 
 
-/* v8.26 — tabelas compactas e responsivas */
+/* v8.27 — tabelas compactas e responsivas */
 .compact-data-table{
   width:100%;
   table-layout:fixed;
@@ -836,7 +836,7 @@ td.num,th.num{
 }
 
 
-/* v8.26 — investimentos sem coluna Origem */
+/* v8.27 — investimentos sem coluna Origem */
 .table-investimentos th:nth-child(1),.table-investimentos td:nth-child(1){width:36%}
 .table-investimentos th:nth-child(2),.table-investimentos td:nth-child(2){width:22%}
 .table-investimentos th:nth-child(3),.table-investimentos td:nth-child(3){width:18%}
@@ -849,7 +849,7 @@ td.num,th.num{
 }
 
 
-/* v8.26 — ações das tabelas com ícones */
+/* v8.27 — ações das tabelas com ícones */
 .icon-btn{
   width:28px;
   height:28px;
@@ -1163,7 +1163,7 @@ td.num,th.num{
 <section class="hidden" id="config">
 <div class="grid2">
 <div class="card"><div class="title">Importação e exportação</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados<input accept=".json,application/json" hidden="" id="jsonImport" type="file"/></label><button class="btn secondary" id="btnExportJson">Exportar dados</button><button class="btn secondary" id="btnUploadCurrent">Enviar versão atual ao OneDrive</button></div><div class="small" id="jsonInfo">Nenhum dado importado.</div></div>
-<div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft.</div><div class="field section"><label>Application (client) ID</label><input id="clientIdInput" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/></div><div class="form-actions"><button class="btn secondary" id="btnSaveClient">Salvar Client ID</button><button class="btn green" id="btnLogin">Entrar com Microsoft</button><button class="btn secondary" id="btnLogout">Sair</button><button class="btn secondary" id="btnSync">Sincronizar OneDrive</button></div><div class="small section" id="accountInfo">Nenhuma conta conectada.</div><pre class="mono" id="remoteInfo">Ainda não sincronizado.</pre></div>
+<div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft. O aplicativo já está configurado.</div><div class="form-actions"><button class="btn green" id="btnLogin">Entrar com Microsoft</button><button class="btn secondary" id="btnLogout">Sair</button><button class="btn secondary" id="btnSync">Sincronizar OneDrive</button></div><div class="small section" id="accountInfo">Nenhuma conta conectada.</div><pre class="mono" id="remoteInfo">Ainda não sincronizado.</pre></div>
 </div>
 <div class="setupgrid section"><div class="step"><b>Redirect URI da SPA</b><div class="mono" id="redirectUriBox"></div></div><div class="step"><b>Permissão Microsoft Graph</b>Delegated permission: <b>Files.ReadWrite.AppFolder</b>. Não use Client Secret no HTML.</div></div>
 </section>
@@ -1189,7 +1189,7 @@ function normalizeDescription20(value){
 import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
 
 const $=id=>document.getElementById(id);
-const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI=location.origin+location.pathname;
+const FILE_NAME="dados_financeiros.json", CLIENT_ID="219bb9ea-ed0a-4ac0-9c28-16da10ada408", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI=location.origin+location.pathname;
 const COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5B6EB4","#7D4D7B","#6F8E7B","#C58A2B","#654E57","#D66A7D","#41596C"];
 const CATEGORY_COLORS={
  "Alimentação":"#CC092F",
@@ -2140,8 +2140,19 @@ async function importJson(file){try{let obj=JSON.parse(await file.text());if(!va
 
 function setSyncStatus(t,state=""){$("syncPill").textContent=t;$("syncPill").className="syncpill "+state}
 function updateCloudUi(){$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?"Dados sincronizados com o OneDrive.":"Ainda não sincronizado.";if(account&&remoteMeta&&!dirty)setSyncStatus("OneDrive sincronizado","online");else if(account)setSyncStatus(dirty?"Alterado localmente":"Conectado","warn");else if(data)setSyncStatus("Dados carregados");else setSyncStatus("Sem dados")}
-function clientId(){return localStorage.getItem(CLIENT_KEY)||""}
-async function initPca(){let id=clientId();$("clientIdInput").value=id;if(!id){pca=null;return}pca=new PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let resp=await pca.handleRedirectPromise();account=resp?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);updateCloudUi()}
+async function initPca(){
+ if(pca)return pca;
+ pca=new PublicClientApplication({
+  auth:{clientId:CLIENT_ID,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},
+  cache:{cacheLocation:"localStorage",storeAuthStateInCookie:false}
+ });
+ await pca.initialize();
+ let resp=await pca.handleRedirectPromise();
+ account=resp?.account||pca.getActiveAccount()||pca.getAllAccounts()[0]||null;
+ if(account)pca.setActiveAccount(account);
+ updateCloudUi();
+ return pca
+}
 async function token(){if(!pca||!account)throw new Error("Entre com a conta Microsoft primeiro.");try{let r=await pca.acquireTokenSilent({scopes:SCOPES,account});accessToken=r.accessToken;return accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});return null}throw e}}
 async function graph(path,opts={}){let t=await token();return fetch("https://graph.microsoft.com/v1.0"+path,{...opts,headers:{Authorization:`Bearer ${t}`,...(opts.headers||{})}})}
 async function ensureAppRoot(){let r=await graph("/me/drive/special/approot");if(!r.ok)throw new Error(`Não foi possível acessar a pasta do aplicativo (${r.status}).`);appRoot=await r.json();return appRoot}
@@ -2207,8 +2218,7 @@ window.addEventListener("scroll",closeExcelFilterMenu,true);
 $("manageType").onchange=renderManage;$("manageSearch").oninput=renderManage;$("nTipo").onchange=updateLaunchForm;$("btnSaveLaunch").onclick=saveLaunch;$("btnCancelEdit").onclick=cancelEdit;$("btnSaveProjection").onclick=saveProjectionSettings;$("btnResetProjection").onclick=resetProjection;
 document.querySelectorAll(".money-input").forEach(el=>el.addEventListener("blur",()=>{if(el.value.trim()!=="")el.value=moneyInput(parseMoney(el.value))}));
 $("jsonImport").onchange=()=>{let f=$("jsonImport").files?.[0];if(f)importJson(f)};$("btnExportJson").onclick=exportJson;
-$("btnSaveClient").onclick=async()=>{let id=$("clientIdInput").value.trim();localStorage.setItem(CLIENT_KEY,id);await initPca();toast("Client ID salvo.")};
-$("btnLogin").onclick=async()=>{try{if(location.protocol==="file:")throw new Error("Publique o HTML em HTTPS para usar o login Microsoft.");if(!pca)throw new Error("Salve o Client ID primeiro.");await pca.loginRedirect({scopes:SCOPES,redirectUri:REDIRECT_URI})}catch(e){handleError(e)}};
+$("btnLogin").onclick=async()=>{try{if(location.protocol==="file:")throw new Error("Publique o HTML em HTTPS para usar o login Microsoft.");await initPca();await pca.loginRedirect({scopes:SCOPES,redirectUri:REDIRECT_URI})}catch(e){handleError(e)}};
 $("btnLogout").onclick=async()=>{if(pca&&account)await pca.logoutRedirect({account,postLogoutRedirectUri:REDIRECT_URI})};
 $("btnSync").onclick=$("btnTopSync").onclick=async()=>{try{await syncFromOneDrive()}catch(e){handleError(e)}};
 $("btnUploadCurrent").onclick=async()=>{try{if(!account)throw new Error("Entre com a conta Microsoft primeiro.");let m=await getMeta();if(m&&remoteMeta?.eTag&&m.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson();toast(`${FILE_NAME} salvo no OneDrive.`)}catch(e){handleError(e)}};
