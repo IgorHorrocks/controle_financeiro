@@ -924,8 +924,23 @@ td.num,th.num{
 <meta name="apple-mobile-web-app-title" content="Controle de Gastos">
 <link rel="apple-touch-icon" href="./icon-192.png">
 
+<style>
+body.auth-locked .app{display:none!important}
+.auth-gate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:#f7f5f7;color:#302b39;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.auth-gate[hidden]{display:none!important}
+.auth-card{width:min(100%,410px);padding:32px;border:1px solid #e8e1e8;border-radius:20px;background:#fff;box-shadow:0 18px 60px #302b3914;text-align:center}
+.auth-card h1{font-size:24px;margin:0 0 10px}.auth-card p{font-size:14px;line-height:1.5;color:#675e6c;margin:0 0 22px}
+.auth-card button{width:100%;min-height:48px;border:0;border-radius:10px;background:#333b8f;color:white;font-size:15px;font-weight:700;cursor:pointer}
+.auth-card button:disabled{opacity:.6;cursor:wait}.auth-card small{display:block;min-height:18px;margin-top:14px;color:#79555b;line-height:1.45}
+</style>
 </head>
-<body>
+<body class="auth-locked">
+<div id="authGate" class="auth-gate" role="region" aria-label="Acesso ao aplicativo">
+ <div class="auth-card"><h1>Bem-vinda de volta</h1>
+ <p>Entre com sua conta Microsoft para carregar seus dados do OneDrive.</p>
+ <button id="authGateButton" type="button">Entrar com Microsoft</button>
+ <small id="authGateMessage" role="status" aria-live="polite">Verificando sua sessão…</small></div>
+</div>
 <div class="app">
 <aside class="sidebar">
 <div class="brand"><div><b>Controle de Gastos</b></div></div>
@@ -1048,7 +1063,7 @@ td.num,th.num{
 <section class="hidden" id="config">
 <div class="grid2">
 <div class="card"><div class="title">Importação e exportação</div><div class="form-actions"><label class="btn green" style="display:inline-flex;align-items:center">Importar dados<input accept=".json,application/json" hidden="" id="jsonImport" type="file"/></label><button class="btn secondary" id="btnExportJson">Exportar dados</button><button class="btn secondary" id="btnUploadCurrent">Enviar versão atual ao OneDrive</button></div><div class="small" id="jsonInfo">Nenhum dado importado.</div></div>
-<div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft.</div><div class="field section"><label>Application (client) ID</label><input id="clientIdInput" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/></div><div class="form-actions"><button class="btn secondary" id="btnSaveClient">Salvar Client ID</button><button class="btn green" id="btnLogin">Entrar com Microsoft</button><button class="btn secondary" id="btnLogout">Sair</button><button class="btn secondary" id="btnSync">Sincronizar OneDrive</button></div><div class="small section" id="accountInfo">Nenhuma conta conectada.</div><pre class="mono" id="remoteInfo">Ainda não sincronizado.</pre></div>
+<div class="card"><div class="title">Microsoft OneDrive</div><div class="subtitle">Sincronização com sua conta Microsoft.</div><div class="field section hidden"><input id="clientIdInput" type="hidden"/></div><div class="form-actions"><button class="btn secondary hidden" id="btnSaveClient">Salvar Client ID</button><button class="btn green" id="btnLogin">Entrar com Microsoft</button><button class="btn secondary" id="btnLogout">Sair</button><button class="btn secondary" id="btnSync">Sincronizar OneDrive</button></div><div class="small section" id="accountInfo">Nenhuma conta conectada.</div><pre class="mono" id="remoteInfo">Ainda não sincronizado.</pre></div>
 </div>
 <div class="setupgrid section"><div class="step"><b>Redirect URI da SPA</b><div class="mono" id="redirectUriBox"></div></div><div class="step"><b>Permissão Microsoft Graph</b>Delegated permission: <b>Files.ReadWrite.AppFolder</b>. Não use Client Secret no HTML.</div></div>
 </section>
@@ -1074,7 +1089,7 @@ function normalizeDescription20(value){
 import { PublicClientApplication, InteractionRequiredAuthError } from "https://cdn.jsdelivr.net/npm/@azure/msal-browser@5.19.0/+esm";
 
 const $=id=>document.getElementById(id);
-const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI="https://igorhorrocks.github.io/controle_financeiro/";
+const FILE_NAME="dados_financeiros.json", CLIENT_KEY="financeOneDriveClientIdV1", CLIENT_ID="219bb9ea-ed0a-4ac0-9c28-16da10ada408", SCOPES=["Files.ReadWrite.AppFolder"], REDIRECT_URI=location.origin+location.pathname;
 const COLORS=["#900F15","#CC092F","#B81570","#333B8F","#5B6EB4","#7D4D7B","#6F8E7B","#C58A2B","#654E57","#D66A7D","#41596C"];
 const CATEGORY_COLORS={
  "Alimentação":"#CC092F",
@@ -2052,15 +2067,43 @@ async function importJson(file){
 
 function setSyncStatus(t,state=""){$("syncPill").textContent=t;$("syncPill").className="syncpill "+state}
 function updateCloudUi(){$("accountInfo").textContent=account?`Conectado: ${account.username||account.name||"Conta Microsoft"}`:"Nenhuma conta conectada.";$("remoteInfo").textContent=remoteMeta?"Dados sincronizados com o OneDrive.":"Ainda não sincronizado.";if(account&&remoteMeta&&!dirty)setSyncStatus("OneDrive sincronizado","online");else if(account)setSyncStatus(dirty?"Alterado localmente":"Conectado","warn");else if(data)setSyncStatus("Dados carregados");else setSyncStatus("Sem dados")}
-function clientId(){return localStorage.getItem(CLIENT_KEY)||""}
-async function initPca(){let id=clientId();$("clientIdInput").value=id;if(!id){pca=null;return}pca=new PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let resp=await pca.handleRedirectPromise();account=resp?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);updateCloudUi()}
-async function token(){if(!pca||!account)throw new Error("Entre com a conta Microsoft primeiro.");try{let r=await pca.acquireTokenSilent({scopes:SCOPES,account});accessToken=r.accessToken;return accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});return null}throw e}}
+function clientId(){return CLIENT_ID}
+async function initPca(){let id=clientId();$("clientIdInput").value=id;if(pca)return pca;pca=new PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/consumers",redirectUri:REDIRECT_URI},cache:{cacheLocation:"localStorage"}});await pca.initialize();let resp=await pca.handleRedirectPromise();account=resp?.account||pca.getAllAccounts()[0]||null;if(account)pca.setActiveAccount(account);updateCloudUi();return pca}
+async function token(){if(!pca||!account)throw new Error("Entre com a conta Microsoft primeiro.");try{let r=await pca.acquireTokenSilent({scopes:SCOPES,account});accessToken=r.accessToken;return accessToken}catch(e){if(e instanceof InteractionRequiredAuthError){await pca.acquireTokenRedirect({scopes:SCOPES,account,redirectUri:REDIRECT_URI});throw new Error("Redirecionando para a Microsoft…")}throw e}}
 async function graph(path,opts={}){let t=await token();return fetch("https://graph.microsoft.com/v1.0"+path,{...opts,headers:{Authorization:`Bearer ${t}`,...(opts.headers||{})}})}
 async function ensureAppRoot(){let r=await graph("/me/drive/special/approot");if(!r.ok)throw new Error(`Não foi possível acessar a pasta do aplicativo (${r.status}).`);appRoot=await r.json();return appRoot}
 async function getMeta(){await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}`);if(r.status===404)return null;if(!r.ok)throw new Error(`Erro ao ler metadados de ${FILE_NAME} (${r.status}).`);return r.json()}
 async function uploadJson(){if(!data)throw new Error("Importe o JSON consolidado primeiro.");await ensureAppRoot();let r=await graph(`/me/drive/items/${encodeURIComponent(appRoot.id)}:/${FILE_NAME}:/content`,{method:"PUT",headers:{"Content-Type":"application/json; charset=utf-8"},body:JSON.stringify(data,null,2)});if(!r.ok)throw new Error(`Falha ao gravar ${FILE_NAME} no OneDrive (${r.status}).`);remoteMeta=await r.json();dirty=false;updateCloudUi();return remoteMeta}
-async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus(`${FILE_NAME} não existe`,"warn");toast("Primeiro uso: importe dados_financeiros.json e envie ao OneDrive.");updateCloudUi();return}let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error(`Falha ao baixar ${FILE_NAME} (${r.status}).`);let obj=JSON.parse(await r.text());if(!validateData(obj))throw new Error("Os dados remotos têm formato incompatível.");data=obj;remoteMeta=meta;dirty=false;refreshSelects();renderAll();toast("Base sincronizada do OneDrive.")}
+async function syncFromOneDrive(){if(!account)throw new Error("Faça login primeiro.");setSyncStatus("Sincronizando…","warn");let meta=await getMeta();if(!meta){remoteMeta=null;setSyncStatus(`${FILE_NAME} não existe`,"warn");toast("Primeiro uso: importe dados_financeiros.json e envie ao OneDrive.");updateCloudUi();return false}let r=await graph(`/me/drive/items/${encodeURIComponent(meta.id)}/content`);if(!r.ok)throw new Error(`Falha ao baixar ${FILE_NAME} (${r.status}).`);let obj=JSON.parse(await r.text());if(!validateData(obj))throw new Error("Os dados remotos têm formato incompatível.");data=obj;remoteMeta=meta;dirty=false;refreshSelects();renderAll();toast("Base sincronizada do OneDrive.");return true}
 async function saveRemoteWithConflictCheck(){let current=await getMeta();if(current&&remoteMeta?.eTag&&current.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson()}
+function gateMessage(message){$("authGateMessage").textContent=message}
+function unlockApp(){document.body.classList.remove("auth-locked");$("authGate").hidden=true}
+function lockApp(message,buttonLabel="Entrar com Microsoft"){
+ document.body.classList.add("auth-locked");$("authGate").hidden=false;
+ $("authGateButton").disabled=false;$("authGateButton").textContent=buttonLabel;
+ gateMessage(message);
+}
+async function enterApp(){
+ const button=$("authGateButton");button.disabled=true;
+ try{
+  if(location.protocol==="file:")throw new Error("Abra a versão publicada em HTTPS para entrar com a Microsoft.");
+  await initPca();
+  if(!account){
+   gateMessage("Abrindo a conta Microsoft…");
+   await pca.loginRedirect({scopes:SCOPES,redirectUri:REDIRECT_URI});
+   return;
+  }
+  gateMessage("Carregando seus dados do OneDrive…");
+  const loaded=await syncFromOneDrive();
+  if(loaded){unlockApp();return}
+  // Primeira utilização: permitir importação apenas depois de autenticar.
+  unlockApp();showTab("config");
+ }catch(e){
+  console.error(e);
+  lockApp(e?.message||"Não foi possível carregar seus dados. Tente novamente.",account?"Tentar novamente":"Entrar com Microsoft");
+ }finally{button.disabled=false}
+}
+$("authGateButton").onclick=enterApp;
 function handleError(e){console.error(e);if(String(e?.message||e)==="CONFLICT_REMOTE"){toast("Conflito: existe uma versão mais nova no OneDrive. Sincronize antes de salvar.");return}toast(e?.message||String(e))}
 
 $("redirectUriBox").textContent=REDIRECT_URI;
@@ -2103,14 +2146,14 @@ window.addEventListener("resize",closeExcelFilterMenu);
 window.addEventListener("scroll",closeExcelFilterMenu,true);
 document.querySelectorAll(".money-input").forEach(el=>el.addEventListener("blur",()=>{if(el.value.trim()!=="")el.value=moneyInput(parseMoney(el.value))}));
 $("jsonImport").onchange=()=>{let f=$("jsonImport").files?.[0];if(f)importJson(f)};$("btnExportJson").onclick=exportJson;
-$("btnSaveClient").onclick=async()=>{let id=$("clientIdInput").value.trim();localStorage.setItem(CLIENT_KEY,id);await initPca();toast("Client ID salvo.")};
-$("btnLogin").onclick=async()=>{try{if(location.protocol==="file:")throw new Error("Publique o HTML em HTTPS para usar o login Microsoft.");if(!pca)throw new Error("Salve o Client ID primeiro.");await pca.loginRedirect({scopes:SCOPES,redirectUri:REDIRECT_URI})}catch(e){handleError(e)}};
+$("btnSaveClient").onclick=async()=>{let id=$("clientIdInput").value.trim();toast("O aplicativo já está configurado para entrar com a Microsoft.")};
+$("btnLogin").onclick=async()=>{try{if(location.protocol==="file:")throw new Error("Publique o HTML em HTTPS para usar o login Microsoft.");await initPca();await pca.loginRedirect({scopes:SCOPES,redirectUri:REDIRECT_URI})}catch(e){handleError(e)}};
 $("btnLogout").onclick=async()=>{if(pca&&account)await pca.logoutRedirect({account,postLogoutRedirectUri:REDIRECT_URI})};
 $("btnSync").onclick=$("btnTopSync").onclick=async()=>{try{await syncFromOneDrive()}catch(e){handleError(e)}};
 $("btnUploadCurrent").onclick=async()=>{try{if(!account)throw new Error("Entre com a conta Microsoft primeiro.");let m=await getMeta();if(m&&remoteMeta?.eTag&&m.eTag!==remoteMeta.eTag)throw new Error("CONFLICT_REMOTE");await uploadJson();toast(`${FILE_NAME} salvo no OneDrive.`)}catch(e){handleError(e)}};
 
-await initPca();updateStatus();
-if(account){try{await syncFromOneDrive()}catch(e){console.warn(e);updateCloudUi()}}
+updateStatus();
+await enterApp();
 </script>
 
 <script>
