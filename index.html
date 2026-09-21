@@ -1032,7 +1032,7 @@ body.auth-locked .app{display:none!important}
 <div class="form-actions"><button class="btn green" id="btnSaveFixed">Salvar</button><button class="btn secondary" id="btnCancelFixed">Cancelar</button></div>
 </div>
 </div><div class="card expense-table-pane hidden" id="expenseVariablePane">
-<div class="chart-head"><div><h3>Gastos Variáveis</h3><p>Lançamentos do período selecionado. Use os filtros no cabeçalho das colunas.</p></div><span class="table-filter-count" id="varTableCount"></span></div>
+<div class="chart-head"><div><h3>Gastos Variáveis</h3><p>Lançamentos do período selecionado. Use os filtros no cabeçalho das colunas.</p></div><div class="fixed-month-actions"><button class="btn green" id="btnOpenVariable" type="button">Adicionar gasto variável</button></div></div><div class="fixed-table-toolbar"><span class="table-filter-count" id="varTableCount"></span></div>
 <div class="wrap table-scroll-10"><table class="compact-data-table table-variaveis"><thead><tr><th><span class="excel-th"><span>Data</span><button aria-label="Filtrar Data" class="excel-filter-btn" data-field="data" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Descrição</span><button aria-label="Filtrar Descrição" class="excel-filter-btn" data-field="descricao" data-table-filter="variaveis" type="button">▾</button></span></th><th><span class="excel-th"><span>Categoria</span><button aria-label="Filtrar Categoria" class="excel-filter-btn" data-field="categoria" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num"><span class="excel-th"><span>Valor</span><button aria-label="Filtrar Valor" class="excel-filter-btn" data-field="valor" data-table-filter="variaveis" type="button">▾</button></span></th><th class="num">Ações</th></tr></thead><tbody id="recentVariaveis"></tbody></table></div>
 <div class="inline-editor hidden" id="varForm">
 <div class="context-title" id="varFormTitle">Adicionar nova despesa variável</div>
@@ -2211,6 +2211,7 @@ $("periodPreset").onchange=()=>{refreshPeriodUi();renderAll()};$("periodStart").
 ["expenseTypeFilter","expenseCategoryFilter"].forEach(id=>$(id).onchange=renderExpenses);$("incomePersonFilter").onchange=renderIncome;$("installmentCategoryFilter").onchange=renderInstallments;
 
 $("btnOpenFixed").onclick=()=>openContextForm("fixas");
+$("btnOpenVariable").onclick=()=>{expenseTableView="variaveis";renderExpenseTableView();openContextForm("variaveis")};
 $("btnTopAddVariable").onclick=()=>{expenseTableView="variaveis";renderExpenseTableView();openContextForm("variaveis")};
 $("btnTopAddInstallment").onclick=()=>openContextForm("parcelas");
 document.querySelectorAll("[data-expense-table-view]").forEach(b=>b.onclick=()=>setExpenseTableView(b.dataset.expenseTableView));
